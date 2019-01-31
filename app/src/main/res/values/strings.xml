@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">记账</string>
+    <string name="title_home">添加</string>
+    <string name="title_dashboard">列表</string>
+    <string name="title_notifications">统计</string>
+
+</resources>

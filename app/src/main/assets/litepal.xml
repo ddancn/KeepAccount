@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<litepal>
+    <dbname value="Accounts" />
+
+    <version value="1" />
+  
+    <list>
+        <mapping class="com.ddancn.keepaccount.entity.Record" />
+        <mapping class="com.ddancn.keepaccount.entity.Type" />
+    </list>  
+</litepal>  
