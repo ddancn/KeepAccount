@@ -100,6 +100,7 @@ public class UpdateActivity extends AppCompatActivity {
 
         if (typeList == null || typeList.size() == 0) {
             ToastUtil.show("先在设置里创建类型~");
+            spinnerType.setAdapter(null);
             return;
         }
         List<String> types = new ArrayList<>();

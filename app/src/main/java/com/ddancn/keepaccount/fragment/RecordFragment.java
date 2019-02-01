@@ -1,6 +1,8 @@
 package com.ddancn.keepaccount.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -16,6 +19,7 @@ import android.widget.EditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.activity.UpdateActivity;
+import com.ddancn.keepaccount.util.DimenUtil;
 import com.ddancn.keepaccount.util.ToastUtil;
 import com.ddancn.keepaccount.adapter.RecordAdapter;
 import com.ddancn.keepaccount.dialog.DatePickerDialog;
@@ -42,9 +46,10 @@ public class RecordFragment extends Fragment
     private List<Record> recordList = new ArrayList<>();
     private RecordAdapter recordAdapter;
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
     private String showMonth = sdf.format(new Date());
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,7 +58,13 @@ public class RecordFragment extends Fragment
         iconDate = root.findViewById(R.id.icon_date);
         recyclerView = root.findViewById(R.id.rv_record);
 
+        //搜索框的清空按钮
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_delete);
+        drawable.setBounds(0,0,DimenUtil.dp2px(20),DimenUtil.dp2px(20));
+        editText.setCompoundDrawables(null,null,drawable,null);
+
         iconDate.setOnClickListener(v -> showDatePickDialog());
+        //输入时即搜索
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -80,6 +91,18 @@ public class RecordFragment extends Fragment
                 }
                 recordAdapter.notifyDataSetChanged();
             }
+        });
+        //搜索框清空按钮的事件
+        editText.setOnTouchListener((v, event) -> {
+            Drawable drawable1 = editText.getCompoundDrawables()[2];
+            if (drawable1 == null || event.getAction() != MotionEvent.ACTION_UP)
+                return false;
+            if (event.getX() > editText.getWidth()
+                    - editText.getPaddingRight()
+                    - drawable1.getIntrinsicWidth()){
+                editText.setText("");
+            }
+            return false;
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

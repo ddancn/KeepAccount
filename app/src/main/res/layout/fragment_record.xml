@@ -24,6 +24,7 @@
             android:background="@drawable/bg_edit_text"
             android:hint="搜索..."
             android:paddingLeft="15dp"
+            android:paddingRight="10dp"
             tools:ignore="Autofill,HardcodedText,RtlHardcoded,RtlSymmetry"
             android:inputType="text" />
 

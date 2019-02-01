@@ -35,7 +35,7 @@ public class AddFragment extends Fragment {
     RadioGroup rgType;
     Spinner spinnerType;
     Button btnAdd;
-    IconTextView btnSetting;
+    IconTextView iconSetting;
 
     private int type = MainActivity.TYPE_OUT;
     private String typeName;
@@ -50,7 +50,7 @@ public class AddFragment extends Fragment {
         rgType = root.findViewById(R.id.rg_type);
         spinnerType = root.findViewById(R.id.spinner_type);
         btnAdd = root.findViewById(R.id.btn_add);
-        btnSetting = root.findViewById(R.id.btn_setting);
+        iconSetting = root.findViewById(R.id.icon_setting);
 
         // 获取radio group收支选项，联动改变类型spinner的内容
         rgType.setOnCheckedChangeListener((group, checkId) -> {
@@ -63,7 +63,7 @@ public class AddFragment extends Fragment {
         // 默认设置radio group为支出
         setSpinnerContent();
 
-        btnSetting.setOnClickListener(v->{
+        iconSetting.setOnClickListener(v->{
             Intent intent = new Intent(getContext(), SettingActivity.class);
             startActivity(intent);
         });
@@ -77,7 +77,7 @@ public class AddFragment extends Fragment {
             }
             typeName = (String) spinnerType.getSelectedItem();
             if (typeName == null) {
-                ToastUtil.show("请选择类型");
+                ToastUtil.show("请选择/创建类型");
                 return;
             }
             int y = datePicker.getYear();
@@ -118,6 +118,7 @@ public class AddFragment extends Fragment {
                 .find(Type.class);
         if (typeList == null || typeList.size() == 0) {
             ToastUtil.show("先在设置里创建类型~");
+            spinnerType.setAdapter(null);
             return ;
         }
         List<String> types = new ArrayList<>();
