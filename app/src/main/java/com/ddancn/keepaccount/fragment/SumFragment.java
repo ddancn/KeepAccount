@@ -1,25 +1,20 @@
 package com.ddancn.keepaccount.fragment;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.print.PrinterId;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
-import com.ddancn.keepaccount.activity.MainActivity;
 import com.ddancn.keepaccount.dialog.DatePickerDialog;
 import com.ddancn.keepaccount.entity.Record;
 import com.ddancn.keepaccount.entity.Type;
-import com.ddancn.keepaccount.util.DimenUtil;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -72,27 +67,17 @@ public class SumFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            getData();
-//        }
+        if (isVisibleToUser) {
+            getData();
+        }
     }
 
     private void getData() {
         initSumData();
         preparePie(chartIn);
         preparePie(chartOut);
-        chartIn.setData(getPieDataFromDB(MainActivity.TYPE_IN, "收入"));
-        chartOut.setData(getPieDataFromDB(MainActivity.TYPE_OUT, "支出"));
-    }
-
-    private void preparePie(PieChart pieChart) {
-        pieChart.setDescription(null); // 描述
-        pieChart.setRotationAngle(90); // 初始旋转角度
-        pieChart.animateXY(500, 500); // 设置动画
-        Legend mLegend = pieChart.getLegend(); // 设置比例图
-        mLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        mLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        mLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT); //在右边显示
+        chartIn.setData(getPieDataFromDB(Constant.TYPE_IN, "收入"));
+        chartOut.setData(getPieDataFromDB(Constant.TYPE_OUT, "支出"));
     }
 
     /**
@@ -102,11 +87,11 @@ public class SumFragment extends Fragment {
     protected void initSumData() {
         List<Record> incomeList = LitePal
                 .where("date like ? and type is ?",
-                        showMonth + "%", String.valueOf(MainActivity.TYPE_IN))
+                        showMonth + "%", String.valueOf(Constant.TYPE_IN))
                 .find(Record.class);
         List<Record> outcomeList = LitePal
                 .where("date like ? and type is ?",
-                        showMonth + "%", String.valueOf(MainActivity.TYPE_OUT))
+                        showMonth + "%", String.valueOf(Constant.TYPE_OUT))
                 .find(Record.class);
 
         double income = 0, outcome = 0, sum = 0;
@@ -120,6 +105,20 @@ public class SumFragment extends Fragment {
         tvIncome.setText("￥" + df.format(income));
         tvOutcome.setText("￥-" + df.format(outcome));
         tvSum.setText("￥" + df.format(sum));
+    }
+
+    /**
+     * 对饼进行一些设置
+     * @param pieChart 饼图
+     */
+    private void preparePie(PieChart pieChart) {
+        pieChart.setDescription(null); // 描述
+        pieChart.setRotationAngle(90); // 初始旋转角度
+        pieChart.animateXY(500, 500); // 设置动画
+        Legend mLegend = pieChart.getLegend(); // 设置比例图
+        mLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
+        mLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        mLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT); //在右边显示
     }
 
     /**

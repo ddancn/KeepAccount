@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.entity.Record;
 import com.ddancn.keepaccount.entity.Type;
@@ -28,7 +29,7 @@ public class UpdateActivity extends AppCompatActivity {
     Spinner spinnerType;
     Button btnAdd;
 
-    private int type = MainActivity.TYPE_OUT;
+    private int type = Constant.TYPE_OUT;
     private String typeName;
 
     private Record toUpdateRecord;
@@ -52,9 +53,9 @@ public class UpdateActivity extends AppCompatActivity {
         // 获取radio group收支选项，联动改变类型spinner的内容
         rgType.setOnCheckedChangeListener((group, checkId) -> {
             if (checkId == R.id.rbtn_type_out)
-                type = MainActivity.TYPE_OUT;
+                type = Constant.TYPE_OUT;
             else if (checkId == R.id.rbtn_type_in)
-                type = MainActivity.TYPE_IN;
+                type = Constant.TYPE_IN;
             setSpinnerContent();
         });
 
@@ -130,7 +131,7 @@ public class UpdateActivity extends AppCompatActivity {
                 .where("type = ?", String.valueOf(toUpdateRecord.getType()))
                 .find(Type.class);
         type = toUpdateRecord.getType();
-        if (type == MainActivity.TYPE_IN) {
+        if (type == Constant.TYPE_IN) {
             rgType.check(R.id.rbtn_type_in);
         } else {
             rgType.check(R.id.rbtn_type_out);

@@ -1,6 +1,5 @@
 package com.ddancn.keepaccount.activity;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -13,19 +12,11 @@ import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.fragment.AddFragment;
 import com.ddancn.keepaccount.fragment.RecordFragment;
 import com.ddancn.keepaccount.fragment.SumFragment;
-import com.ddancn.keepaccount.util.ToastUtil;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
-
-import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final int TYPE_OUT = -1;
-    public static final int TYPE_IN = 1;
 
     private ViewPager mViewPager;
     private BottomNavigationView mBottomNavView;
@@ -35,10 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ToastUtil.init(getApplication());
-        Iconify.with(new FontAwesomeModule());
-        SQLiteDatabase db = LitePal.getDatabase();
 
         mViewPager = findViewById(R.id.viewpager);
         mBottomNavView = findViewById(R.id.navigation);

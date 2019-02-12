@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.adapter.TypeAdapter;
 import com.ddancn.keepaccount.dialog.NormalDialog;
@@ -35,7 +36,6 @@ public class SettingActivity extends AppCompatActivity
     private TypeAdapter inTypesAdapter;
     private TypeAdapter outTypesAdapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,26 +48,34 @@ public class SettingActivity extends AppCompatActivity
         rvTypeOut = findViewById(R.id.rv_type_out);
 
         iconBack.setOnClickListener(v -> this.finish());
-        iconAddIn.setOnClickListener(v -> addType(MainActivity.TYPE_IN));
-        iconAddOut.setOnClickListener(v -> addType(MainActivity.TYPE_OUT));
+        iconAddIn.setOnClickListener(v -> addType(Constant.TYPE_IN));
+        iconAddOut.setOnClickListener(v -> addType(Constant.TYPE_OUT));
 
         GridLayoutManager manager1 = new GridLayoutManager(this, 3);
         GridLayoutManager manager2 = new GridLayoutManager(this, 3);
         rvTypeIn.setLayoutManager(manager1);
         rvTypeOut.setLayoutManager(manager2);
 
-        inTypes = LitePal.where("type is ?", String.valueOf(MainActivity.TYPE_IN)).find(Type.class);
+        inTypes = LitePal.where("type is ?", String.valueOf(Constant.TYPE_IN)).find(Type.class);
         inTypesAdapter = new TypeAdapter(R.layout.item_type, inTypes);
         inTypesAdapter.setOnItemClickListener(this);
         inTypesAdapter.setOnItemLongClickListener(this);
         rvTypeIn.setAdapter(inTypesAdapter);
 
-        outTypes = LitePal.where("type is ?", String.valueOf(MainActivity.TYPE_OUT)).find(Type.class);
+        outTypes = LitePal.where("type is ?", String.valueOf(Constant.TYPE_OUT)).find(Type.class);
         outTypesAdapter = new TypeAdapter(R.layout.item_type, outTypes);
         outTypesAdapter.setOnItemClickListener(this);
         outTypesAdapter.setOnItemLongClickListener(this);
         rvTypeOut.setAdapter(outTypesAdapter);
 
+    }
+
+    private TypeAdapter getAdapter(int type){
+        return (type == Constant.TYPE_IN) ? inTypesAdapter : outTypesAdapter;
+    }
+
+    private List<Type> getList(int type){
+        return (type == Constant.TYPE_IN) ? inTypes : outTypes;
     }
 
     private void addType(int type) {
@@ -93,14 +101,6 @@ public class SettingActivity extends AppCompatActivity
         dialog.show();
     }
 
-    private TypeAdapter getAdapter(int type){
-        if (type == MainActivity.TYPE_IN) {
-            return inTypesAdapter;
-        } else {
-            return outTypesAdapter;
-        }
-    }
-
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Type typeToUpdate = (Type) (adapter.getData().get(position));
@@ -114,7 +114,7 @@ public class SettingActivity extends AppCompatActivity
                         ToastUtil.show("没有输入类型的名称哦");
                         return false;
                     }
-                    List<Type> types = (type == MainActivity.TYPE_IN) ? inTypes : outTypes;
+                    List<Type> types = getList(type);
                     //修改类型
                     Type updateType = new Type();
                     updateType.setName(typeName);
@@ -142,7 +142,7 @@ public class SettingActivity extends AppCompatActivity
         dialog.setTitle("删除类型")
                 .setMsg("删除类型会删除所有与之相关的记录，确定要继续吗？")
                 .setOnConfirmClickListener("删除", () -> {
-                    List<Type> types = (type == MainActivity.TYPE_IN) ? inTypes : outTypes;
+                    List<Type> types = getList(type);
                     //先删除相关的记录
                     LitePal.deleteAll(Record.class, "typeName is ?", types.get(position).getName());
                     //删除类型

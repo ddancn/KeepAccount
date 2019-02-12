@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import com.ddancn.keepaccount.activity.MainActivity;
+import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.activity.SettingActivity;
 import com.ddancn.keepaccount.util.ToastUtil;
@@ -37,7 +37,7 @@ public class AddFragment extends Fragment {
     Button btnAdd;
     IconTextView iconSetting;
 
-    private int type = MainActivity.TYPE_OUT;
+    private int type = Constant.TYPE_OUT;
     private String typeName;
 
     @Override
@@ -55,9 +55,9 @@ public class AddFragment extends Fragment {
         // 获取radio group收支选项，联动改变类型spinner的内容
         rgType.setOnCheckedChangeListener((group, checkId) -> {
             if (checkId == R.id.rbtn_type_out)
-                type = MainActivity.TYPE_OUT;
+                type = Constant.TYPE_OUT;
             else if (checkId == R.id.rbtn_type_in)
-                type = MainActivity.TYPE_IN;
+                type = Constant.TYPE_IN;
             setSpinnerContent();
         });
         // 默认设置radio group为支出
@@ -139,7 +139,7 @@ public class AddFragment extends Fragment {
         datePicker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
         etMoney.setText("");
         etDetail.setText("");
-        type = MainActivity.TYPE_OUT;
+        type = Constant.TYPE_OUT;
         rgType.check(R.id.rbtn_type_out);
         setSpinnerContent();
     }
