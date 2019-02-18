@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="{fa-angle-left}"
+            android:text="@string/iconify_back"
             android:textColor="@android:color/primary_text_dark"
             android:textSize="30sp" />
 
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="设置"
+            android:text="@string/setting_title"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
 
@@ -41,9 +41,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:text="支出类型"
+            android:text="@string/setting_type_out"
             android:textSize="24sp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            tools:ignore="RtlHardcoded" />
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/icon_add_out"
@@ -51,10 +51,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:text="{fa-plus-square-o}"
-            android:textSize="24sp"
+            android:text="@string/iconify_plus"
             android:textColor="@color/colorPrimary"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            android:textSize="24sp"
+            tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -72,9 +72,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"
-            android:text="收入类型"
+            android:text="@string/setting_type_in"
             android:textSize="24sp"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            tools:ignore="RtlHardcoded" />
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/icon_add_in"
@@ -82,10 +82,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
-            android:text="{fa-plus-square-o}"
-            android:textSize="24sp"
+            android:text="@string/iconify_plus"
             android:textColor="@color/colorPrimary"
-            tools:ignore="HardcodedText,RtlHardcoded" />
+            android:textSize="24sp"
+            tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

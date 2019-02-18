@@ -18,10 +18,10 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:paddingLeft="20sp"
-            android:text="修改记录"
+            android:paddingRight="20sp"
+            android:text="@string/update_title"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
-            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 
@@ -32,7 +32,7 @@
         android:layout_marginTop="5dp"
         android:calendarViewShown="false"
         android:datePickerMode="spinner"
-        tools:ignore="UnusedAttribute" />
+        tools:targetApi="lollipop" />
 
     <EditText
         android:id="@+id/et_money"
@@ -40,10 +40,10 @@
         android:layout_height="wrap_content"
         android:ems="14"
         android:gravity="center"
-        android:hint="金额"
+        android:hint="@string/add_money"
         android:inputType="numberDecimal"
         android:textColor="@color/colorText"
-        tools:ignore="Autofill,HardcodedText" />
+        tools:ignore="Autofill" />
 
     <EditText
         android:id="@+id/et_detail"
@@ -51,10 +51,11 @@
         android:layout_height="wrap_content"
         android:ems="14"
         android:gravity="center"
-        android:hint="说明"
+        android:hint="@string/add_desc"
         android:inputType="none"
         android:textColor="@color/colorText"
-        tools:ignore="Autofill,HardcodedText" />
+        tools:ignore="Autofill" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,21 +71,19 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/rbtn_type_out"
+                android:id="@+id/rb_type_out"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="支出"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText" />
+                android:text="@string/app_out"
+                android:textSize="18sp" />
 
             <RadioButton
-                android:id="@+id/rbtn_type_in"
+                android:id="@+id/rb_type_in"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="收入"
-                android:textSize="18sp"
-                tools:ignore="HardcodedText" />
+                android:text="@string/app_in"
+                android:textSize="18sp" />
 
         </RadioGroup>
 
@@ -102,8 +101,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/bg_item"
-        android:text="修改"
+        android:text="@string/update_btn"
         android:textColor="@color/colorPrimary"
-        android:textSize="20sp"
-        tools:ignore="HardcodedText" />
+        android:textSize="20sp" />
 </LinearLayout>

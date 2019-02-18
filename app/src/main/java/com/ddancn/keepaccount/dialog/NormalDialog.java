@@ -97,19 +97,25 @@ public class NormalDialog extends BaseDialog {
     }
 
     public NormalDialog setOnConfirmClickListener(String txtConfirm, OnConfirmListener onConfirmClickListener){
-        if(txtConfirm != null) this.txtConfirm = txtConfirm;
+        if(txtConfirm != null) {
+            this.txtConfirm = txtConfirm;
+        }
         this.confirmListener = onConfirmClickListener;
         return this;
     }
 
     public NormalDialog setOnConfirmClickListenerWithInput(String txtConfirm, OnConfirmListenerWithInput onConfirmClickListenerWithInput){
-        if(txtConfirm != null) this.txtConfirm = txtConfirm;
+        if(txtConfirm != null) {
+            this.txtConfirm = txtConfirm;
+        }
         this.confirmListenerWithInput = onConfirmClickListenerWithInput;
         return this;
     }
 
     public NormalDialog setOnCancelClickListener(String txtCancel, OnCancelListener onCancelClickListener){
-        if(txtCancel != null) this.txtCancel = txtCancel;
+        if(txtCancel != null) {
+            this.txtCancel = txtCancel;
+        }
         this.cancelListener = onCancelClickListener;
         return this;
     }

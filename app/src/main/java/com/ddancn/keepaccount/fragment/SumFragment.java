@@ -67,7 +67,7 @@ public class SumFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
+        if (isVisibleToUser && getView() != null) {
             getData();
         }
     }
@@ -95,10 +95,12 @@ public class SumFragment extends Fragment {
                 .find(Record.class);
 
         double income = 0, outcome = 0, sum = 0;
-        for (Record record : incomeList)
+        for (Record record : incomeList) {
             income += record.getMoney();
-        for (Record record : outcomeList)
+        }
+        for (Record record : outcomeList) {
             outcome += record.getMoney();
+        }
         sum = income - outcome;
 
         DecimalFormat df = new DecimalFormat("0.00");
@@ -112,13 +114,14 @@ public class SumFragment extends Fragment {
      * @param pieChart 饼图
      */
     private void preparePie(PieChart pieChart) {
-        pieChart.setDescription(null); // 描述
-        pieChart.setRotationAngle(90); // 初始旋转角度
-        pieChart.animateXY(500, 500); // 设置动画
-        Legend mLegend = pieChart.getLegend(); // 设置比例图
+        pieChart.setDescription(null); 
+        pieChart.setRotationAngle(90); 
+        pieChart.animateXY(500, 500); 
+        
+        Legend mLegend = pieChart.getLegend(); 
         mLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
         mLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        mLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT); //在右边显示
+        mLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT); 
     }
 
     /**
@@ -136,8 +139,9 @@ public class SumFragment extends Fragment {
                     .where("date like ? and typeName is ?", showMonth + "%", t.getName())
                     .find(Record.class);
             double temp = 0;
-            for (Record record : recordList)
+            for (Record record : recordList) {
                 temp += record.getMoney();
+            }
             entries.add(new PieEntry((float) temp, t.getName()));
         }
         PieDataSet set = new PieDataSet(entries, label);

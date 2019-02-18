@@ -16,7 +16,9 @@ public class ToastUtil {
     }
 
     public static void show(CharSequence msg){
-        if (msg == null || msg.equals("")) return;
+        if (msg == null || "".equals(msg)) {
+            return;
+        }
         if(sToast == null){
             sToast = Toast.makeText(sApplication, msg, Toast.LENGTH_SHORT);
         }

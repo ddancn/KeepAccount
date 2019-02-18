@@ -23,9 +23,11 @@ import com.joanzapata.iconify.widget.IconTextView;
 
 import org.litepal.LitePal;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class AddFragment extends Fragment {
 
@@ -54,10 +56,11 @@ public class AddFragment extends Fragment {
 
         // 获取radio group收支选项，联动改变类型spinner的内容
         rgType.setOnCheckedChangeListener((group, checkId) -> {
-            if (checkId == R.id.rbtn_type_out)
+            if (checkId == R.id.rb_type_out) {
                 type = Constant.TYPE_OUT;
-            else if (checkId == R.id.rbtn_type_in)
+            } else if (checkId == R.id.rb_type_in) {
                 type = Constant.TYPE_IN;
+            }
             setSpinnerContent();
         });
         // 默认设置radio group为支出
@@ -71,7 +74,7 @@ public class AddFragment extends Fragment {
         // 按钮点击事件，判断是否合法并且存下记录
         btnAdd.setOnClickListener(v -> {
             String money = etMoney.getText().toString();
-            if (money.equals("")) {
+            if ("".equals(money)) {
                 ToastUtil.show("请输入钱数");
                 return;
             }
@@ -96,8 +99,9 @@ public class AddFragment extends Fragment {
             if (record.save()) {
                 ToastUtil.show("添加成功");
                 reset();
-            } else
+            } else {
                 ToastUtil.show("添加失败");
+            }
         });
         return root;
     }
@@ -140,7 +144,7 @@ public class AddFragment extends Fragment {
         etMoney.setText("");
         etDetail.setText("");
         type = Constant.TYPE_OUT;
-        rgType.check(R.id.rbtn_type_out);
+        rgType.check(R.id.rb_type_out);
         setSpinnerContent();
     }
 

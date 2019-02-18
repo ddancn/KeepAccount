@@ -88,15 +88,18 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener, On
         }
     }
 
+    @Override
     public void onClick(DialogInterface dialog, int which) {
-        if (which == BUTTON_POSITIVE)
+        if (which == BUTTON_POSITIVE) {
             tryNotifyDateSet();
+        }
     }
 
     @Override
     public void onDateChanged(DatePicker view, int year, int month, int day) {
-        if (view.getId() == R.id.datePickerStart)
+        if (view.getId() == R.id.datePickerStart) {
             mDatePickerStart.init(year, month, day, this);
+        }
     }
 
     public DatePicker getDatePickerStart() {
@@ -134,10 +137,10 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener, On
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        int start_year = savedInstanceState.getInt(START_YEAR);
-        int start_month = savedInstanceState.getInt(START_MONTH);
-        int start_day = savedInstanceState.getInt(START_DAY);
-        mDatePickerStart.init(start_year, start_month, start_day, this);
+        int startYear = savedInstanceState.getInt(START_YEAR);
+        int startMonth = savedInstanceState.getInt(START_MONTH);
+        int startDay = savedInstanceState.getInt(START_DAY);
+        mDatePickerStart.init(startYear, startMonth, startDay, this);
 
     }
 }

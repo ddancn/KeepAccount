@@ -22,10 +22,10 @@
             android:layout_marginLeft="15dp"
             android:layout_weight="5"
             android:background="@drawable/bg_edit_text"
-            android:hint="搜索..."
+            android:hint="@string/record_search"
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
-            tools:ignore="Autofill,HardcodedText,RtlHardcoded,RtlSymmetry"
+            tools:ignore="Autofill,RtlHardcoded,RtlSymmetry"
             android:inputType="text" />
 
         <com.joanzapata.iconify.widget.IconTextView
@@ -34,10 +34,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="{fa-calendar-o}"
+            android:text="@string/iconify_calendar"
             android:textColor="@android:color/primary_text_dark"
-            android:textSize="30sp"
-            tools:ignore="HardcodedText" />
+            android:textSize="30sp" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

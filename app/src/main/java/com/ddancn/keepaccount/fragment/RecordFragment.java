@@ -95,8 +95,9 @@ public class RecordFragment extends Fragment
         //搜索框清空按钮的事件
         editText.setOnTouchListener((v, event) -> {
             Drawable drawable1 = editText.getCompoundDrawables()[2];
-            if (drawable1 == null || event.getAction() != MotionEvent.ACTION_UP)
+            if (drawable1 == null || event.getAction() != MotionEvent.ACTION_UP) {
                 return false;
+            }
             if (event.getX() > editText.getWidth()
                     - editText.getPaddingRight()
                     - drawable1.getIntrinsicWidth()){
@@ -142,8 +143,9 @@ public class RecordFragment extends Fragment
                 .where("date like ?", showMonth + "%")
                 .order("date desc")
                 .find(Record.class));
-        if (recordList.isEmpty())
+        if (recordList.isEmpty()) {
             ToastUtil.show("查不到记录鸭");
+        }
         recordAdapter.notifyDataSetChanged();
     }
 

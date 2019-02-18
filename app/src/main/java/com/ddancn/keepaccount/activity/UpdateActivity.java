@@ -52,17 +52,18 @@ public class UpdateActivity extends AppCompatActivity {
 
         // 获取radio group收支选项，联动改变类型spinner的内容
         rgType.setOnCheckedChangeListener((group, checkId) -> {
-            if (checkId == R.id.rbtn_type_out)
+            if (checkId == R.id.rb_type_out) {
                 type = Constant.TYPE_OUT;
-            else if (checkId == R.id.rbtn_type_in)
+            } else if (checkId == R.id.rb_type_in) {
                 type = Constant.TYPE_IN;
+            }
             setSpinnerContent();
         });
 
         // 按钮点击事件，判断是否合法并且存下记录
         btnAdd.setOnClickListener(v -> {
             String money = etMoney.getText().toString();
-            if (money.equals("")) {
+            if ("".equals(money)) {
                 ToastUtil.show("请输入钱数");
                 return;
             }
@@ -132,9 +133,9 @@ public class UpdateActivity extends AppCompatActivity {
                 .find(Type.class);
         type = toUpdateRecord.getType();
         if (type == Constant.TYPE_IN) {
-            rgType.check(R.id.rbtn_type_in);
+            rgType.check(R.id.rb_type_in);
         } else {
-            rgType.check(R.id.rbtn_type_out);
+            rgType.check(R.id.rb_type_out);
         }
         setSpinnerContent();
 

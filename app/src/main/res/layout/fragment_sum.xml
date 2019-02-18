@@ -17,10 +17,10 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:paddingLeft="20sp"
-            android:text="统计"
+            android:text="@string/sum_title"
             android:textColor="@android:color/white"
             android:textSize="24sp"
-            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/icon_date"
@@ -30,10 +30,10 @@
             android:layout_weight="1"
             android:gravity="right"
             android:paddingRight="20dp"
-            android:text="{fa-calendar-o}"
+            android:text="@string/iconify_calendar"
             android:textColor="@android:color/primary_text_dark"
             android:textSize="30sp"
-            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+            tools:ignore="RtlHardcoded,RtlSymmetry" />
 
     </LinearLayout>
 
@@ -57,27 +57,24 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="收入"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/app_in"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="支出"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/app_out"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="总计"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    android:text="@string/sum_total"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <LinearLayout

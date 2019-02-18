@@ -3,5 +3,34 @@
     <string name="title_home">添加</string>
     <string name="title_dashboard">列表</string>
     <string name="title_notifications">统计</string>
+    <string name="app_in">收入</string>
+    <string name="app_out">支出</string>
+
+    <!-- Iconify -->
+    <string name="iconify_back">{fa-angle-left}</string>
+    <string name="iconify_plus">{fa-plus-square-o}</string>
+    <string name="iconify_setting">{fa-gear}</string>
+    <string name="iconify_calendar">{fa-calendar-o}</string>
+
+    <!-- 添加页面 -->
+    <string name="add_money">金额</string>
+    <string name="add_desc">说明</string>
+    <string name="add_btn">添加</string>
+
+    <!-- 列表页面 -->
+    <string name="record_search">搜索…</string>
+
+    <!-- 统计页面 -->
+    <string name="sum_title">统计</string>
+    <string name="sum_total">总计</string>
+
+    <!-- 设置页面 -->
+    <string name="setting_title">设置</string>
+    <string name="setting_type_in">收入类型</string>
+    <string name="setting_type_out">支出类型</string>
+
+    <!-- 修改页面 -->
+    <string name="update_title">修改记录</string>
+    <string name="update_btn">修改</string>
 
 </resources>
