@@ -6,37 +6,6 @@
     android:background="@color/colorBackground"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:paddingLeft="20sp"
-            android:text="@string/sum_title"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/icon_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:paddingRight="20dp"
-            android:text="@string/iconify_calendar"
-            android:textColor="@android:color/primary_text_dark"
-            android:textSize="30sp"
-            tools:ignore="RtlHardcoded,RtlSymmetry" />
-
-    </LinearLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

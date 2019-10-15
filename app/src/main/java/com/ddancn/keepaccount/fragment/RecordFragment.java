@@ -2,130 +2,115 @@ package com.ddancn.keepaccount.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.blankj.utilcode.util.ToastUtils;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.activity.UpdateActivity;
-import com.ddancn.keepaccount.util.DimenUtil;
-import com.ddancn.keepaccount.util.ToastUtil;
 import com.ddancn.keepaccount.adapter.RecordAdapter;
-import com.ddancn.keepaccount.dialog.DatePickerDialog;
-import com.ddancn.keepaccount.dialog.NormalDialog;
+import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.entity.Record;
-import com.joanzapata.iconify.widget.IconTextView;
-
-import org.litepal.LitePal;
+import com.ddancn.lib.base.BaseFragment;
+import com.ddancn.lib.util.SimpleTextWatcher;
+import com.ddancn.lib.view.dialog.ConfirmDialog;
+import com.ddancn.lib.view.dialog.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-public class RecordFragment extends Fragment
-        implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
+/**
+ * @author ddan.zhuang
+ */
+public class RecordFragment extends BaseFragment {
 
-    EditText editText;
-    IconTextView iconDate;
-    RecyclerView recyclerView;
+    private EditText editText;
+    private ImageView iconDate;
+    private RecyclerView rvRecord;
 
-    private List<Record> recordList = new ArrayList<>();
     private RecordAdapter recordAdapter;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
     private String showMonth = sdf.format(new Date());
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_record, container, false);
+    protected int bindLayout() {
+        return R.layout.fragment_record;
+    }
+
+    @Override
+    protected boolean hasHeader() {
+        return false;
+    }
+
+    @Override
+    protected void initView(View root) {
         editText = root.findViewById(R.id.search);
         iconDate = root.findViewById(R.id.icon_date);
-        recyclerView = root.findViewById(R.id.rv_record);
+        rvRecord = root.findViewById(R.id.rv_record);
 
-        //搜索框的清空按钮
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_delete);
-        drawable.setBounds(0,0,DimenUtil.dp2px(20),DimenUtil.dp2px(20));
-        editText.setCompoundDrawables(null,null,drawable,null);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        rvRecord.setLayoutManager(layoutManager);
+        recordAdapter = new RecordAdapter(R.layout.item_record);
+        rvRecord.setAdapter(recordAdapter);
+    }
 
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    protected void bindListener() {
         iconDate.setOnClickListener(v -> showDatePickDialog());
         //输入时即搜索
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+        editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 String query = s.toString();
-                if(TextUtils.isEmpty(query)){
-                    recordList.clear();
-                    showMonth = sdf.format(new Date());
+                if (TextUtils.isEmpty(query)) {
                     getRecords();
                 } else {
-                    String condition = "%" + query + "%";
-                    recordList.clear();
-                    recordList.addAll(LitePal
-                            .where("date like ? or money like ? " +
-                                            "or detail like ? or typeName like ?",
-                                    condition, condition, condition, condition)
-                            .order("date desc")
-                            .find(Record.class));
+                    recordAdapter.setNewData(RecordDao.searchRecord(query));
                 }
-                recordAdapter.notifyDataSetChanged();
             }
         });
         //搜索框清空按钮的事件
         editText.setOnTouchListener((v, event) -> {
-            Drawable drawable1 = editText.getCompoundDrawables()[2];
-            if (drawable1 == null || event.getAction() != MotionEvent.ACTION_UP) {
-                return false;
-            }
             if (event.getX() > editText.getWidth()
                     - editText.getPaddingRight()
-                    - drawable1.getIntrinsicWidth()){
+                    - 32) {
                 editText.setText("");
+                return true;
             }
             return false;
         });
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recordList = LitePal
-                .where("date like ?", showMonth + "%")
-                .order("date desc")
-                .find(Record.class);
-        recordAdapter = new RecordAdapter(R.layout.item_record, recordList);
-        recordAdapter.setOnItemClickListener(this);
-        recordAdapter.setOnItemLongClickListener(this);
-        recyclerView.setAdapter(recordAdapter);
-
-        return root;
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            getRecords();
-        }
+        recordAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Intent intent = new Intent(getContext(), UpdateActivity.class);
+            intent.putExtra(UpdateActivity.EXTRA_ARG, recordAdapter.getItem(position));
+            startActivity(intent);
+        });
+        recordAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+            ConfirmDialog.builder(getContext())
+                    .setTitle(R.string.record_delete_record)
+                    .setMessage(R.string.record_delete_hint)
+                    .setConfirmText(R.string.record_delete)
+                    .setCancelText(R.string.cancel)
+                    .setConfirmListener(() -> {
+                        Record recordToDelete = recordAdapter.getItem(position);
+                        if (recordToDelete != null
+                                && RecordDao.deleteRecordById(recordToDelete.getId()) == 1) {
+                            ToastUtils.showShort(R.string.record_delete_succeed);
+                            recordAdapter.remove(position);
+                        }
+                        return true;
+                    }).build().show();
+            return false;
+        });
     }
 
     @Override
@@ -134,19 +119,20 @@ public class RecordFragment extends Fragment
         getRecords();
     }
 
+    @Override
+    protected void applyData() {
+        super.applyData();
+        getRecords();
+    }
+
     /**
      * 从数据库中查询某月的记录
      */
     private void getRecords() {
-        recordList.clear();
-        recordList.addAll(LitePal
-                .where("date like ?", showMonth + "%")
-                .order("date desc")
-                .find(Record.class));
-        if (recordList.isEmpty()) {
-            ToastUtil.show("查不到记录鸭");
+        recordAdapter.setNewData(RecordDao.getRecordsByMonth(showMonth));
+        if (recordAdapter.getData().isEmpty()) {
+            ToastUtils.showShort("查不到记录鸭");
         }
-        recordAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -162,29 +148,5 @@ public class RecordFragment extends Fragment
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
-    }
-
-
-    @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Intent intent = new Intent(getContext(), UpdateActivity.class);
-        intent.putExtra(UpdateActivity.EXTRA_ARG, recordList.get(position));
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-        NormalDialog dialog = new NormalDialog(getContext());
-        dialog.setTitle("删除记录")
-                .setMsg("真的要删除这条记录吗？")
-                .setOnConfirmClickListener("删除", () -> {
-                    LitePal.delete(Record.class, recordList.get(position).getId());
-                    ToastUtil.show("删除成功");
-                    recordAdapter.remove(position);
-                    return true;
-                })
-                .setOnCancelClickListener("取消", null);
-        dialog.show();
-        return false;
     }
 }

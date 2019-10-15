@@ -1,24 +1,31 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ExtraTranslation">
     <string name="app_name">记账</string>
-    <string name="title_home">添加</string>
-    <string name="title_dashboard">列表</string>
-    <string name="title_notifications">统计</string>
+    <string name="nav_add">添加</string>
+    <string name="nav_list">列表</string>
+    <string name="nav_sum">统计</string>
+
     <string name="app_in">收入</string>
     <string name="app_out">支出</string>
-
-    <!-- Iconify -->
-    <string name="iconify_back">{fa-angle-left}</string>
-    <string name="iconify_plus">{fa-plus-square-o}</string>
-    <string name="iconify_setting">{fa-gear}</string>
-    <string name="iconify_calendar">{fa-calendar-o}</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
 
     <!-- 添加页面 -->
     <string name="add_money">金额</string>
     <string name="add_desc">说明</string>
     <string name="add_btn">添加</string>
+    <string name="add_succeed">添加成功</string>
+    <string name="add_fail">添加失败</string>
+    <string name="add_need_money">请输入钱数</string>
+    <string name="add_need_type">请选择/创建类型</string>
+    <string name="add_no_type">先在设置里创建类型~</string>
 
     <!-- 列表页面 -->
     <string name="record_search">搜索…</string>
+    <string name="record_delete">删除</string>
+    <string name="record_delete_record">删除记录</string>
+    <string name="record_delete_succeed">删除成功</string>
+    <string name="record_delete_hint">真的要删除这条记录吗？</string>
 
     <!-- 统计页面 -->
     <string name="sum_title">统计</string>
@@ -28,6 +35,18 @@
     <string name="setting_title">设置</string>
     <string name="setting_type_in">收入类型</string>
     <string name="setting_type_out">支出类型</string>
+    <string name="setting_add">添加</string>
+    <string name="setting_add_type">添加类型</string>
+    <string name="setting_add_succeed">添加成功</string>
+    <string name="setting_add_fail">添加失败</string>
+    <string name="setting_need_type_name">没有输入类型的名称哦</string>
+    <string name="setting_update">修改</string>
+    <string name="setting_update_type">修改类型</string>
+    <string name="setting_update_succeed">修改成功</string>
+    <string name="setting_delete">删除</string>
+    <string name="setting_delete_type">删除类型</string>
+    <string name="setting_delete_succeed">删除成功</string>
+    <string name="setting_delete_hint">删除类型会删除所有与之相关的记录，确定要继续吗？</string>
 
     <!-- 修改页面 -->
     <string name="update_title">修改记录</string>

@@ -2,6 +2,9 @@ package com.ddancn.keepaccount.entity;
 
 import org.litepal.crud.LitePalSupport;
 
+/**
+ * @author ddan.zhuang
+ */
 public class Type extends LitePalSupport {
 	
 	private int id;

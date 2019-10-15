@@ -1,9 +1,13 @@
-package com.ddancn.keepaccount.dialog;
+package com.ddancn.lib.view.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * @author ddan.zhuang
+ * @date 2019/10/15
+ */
 public abstract class BaseDialog extends Dialog {
 
     protected Context mContext;
@@ -33,5 +37,17 @@ public abstract class BaseDialog extends Dialog {
         initView();
     }
 
-    abstract protected void initView();
+    /**
+     * 初始化
+     */
+    protected abstract  void initView();
+
+    public interface OnBtnClickListener {
+        /**
+         * 点击事件
+         *
+         * @return 是否dismiss
+         */
+        boolean onClick();
+    }
 }

@@ -9,8 +9,14 @@ import com.ddancn.keepaccount.entity.Record;
 
 import java.util.List;
 
+/**
+ * @author ddan.zhuang
+ */
 public class RecordAdapter extends BaseQuickAdapter<Record, BaseViewHolder> {
 
+    public RecordAdapter(int layoutResId) {
+        super(layoutResId);
+    }
 
     public RecordAdapter(int layoutResId, @Nullable List<Record> data) {
         super(layoutResId, data);
@@ -23,6 +29,5 @@ public class RecordAdapter extends BaseQuickAdapter<Record, BaseViewHolder> {
         helper.setText(R.id.tv_detail, item.getDetail());
         helper.setText(R.id.tv_money, String.valueOf(item.getMoney()));
     }
-
 
 }

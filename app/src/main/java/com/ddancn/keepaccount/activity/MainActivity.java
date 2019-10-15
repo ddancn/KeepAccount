@@ -1,40 +1,46 @@
 package com.ddancn.keepaccount.activity;
 
-import android.os.Bundle;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.ddancn.keepaccount.R;
+import com.ddancn.keepaccount.adapter.MainPagerAdapter;
 import com.ddancn.keepaccount.fragment.AddFragment;
 import com.ddancn.keepaccount.fragment.RecordFragment;
 import com.ddancn.keepaccount.fragment.SumFragment;
+import com.ddancn.lib.base.BaseActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+/**
+ * @author ddan.zhuang
+ */
+public class MainActivity extends BaseActivity {
 
     private ViewPager mViewPager;
     private BottomNavigationView mBottomNavView;
-    private MainPagerAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int bindLayout() {
+        return R.layout.activity_main;
+    }
 
+    @Override
+    protected boolean hasHeader() {
+        return false;
+    }
+
+    @Override
+    protected void initView() {
         mViewPager = findViewById(R.id.viewpager);
         mBottomNavView = findViewById(R.id.navigation);
-        adapter = new MainPagerAdapter(getSupportFragmentManager());
+        MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new AddFragment());
         adapter.addFragment(new RecordFragment());
         adapter.addFragment(new SumFragment());
         mViewPager.setAdapter(adapter);
+    }
 
+    @Override
+    protected void bindListener() {
         mBottomNavView.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_add:
@@ -50,43 +56,11 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 mBottomNavView.getMenu().getItem(position).setChecked(true);
             }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
         });
-    }
-
-    public class MainPagerAdapter extends FragmentPagerAdapter {
-
-        private List<Fragment> fragments = new ArrayList<>();
-
-        public MainPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        public void addFragment(Fragment fragment) {
-            fragments.add(fragment);
-        }
     }
 }

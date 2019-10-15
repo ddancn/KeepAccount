@@ -1,4 +1,4 @@
-package com.ddancn.keepaccount.dialog;
+package com.ddancn.lib.view.dialog;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,11 +12,14 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
 
-import com.ddancn.keepaccount.R;
+import com.ddancn.lib.R;
 
 import java.lang.reflect.Field;
 
-
+/**
+ * @author ddan.zhuang
+ * @date 2019/10/15
+ */
 public class DatePickerDialog extends AlertDialog implements OnClickListener, OnDateChangedListener {
 
     private static final String START_YEAR = "start_year";

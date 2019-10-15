@@ -1,160 +1,156 @@
 package com.ddancn.keepaccount.activity;
 
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.adapter.TypeAdapter;
-import com.ddancn.keepaccount.dialog.NormalDialog;
-import com.ddancn.keepaccount.entity.Record;
+import com.ddancn.keepaccount.dao.RecordDao;
+import com.ddancn.keepaccount.dao.TypeDao;
 import com.ddancn.keepaccount.entity.Type;
-import com.ddancn.keepaccount.util.ToastUtil;
-import com.joanzapata.iconify.widget.IconTextView;
+import com.ddancn.lib.base.BaseActivity;
+import com.ddancn.lib.view.dialog.ConfirmDialog;
+import com.ddancn.lib.view.dialog.InputDialog;
 
-import org.litepal.LitePal;
+/**
+ * @author ddan.zhuang
+ */
+public class SettingActivity extends BaseActivity {
 
-import java.util.List;
+    private ImageView iconAddIn;
+    private ImageView iconAddOut;
+    private RecyclerView rvTypeIn;
+    private RecyclerView rvTypeOut;
 
-public class SettingActivity extends AppCompatActivity
-        implements BaseQuickAdapter.OnItemClickListener, BaseQuickAdapter.OnItemLongClickListener {
-
-    IconTextView iconBack;
-    IconTextView iconAddIn;
-    IconTextView iconAddOut;
-
-    RecyclerView rvTypeIn;
-    RecyclerView rvTypeOut;
-
-    private List<Type> inTypes;
-    private List<Type> outTypes;
     private TypeAdapter inTypesAdapter;
     private TypeAdapter outTypesAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+    protected int bindLayout() {
+        return R.layout.activity_setting;
+    }
 
-        iconBack = findViewById(R.id.btn_back);
+    @Override
+    protected String setHeaderTitle() {
+        return getString(R.string.setting_title);
+    }
+
+    @Override
+    protected void initView() {
+        enableLeftBack();
         iconAddIn = findViewById(R.id.icon_add_in);
         iconAddOut = findViewById(R.id.icon_add_out);
         rvTypeIn = findViewById(R.id.rv_type_in);
         rvTypeOut = findViewById(R.id.rv_type_out);
 
-        iconBack.setOnClickListener(v -> this.finish());
-        iconAddIn.setOnClickListener(v -> addType(Constant.TYPE_IN));
-        iconAddOut.setOnClickListener(v -> addType(Constant.TYPE_OUT));
-
         GridLayoutManager manager1 = new GridLayoutManager(this, 3);
         GridLayoutManager manager2 = new GridLayoutManager(this, 3);
         rvTypeIn.setLayoutManager(manager1);
         rvTypeOut.setLayoutManager(manager2);
-
-        inTypes = LitePal.where("type is ?", String.valueOf(Constant.TYPE_IN)).find(Type.class);
-        inTypesAdapter = new TypeAdapter(R.layout.item_type, inTypes);
-        inTypesAdapter.setOnItemClickListener(this);
-        inTypesAdapter.setOnItemLongClickListener(this);
+        inTypesAdapter = new TypeAdapter(R.layout.item_type);
         rvTypeIn.setAdapter(inTypesAdapter);
-
-        outTypes = LitePal.where("type is ?", String.valueOf(Constant.TYPE_OUT)).find(Type.class);
-        outTypesAdapter = new TypeAdapter(R.layout.item_type, outTypes);
-        outTypesAdapter.setOnItemClickListener(this);
-        outTypesAdapter.setOnItemLongClickListener(this);
+        outTypesAdapter = new TypeAdapter(R.layout.item_type);
         rvTypeOut.setAdapter(outTypesAdapter);
-
     }
 
-    private TypeAdapter getAdapter(int type){
+    @Override
+    protected void bindListener() {
+        iconAddIn.setOnClickListener(v -> addType(Constant.TYPE_IN));
+        iconAddOut.setOnClickListener(v -> addType(Constant.TYPE_OUT));
+        inTypesAdapter.setOnItemClickListener(new TypeItemClickItemListener());
+        inTypesAdapter.setOnItemLongClickListener(new TypeItemLongClickListener());
+        outTypesAdapter.setOnItemClickListener(new TypeItemClickItemListener());
+        outTypesAdapter.setOnItemLongClickListener(new TypeItemLongClickListener());
+    }
+
+    @Override
+    protected void applyData() {
+        inTypesAdapter.setNewData(TypeDao.getTypesByType(Constant.TYPE_IN));
+        outTypesAdapter.setNewData(TypeDao.getTypesByType(Constant.TYPE_OUT));
+    }
+
+    private TypeAdapter getAdapter(int type) {
         return (type == Constant.TYPE_IN) ? inTypesAdapter : outTypesAdapter;
     }
 
-    private List<Type> getList(int type){
-        return (type == Constant.TYPE_IN) ? inTypes : outTypes;
-    }
-
     private void addType(int type) {
-        NormalDialog dialog = new NormalDialog(this);
-        dialog.setTitle("添加类型")
-                .setOnConfirmClickListenerWithInput("添加", typeName -> {
-                    if (TextUtils.isEmpty(typeName)) {
-                        ToastUtil.show("没有输入类型的名称哦");
+        InputDialog.builder(this)
+                .setTitle(R.string.setting_add_type)
+                .setConfirmText(R.string.confirm)
+                .setCancelText(R.string.cancel)
+                .setConfirmListener(input -> {
+                    if (TextUtils.isEmpty(input)) {
+                        ToastUtils.showShort(R.string.setting_need_type_name);
                         return false;
                     }
-                    Type addType = new Type();
-                    addType.setName(typeName);
-                    addType.setType(type);
-                    if (addType.save()) {
-                        ToastUtil.show("添加成功");
-                        getAdapter(type).addData(addType);
+                    if (TypeDao.addType(input, type)) {
+                        ToastUtils.showShort(R.string.setting_add_succeed);
+                        applyData();
                     } else {
-                        ToastUtil.show("添加失败");
+                        ToastUtils.showShort(R.string.setting_add_fail);
                     }
                     return true;
-                })
-                .setOnCancelClickListener("取消", null);
-        dialog.show();
+                }).build().show();
     }
 
-    @Override
-    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-        Type typeToUpdate = (Type) (adapter.getData().get(position));
-        int type = typeToUpdate.getType();
+    class TypeItemClickItemListener implements BaseQuickAdapter.OnItemClickListener {
 
-        NormalDialog dialog = new NormalDialog(this);
-        dialog.setTitle("修改类型")
-                .setEditText(typeToUpdate.getName())
-                .setOnConfirmClickListenerWithInput("修改", typeName -> {
-                    if (TextUtils.isEmpty(typeName)) {
-                        ToastUtil.show("没有输入类型的名称哦");
-                        return false;
-                    }
-                    List<Type> types = getList(type);
-                    //修改类型
-                    Type updateType = new Type();
-                    updateType.setName(typeName);
-                    updateType.update(types.get(position).getId());
-                    //更新类型相关的记录
-                    Record record = new Record();
-                    record.setTypeName(typeName);
-                    record.updateAll("typeName is ?", types.get(position).getName());
+        @Override
+        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            Type typeToUpdate = (Type) (adapter.getData().get(position));
+            int type = typeToUpdate.getType();
 
-                    ToastUtil.show("修改成功");
-                    getAdapter(type).getData().get(position).setName(typeName);
-                    getAdapter(type).notifyItemChanged(position);
-                    return true;
-                })
-                .setOnCancelClickListener("取消", null);
-        dialog.show();
+            InputDialog.builder(SettingActivity.this)
+                    .setTitle(R.string.setting_update_type)
+                    .setConfirmText(R.string.setting_update)
+                    .setCancelText(R.string.cancel)
+                    .setEtMsg(typeToUpdate.getName())
+                    .setConfirmListener(input -> {
+                        if (TextUtils.isEmpty(input)) {
+                            ToastUtils.showShort(R.string.setting_need_type_name);
+                            return false;
+                        }
+                        //修改类型，更新类型相关的记录
+                        if (TypeDao.updateTypeName(typeToUpdate.getId(), input) == 1
+                                && RecordDao.updateRecordTypeName(input, typeToUpdate.getName()) >= 0) {
+                            ToastUtils.showShort(R.string.setting_update_succeed);
+                            getAdapter(type).getData().get(position).setName(input);
+                            getAdapter(type).notifyItemChanged(position);
+                        }
+                        return true;
+                    }).build().show();
+        }
     }
 
-    @Override
-    public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
-        Type typeToDelete = (Type) (adapter.getData().get(position));
-        int type = typeToDelete.getType();
+    class TypeItemLongClickListener implements BaseQuickAdapter.OnItemLongClickListener {
 
-        NormalDialog dialog = new NormalDialog(this);
-        dialog.setTitle("删除类型")
-                .setMsg("删除类型会删除所有与之相关的记录，确定要继续吗？")
-                .setOnConfirmClickListener("删除", () -> {
-                    List<Type> types = getList(type);
-                    //先删除相关的记录
-                    LitePal.deleteAll(Record.class, "typeName is ?", types.get(position).getName());
-                    //删除类型
-                    LitePal.delete(Type.class, types.get(position).getId());
+        @Override
+        public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+            Type typeToDelete = (Type) (adapter.getData().get(position));
+            int type = typeToDelete.getType();
 
-                    ToastUtil.show("删除成功");
-                    getAdapter(type).remove(position);
-                    return true;
-                })
-                .setOnCancelClickListener("取消", null);
-        dialog.show();
-        return false;
+            ConfirmDialog.builder(SettingActivity.this)
+                    .setTitle(R.string.setting_delete_type)
+                    .setMessage(R.string.setting_delete_hint)
+                    .setConfirmText(R.string.setting_delete)
+                    .setCancelText(R.string.cancel)
+                    .setConfirmListener(() -> {
+                        //先删除相关的记录，并删除类型
+                        if (RecordDao.deleteRecordByTypeName(typeToDelete.getName()) >= 0
+                                && TypeDao.deleteType(typeToDelete.getId()) == 1) {
+                            ToastUtils.showShort(R.string.setting_delete_succeed);
+                            getAdapter(type).remove(position);
+                        }
+                        return true;
+                    }).build().show();
+            return false;
+        }
     }
-
 }

@@ -8,8 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
+        android:layout_height="@dimen/header_height"
+        android:background="#fff"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:focusable="true"
@@ -24,20 +24,26 @@
             android:background="@drawable/bg_edit_text"
             android:hint="@string/record_search"
             android:paddingLeft="15dp"
+            android:drawableEnd="@drawable/ic_delete"
             android:paddingRight="10dp"
             tools:ignore="Autofill,RtlHardcoded,RtlSymmetry"
             android:inputType="text" />
 
-        <com.joanzapata.iconify.widget.IconTextView
+        <ImageView
             android:id="@+id/icon_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/iconify_calendar"
-            android:textColor="@android:color/primary_text_dark"
-            android:textSize="30sp" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:padding="5dp"
+            android:src="@drawable/ic_calendar" />
+
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#f0f0f0"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_record"

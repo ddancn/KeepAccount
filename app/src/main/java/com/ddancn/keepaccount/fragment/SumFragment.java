@@ -1,26 +1,22 @@
 package com.ddancn.keepaccount.fragment;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
-import com.ddancn.keepaccount.dialog.DatePickerDialog;
+import com.ddancn.keepaccount.dao.RecordDao;
+import com.ddancn.keepaccount.dao.TypeDao;
 import com.ddancn.keepaccount.entity.Record;
 import com.ddancn.keepaccount.entity.Type;
+import com.ddancn.lib.base.BaseFragment;
+import com.ddancn.lib.view.dialog.DatePickerDialog;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.joanzapata.iconify.widget.IconTextView;
-
-import org.litepal.LitePal;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -30,78 +26,85 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class SumFragment extends Fragment {
+/**
+ * @author ddan.zhuang
+ */
+public class SumFragment extends BaseFragment {
 
-    IconTextView iconDate;
-    TextView tvIncome;
-    TextView tvOutcome;
-    TextView tvSum;
-    PieChart chartIn;
-    PieChart chartOut;
+    private TextView tvIncome;
+    private TextView tvOutcome;
+    private TextView tvSum;
+    private PieChart chartIn;
+    private PieChart chartOut;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
     private String showMonth = sdf.format(new Date());
 
-    public static int[] colors = {R.color.colorPieChart0, R.color.colorPieChart1, R.color.colorPieChart2,
+    private static final int[] COLORS = {R.color.colorPieChart0, R.color.colorPieChart1, R.color.colorPieChart2,
             R.color.colorPieChart3, R.color.colorPieChart4, R.color.colorPieChart5,
             R.color.colorPieChart6, R.color.colorPieChart7, R.color.colorPieChart8, R.color.colorPieChart9 };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_sum, container, false);
-        iconDate = root.findViewById(R.id.icon_date);
+    protected int bindLayout() {
+        return R.layout.fragment_sum;
+    }
+
+    @Override
+    protected String setHeaderTitle() {
+        return getString(R.string.sum_title);
+    }
+
+    @Override
+    protected void initView(View root) {
+        setRightImage(R.drawable.ic_calendar);
         tvIncome = root.findViewById(R.id.tv_income);
         tvOutcome = root.findViewById(R.id.tv_outcome);
         tvSum = root.findViewById(R.id.tv_sum);
         chartIn = root.findViewById(R.id.chart_type_in);
         chartOut = root.findViewById(R.id.chart_type_out);
-
-        iconDate.setOnClickListener(v -> showDatePickDialog());
-
-        getData();
-
-        return root;
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && getView() != null) {
-            getData();
-        }
+    protected void bindListener() {
+        setRightClickListener(v->showDatePickDialog());
+    }
+
+    @Override
+    protected void applyData() {
+        getData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 
     private void getData() {
         initSumData();
         preparePie(chartIn);
         preparePie(chartOut);
-        chartIn.setData(getPieDataFromDB(Constant.TYPE_IN, "收入"));
-        chartOut.setData(getPieDataFromDB(Constant.TYPE_OUT, "支出"));
+        chartIn.setData(getPieDataFromDB(Constant.TYPE_IN, getString(R.string.app_in)));
+        chartOut.setData(getPieDataFromDB(Constant.TYPE_OUT, getString(R.string.app_out)));
     }
 
     /**
      * 初始化三个数据
      */
     @SuppressLint("SetTextI18n")
-    protected void initSumData() {
-        List<Record> incomeList = LitePal
-                .where("date like ? and type is ?",
-                        showMonth + "%", String.valueOf(Constant.TYPE_IN))
-                .find(Record.class);
-        List<Record> outcomeList = LitePal
-                .where("date like ? and type is ?",
-                        showMonth + "%", String.valueOf(Constant.TYPE_OUT))
-                .find(Record.class);
+    private void initSumData() {
+        List<Record> incomeList = RecordDao.getRecordByTypeAndMonth(Constant.TYPE_IN, showMonth);
+        List<Record> outcomeList = RecordDao.getRecordByTypeAndMonth(Constant.TYPE_OUT, showMonth);
 
-        double income = 0, outcome = 0, sum = 0;
+        double income = 0;
+        double outcome = 0;
         for (Record record : incomeList) {
             income += record.getMoney();
         }
         for (Record record : outcomeList) {
             outcome += record.getMoney();
         }
-        sum = income - outcome;
+        double sum = income - outcome;
 
         DecimalFormat df = new DecimalFormat("0.00");
         tvIncome.setText("￥" + df.format(income));
@@ -133,11 +136,9 @@ public class SumFragment extends Fragment {
     private PieData getPieDataFromDB(int type, String label) {
         List<PieEntry> entries = new ArrayList<>();
 
-        List<Type> typeList = LitePal.select("name").where("type = ?", type + "").find(Type.class);
+        List<Type> typeList = TypeDao.getTypesByType(type);
         for (Type t : typeList) {
-            List<Record> recordList = LitePal.select("money")
-                    .where("date like ? and typeName is ?", showMonth + "%", t.getName())
-                    .find(Record.class);
+            List<Record> recordList = RecordDao.getRecordByTypeNameAndMonth(t.getName(), showMonth);
             double temp = 0;
             for (Record record : recordList) {
                 temp += record.getMoney();
@@ -145,7 +146,7 @@ public class SumFragment extends Fragment {
             entries.add(new PieEntry((float) temp, t.getName()));
         }
         PieDataSet set = new PieDataSet(entries, label);
-        set.setColors(colors, getContext());
+        set.setColors(COLORS, getContext());
         set.setValueTextSize(14f);
         set.setValueTextColor(getResources().getColor(R.color.colorText));
         return new PieData(set);

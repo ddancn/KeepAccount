@@ -1,7 +1,6 @@
 package com.ddancn.keepaccount.activity;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -9,11 +8,13 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.blankj.utilcode.util.ToastUtils;
 import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.entity.Record;
 import com.ddancn.keepaccount.entity.Type;
-import com.ddancn.keepaccount.util.ToastUtil;
 
 import org.litepal.LitePal;
 
@@ -22,12 +23,12 @@ import java.util.List;
 
 public class UpdateActivity extends AppCompatActivity {
 
-    DatePicker datePicker;
-    EditText etMoney;
-    EditText etDetail;
-    RadioGroup rgType;
-    Spinner spinnerType;
-    Button btnAdd;
+    private DatePicker datePicker;
+    private EditText etMoney;
+    private EditText etDetail;
+    private RadioGroup rgType;
+    private Spinner spinnerType;
+    private Button btnAdd;
 
     private int type = Constant.TYPE_OUT;
     private String typeName;
@@ -64,12 +65,12 @@ public class UpdateActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(v -> {
             String money = etMoney.getText().toString();
             if ("".equals(money)) {
-                ToastUtil.show("请输入钱数");
+                ToastUtils.showShort("请输入钱数");
                 return;
             }
             typeName = (String) spinnerType.getSelectedItem();
             if (typeName == null) {
-                ToastUtil.show("请选择类型");
+                ToastUtils.showShort("请选择类型");
                 return;
             }
             int y = datePicker.getYear();
@@ -86,7 +87,7 @@ public class UpdateActivity extends AppCompatActivity {
             record.setType(type);
             record.setTypeName(typeName);
             record.update(toUpdateRecord.getId());
-            ToastUtil.show("修改成功");
+            ToastUtils.showShort("修改成功");
             finish();
         });
     }
@@ -101,7 +102,7 @@ public class UpdateActivity extends AppCompatActivity {
                 .find(Type.class);
 
         if (typeList == null || typeList.size() == 0) {
-            ToastUtil.show("先在设置里创建类型~");
+            ToastUtils.showShort("先在设置里创建类型~");
             spinnerType.setAdapter(null);
             return;
         }

@@ -1,9 +1,12 @@
 package com.ddancn.keepaccount.entity;
 
-import java.io.Serializable;
-
 import org.litepal.crud.LitePalSupport;
 
+import java.io.Serializable;
+
+/**
+ * @author ddan.zhuang
+ */
 public class Record extends LitePalSupport implements Serializable{
 
 	private int id;
