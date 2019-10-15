@@ -57,7 +57,7 @@
             tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_type_out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -88,7 +88,7 @@
             tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_type_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
