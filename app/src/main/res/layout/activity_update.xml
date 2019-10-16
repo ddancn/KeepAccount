@@ -6,102 +6,10 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/frag_update"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:name="com.ddancn.keepaccount.fragment.AddFragment"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:paddingLeft="20sp"
-            android:paddingRight="20sp"
-            android:text="@string/update_title"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-
-    </LinearLayout>
-
-    <DatePicker
-        android:id="@+id/date_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        tools:targetApi="lollipop" />
-
-    <EditText
-        android:id="@+id/et_money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="14"
-        android:gravity="center"
-        android:hint="@string/add_money"
-        android:inputType="numberDecimal"
-        android:textColor="@color/colorText"
-        tools:ignore="Autofill" />
-
-    <EditText
-        android:id="@+id/et_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="14"
-        android:gravity="center"
-        android:hint="@string/add_desc"
-        android:inputType="none"
-        android:textColor="@color/colorText"
-        tools:ignore="Autofill" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <RadioGroup
-            android:id="@+id/rg_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rb_type_out"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/app_out"
-                android:textSize="18sp" />
-
-            <RadioButton
-                android:id="@+id/rb_type_in"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_in"
-                android:textSize="18sp" />
-
-        </RadioGroup>
-
-        <Spinner
-            android:id="@+id/spinner_type"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="18dp"
-            tools:ignore="RtlHardcoded" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_item"
-        android:text="@string/update_btn"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp" />
 </LinearLayout>

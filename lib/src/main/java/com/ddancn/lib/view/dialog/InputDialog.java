@@ -3,13 +3,13 @@ package com.ddancn.lib.view.dialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.ddancn.lib.R;
 
 /**
@@ -27,7 +27,6 @@ public class InputDialog extends BaseDialog {
 
     public InputDialog(Context context) {
         super(context, R.layout.dialog_input, R.style.CustomDialog);
-        mContext = context;
     }
 
     @Override
@@ -41,10 +40,9 @@ public class InputDialog extends BaseDialog {
         btnCancel.setVisibility(View.GONE);
         tvTitle.setVisibility(View.GONE);
         vLine.setVisibility(View.GONE);
+        editText.requestFocus();
 
-        if (getWindow() != null) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        }
+        KeyboardUtils.toggleSoftInput();
 
         if (!TextUtils.isEmpty(title)) {
             tvTitle.setText(title);
@@ -69,15 +67,16 @@ public class InputDialog extends BaseDialog {
         btnConfirm.setOnClickListener(v -> {
             if (confirmListener != null
                     && confirmListener.onClick(editText.getText().toString())) {
-                dismiss();
+                cancel();
             }
         });
         btnCancel.setOnClickListener(v -> {
             if (cancelListener != null) {
                 cancelListener.onClick();
             }
-            dismiss();
+            cancel();
         });
+        setOnCancelListener(dialog -> KeyboardUtils.toggleSoftInput());
     }
 
     /**
@@ -86,6 +85,7 @@ public class InputDialog extends BaseDialog {
     public interface OnConfirmListenerWithInput {
         /**
          * 点击确定
+         *
          * @param input 输入内容
          * @return 是否dismiss
          */
@@ -123,10 +123,12 @@ public class InputDialog extends BaseDialog {
             this.title = title;
             return this;
         }
+
         public Builder setEtMsg(String etMsg) {
             this.etMsg = etMsg;
             return this;
         }
+
         public Builder setTitle(@StringRes int resId) {
             this.title = context.getString(resId);
             return this;

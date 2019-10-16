@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.adapter.TypeAdapter;
+import com.ddancn.keepaccount.constant.TypeEnum;
 import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.dao.TypeDao;
 import com.ddancn.keepaccount.entity.Type;
+import com.ddancn.keepaccount.exception.TypeNameDuplicateException;
 import com.ddancn.lib.base.BaseActivity;
 import com.ddancn.lib.view.dialog.ConfirmDialog;
 import com.ddancn.lib.view.dialog.InputDialog;
@@ -62,8 +63,8 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void bindListener() {
-        iconAddIn.setOnClickListener(v -> addType(Constant.TYPE_IN));
-        iconAddOut.setOnClickListener(v -> addType(Constant.TYPE_OUT));
+        iconAddIn.setOnClickListener(v -> addType(TypeEnum.IN.value()));
+        iconAddOut.setOnClickListener(v -> addType(TypeEnum.OUT.value()));
         inTypesAdapter.setOnItemClickListener(new TypeItemClickItemListener());
         inTypesAdapter.setOnItemLongClickListener(new TypeItemLongClickListener());
         outTypesAdapter.setOnItemClickListener(new TypeItemClickItemListener());
@@ -72,12 +73,12 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void applyData() {
-        inTypesAdapter.setNewData(TypeDao.getTypesByType(Constant.TYPE_IN));
-        outTypesAdapter.setNewData(TypeDao.getTypesByType(Constant.TYPE_OUT));
+        inTypesAdapter.setNewData(TypeDao.getTypesByType(TypeEnum.IN.value()));
+        outTypesAdapter.setNewData(TypeDao.getTypesByType(TypeEnum.OUT.value()));
     }
 
     private TypeAdapter getAdapter(int type) {
-        return (type == Constant.TYPE_IN) ? inTypesAdapter : outTypesAdapter;
+        return (type == TypeEnum.IN.value()) ? inTypesAdapter : outTypesAdapter;
     }
 
     private void addType(int type) {
@@ -90,12 +91,17 @@ public class SettingActivity extends BaseActivity {
                         ToastUtils.showShort(R.string.setting_need_type_name);
                         return false;
                     }
-                    if (TypeDao.addType(input, type)) {
-                        ToastUtils.showShort(R.string.setting_add_succeed);
-                        applyData();
-                    } else {
-                        ToastUtils.showShort(R.string.setting_add_fail);
+                    try {
+                        if (TypeDao.addType(input, type)) {
+                            ToastUtils.showShort(R.string.setting_add_succeed);
+                            applyData();
+                        } else {
+                            ToastUtils.showShort(R.string.setting_add_fail);
+                        }
+                    } catch (TypeNameDuplicateException e){
+                        toast(e.getMessage());
                     }
+
                     return true;
                 }).build().show();
     }
@@ -118,11 +124,15 @@ public class SettingActivity extends BaseActivity {
                             return false;
                         }
                         //修改类型，更新类型相关的记录
-                        if (TypeDao.updateTypeName(typeToUpdate.getId(), input) == 1
-                                && RecordDao.updateRecordTypeName(input, typeToUpdate.getName()) >= 0) {
-                            ToastUtils.showShort(R.string.setting_update_succeed);
-                            getAdapter(type).getData().get(position).setName(input);
-                            getAdapter(type).notifyItemChanged(position);
+                        try {
+                            if (TypeDao.updateTypeName(typeToUpdate.getId(), input) == 1
+                                    && RecordDao.updateRecordTypeName(input, typeToUpdate.getName()) >= 0) {
+                                ToastUtils.showShort(R.string.setting_update_succeed);
+                                getAdapter(type).getData().get(position).setName(input);
+                                getAdapter(type).notifyItemChanged(position);
+                            }
+                        } catch (TypeNameDuplicateException e){
+                            toast(e.getMessage());
                         }
                         return true;
                     }).build().show();

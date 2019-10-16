@@ -9,6 +9,8 @@
     <string name="app_out">支出</string>
     <string name="confirm">确定</string>
     <string name="cancel">取消</string>
+    <string name="date_yyyy_mm">%d-%2d</string>
+    <string name="date_yyyy_mm_dd">%d-%2d-%2d</string>
 
     <!-- 添加页面 -->
     <string name="add_money">金额</string>
@@ -22,6 +24,7 @@
 
     <!-- 列表页面 -->
     <string name="record_search">搜索…</string>
+    <string name="record_search_no_result">查不到记录鸭</string>
     <string name="record_delete">删除</string>
     <string name="record_delete_record">删除记录</string>
     <string name="record_delete_succeed">删除成功</string>
@@ -30,6 +33,7 @@
     <!-- 统计页面 -->
     <string name="sum_title">统计</string>
     <string name="sum_total">总计</string>
+    <string name="sum_money">￥%.2f</string>
 
     <!-- 设置页面 -->
     <string name="setting_title">设置</string>
@@ -51,5 +55,7 @@
     <!-- 修改页面 -->
     <string name="update_title">修改记录</string>
     <string name="update_btn">修改</string>
+    <string name="update_succeed">修改成功</string>
+    <string name="update_fail">修改失败</string>
 
 </resources>

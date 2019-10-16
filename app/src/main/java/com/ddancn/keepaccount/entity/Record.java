@@ -23,7 +23,7 @@ public class Record extends LitePalSupport implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getDate() {
 		return date;
 	}

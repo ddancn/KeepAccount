@@ -1,14 +1,20 @@
 package com.ddancn.keepaccount.activity;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ddancn.keepaccount.R;
-import com.ddancn.keepaccount.adapter.MainPagerAdapter;
 import com.ddancn.keepaccount.fragment.AddFragment;
 import com.ddancn.keepaccount.fragment.RecordFragment;
 import com.ddancn.keepaccount.fragment.SumFragment;
 import com.ddancn.lib.base.BaseActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ddan.zhuang
@@ -62,5 +68,29 @@ public class MainActivity extends BaseActivity {
                 mBottomNavView.getMenu().getItem(position).setChecked(true);
             }
         });
+    }
+
+    public class MainPagerAdapter extends FragmentPagerAdapter {
+
+        private List<Fragment> fragments = new ArrayList<>();
+
+        public MainPagerAdapter(FragmentManager fm) {
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        }
+
+        @Override
+        @NonNull
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        public void addFragment(Fragment fragment) {
+            fragments.add(fragment);
+        }
     }
 }

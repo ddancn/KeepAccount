@@ -22,14 +22,16 @@
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@null"
         android:maxLength="9"
         android:gravity="center"
         android:textColor="#555"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
 
     <View
         android:layout_width="match_parent"

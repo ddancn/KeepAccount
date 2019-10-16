@@ -2,20 +2,20 @@
 <resources>
     <color name="colorPrimary">#5290be</color>
     <color name="colorPrimaryDark">#3874a1</color>
-    <color name="colorPrimaryLight">#b0c5cc</color>
-    <color name="colorAccent">#f26677</color>
+    <color name="colorPrimaryLight">#A5C7D3</color>
+    <color name="colorAccent">#EF5350</color>
     <color name="colorBackground">#f8f8f8</color>
     <color name="colorText">#505050</color>
 
-    <color name="colorPieChart0">#aa5290be</color>
-    <color name="colorPieChart1">#aa578aaf</color>
-    <color name="colorPieChart2">#aa679ac1</color>
-    <color name="colorPieChart3">#aa68acdf</color>
-    <color name="colorPieChart4">#aa5aabe7</color>
-    <color name="colorPieChart5">#aa6f9dbf</color>
-    <color name="colorPieChart6">#aa448bc1</color>
-    <color name="colorPieChart7">#aa6ca0c7</color>
-    <color name="colorPieChart8">#aa74bdf4</color>
-    <color name="colorPieChart9">#aa5190bf</color>
+    <color name="colorPieChart0">#DDFF8A65</color>
+    <color name="colorPieChart1">#DDFFB74D</color>
+    <color name="colorPieChart2">#DDFFD54F</color>
+    <color name="colorPieChart3">#DDFFF176</color>
+    <color name="colorPieChart4">#DDDCE775</color>
+    <color name="colorPieChart5">#DDAED581</color>
+    <color name="colorPieChart6">#DD81C784</color>
+    <color name="colorPieChart7">#DD4DB6AC</color>
+    <color name="colorPieChart8">#DD4DD0E1</color>
+    <color name="colorPieChart9">#DD4FC3F7</color>
 
 </resources>

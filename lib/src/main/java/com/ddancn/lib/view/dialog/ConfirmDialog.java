@@ -61,14 +61,14 @@ public class ConfirmDialog extends BaseDialog {
         }
         btnConfirm.setOnClickListener(v -> {
             if (confirmListener != null && confirmListener.onClick()) {
-                dismiss();
+                cancel();
             }
         });
         btnCancel.setOnClickListener(v -> {
             if (cancelListener != null) {
                 cancelListener.onClick();
             }
-            dismiss();
+            cancel();
         });
     }
 

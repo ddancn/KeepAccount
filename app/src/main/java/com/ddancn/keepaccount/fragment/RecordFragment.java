@@ -1,7 +1,6 @@
 package com.ddancn.keepaccount.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.ddancn.lib.view.dialog.ConfirmDialog;
 import com.ddancn.lib.view.dialog.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -66,7 +64,12 @@ public class RecordFragment extends BaseFragment {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void bindListener() {
-        iconDate.setOnClickListener(v -> showDatePickDialog());
+        iconDate.setOnClickListener(v ->
+                DatePickerDialog.getPickerFromToday(getContext(), (datePicker, year, monthOfYear) -> {
+                    showMonth = getString(R.string.date_yyyy_mm, year, monthOfYear + 1);
+                    getRecords();
+                })
+        );
         //输入时即搜索
         editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
@@ -90,9 +93,7 @@ public class RecordFragment extends BaseFragment {
             return false;
         });
         recordAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(getContext(), UpdateActivity.class);
-            intent.putExtra(UpdateActivity.EXTRA_ARG, recordAdapter.getItem(position));
-            startActivity(intent);
+            UpdateActivity.start(getContext(), recordAdapter.getItem(position));
         });
         recordAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             ConfirmDialog.builder(getContext())
@@ -117,12 +118,7 @@ public class RecordFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getRecords();
-    }
-
-    @Override
-    protected void applyData() {
-        super.applyData();
-        getRecords();
+        // TODO: 2019/10/16 bug
     }
 
     /**
@@ -131,22 +127,7 @@ public class RecordFragment extends BaseFragment {
     private void getRecords() {
         recordAdapter.setNewData(RecordDao.getRecordsByMonth(showMonth));
         if (recordAdapter.getData().isEmpty()) {
-            ToastUtils.showShort("查不到记录鸭");
+            ToastUtils.showShort(R.string.record_search_no_result);
         }
-    }
-
-    /**
-     * 只有年月的日期选择框
-     */
-    private void showDatePickDialog() {
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                (view, year, monthOfYear, dayOfMonth) -> {
-                    showMonth = year + "-" + ((monthOfYear < 9) ? "0" : "") + (monthOfYear + 1);
-                    getRecords();
-                }, calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
     }
 }

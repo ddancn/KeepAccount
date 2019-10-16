@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.TextView;
 
-import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
+import com.ddancn.keepaccount.constant.TypeEnum;
 import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.dao.TypeDao;
 import com.ddancn.keepaccount.entity.Record;
@@ -18,10 +18,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -42,7 +40,7 @@ public class SumFragment extends BaseFragment {
 
     private static final int[] COLORS = {R.color.colorPieChart0, R.color.colorPieChart1, R.color.colorPieChart2,
             R.color.colorPieChart3, R.color.colorPieChart4, R.color.colorPieChart5,
-            R.color.colorPieChart6, R.color.colorPieChart7, R.color.colorPieChart8, R.color.colorPieChart9 };
+            R.color.colorPieChart6, R.color.colorPieChart7, R.color.colorPieChart8, R.color.colorPieChart9};
 
     @Override
     protected int bindLayout() {
@@ -66,12 +64,11 @@ public class SumFragment extends BaseFragment {
 
     @Override
     protected void bindListener() {
-        setRightClickListener(v->showDatePickDialog());
-    }
-
-    @Override
-    protected void applyData() {
-        getData();
+        setRightClickListener(v ->
+                DatePickerDialog.getPickerFromToday(getContext(), (datePicker, year, monthOfYear) -> {
+                    showMonth = getString(R.string.date_yyyy_mm, year, monthOfYear + 1);
+                    getData();
+                }));
     }
 
     @Override
@@ -84,8 +81,8 @@ public class SumFragment extends BaseFragment {
         initSumData();
         preparePie(chartIn);
         preparePie(chartOut);
-        chartIn.setData(getPieDataFromDB(Constant.TYPE_IN, getString(R.string.app_in)));
-        chartOut.setData(getPieDataFromDB(Constant.TYPE_OUT, getString(R.string.app_out)));
+        chartIn.setData(getPieDataFromDB(TypeEnum.IN.value(), getString(R.string.app_in)));
+        chartOut.setData(getPieDataFromDB(TypeEnum.OUT.value(), getString(R.string.app_out)));
     }
 
     /**
@@ -93,8 +90,8 @@ public class SumFragment extends BaseFragment {
      */
     @SuppressLint("SetTextI18n")
     private void initSumData() {
-        List<Record> incomeList = RecordDao.getRecordByTypeAndMonth(Constant.TYPE_IN, showMonth);
-        List<Record> outcomeList = RecordDao.getRecordByTypeAndMonth(Constant.TYPE_OUT, showMonth);
+        List<Record> incomeList = RecordDao.getRecordByTypeAndMonth(TypeEnum.IN.value(), showMonth);
+        List<Record> outcomeList = RecordDao.getRecordByTypeAndMonth(TypeEnum.OUT.value(), showMonth);
 
         double income = 0;
         double outcome = 0;
@@ -102,34 +99,33 @@ public class SumFragment extends BaseFragment {
             income += record.getMoney();
         }
         for (Record record : outcomeList) {
-            outcome += record.getMoney();
+            outcome -= record.getMoney();
         }
-        double sum = income - outcome;
-
-        DecimalFormat df = new DecimalFormat("0.00");
-        tvIncome.setText("￥" + df.format(income));
-        tvOutcome.setText("￥-" + df.format(outcome));
-        tvSum.setText("￥" + df.format(sum));
+        tvIncome.setText(getString(R.string.sum_money, income));
+        tvOutcome.setText(getString(R.string.sum_money, outcome));
+        tvSum.setText(getString(R.string.sum_money, income + outcome));
     }
 
     /**
      * 对饼进行一些设置
+     *
      * @param pieChart 饼图
      */
     private void preparePie(PieChart pieChart) {
-        pieChart.setDescription(null); 
-        pieChart.setRotationAngle(90); 
-        pieChart.animateXY(500, 500); 
-        
-        Legend mLegend = pieChart.getLegend(); 
+        pieChart.setDescription(null);
+        pieChart.setRotationAngle(90);
+        pieChart.animateXY(500, 500);
+
+        Legend mLegend = pieChart.getLegend();
         mLegend.setOrientation(Legend.LegendOrientation.VERTICAL);
         mLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        mLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT); 
+        mLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
     }
 
     /**
      * 饼图的数据
-     * @param type 类型
+     *
+     * @param type  类型
      * @param label 名称
      * @return 构造的数据
      */
@@ -138,7 +134,7 @@ public class SumFragment extends BaseFragment {
 
         List<Type> typeList = TypeDao.getTypesByType(type);
         for (Type t : typeList) {
-            List<Record> recordList = RecordDao.getRecordByTypeNameAndMonth(t.getName(), showMonth);
+            List<Record> recordList = RecordDao.getRecordByTypeAndMonth(t.getType(), t.getName(), showMonth);
             double temp = 0;
             for (Record record : recordList) {
                 temp += record.getMoney();
@@ -150,22 +146,6 @@ public class SumFragment extends BaseFragment {
         set.setValueTextSize(14f);
         set.setValueTextColor(getResources().getColor(R.color.colorText));
         return new PieData(set);
-    }
-
-
-    /**
-     * 只有年月的日期选择框
-     */
-    private void showDatePickDialog() {
-        Calendar calendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                (view, year, monthOfYear, dayOfMonth) -> {
-                    showMonth = year + "-" + ((monthOfYear < 9) ? "0" : "") + (monthOfYear + 1);
-                    getData();
-                }, calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
     }
 
 }

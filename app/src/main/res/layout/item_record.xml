@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="35dp"
-    android:layout_marginLeft="10dp"
+    android:layout_marginStart="10dp"
     android:layout_marginTop="4dp"
-    android:layout_marginRight="10dp"
+    android:layout_marginEnd="10dp"
     android:layout_marginBottom="4dp"
     app:cardCornerRadius="5dp">
 
@@ -19,35 +19,35 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:textSize="22sp"
-            tools:ignore="RtlHardcoded" />
+            tools:text="2020-02-02"/>
 
         <TextView
             android:id="@+id/tv_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/tv_date"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/tv_date"
             android:textSize="22sp"
-            tools:ignore="RtlHardcoded" />
+            tools:text="类型"/>
 
         <TextView
             android:id="@+id/tv_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@id/tv_type"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/tv_type"
             android:textSize="22sp"
-            tools:ignore="RtlHardcoded" />
+            tools:text="详情"/>
 
         <TextView
             android:id="@+id/tv_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
             android:textSize="24sp"
-            tools:ignore="RtlHardcoded" />
+            tools:text="100.0"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

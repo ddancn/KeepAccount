@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ddancn.keepaccount.R;
+import com.ddancn.keepaccount.constant.TypeEnum;
 import com.ddancn.keepaccount.entity.Record;
 
 import java.util.List;
@@ -24,10 +25,13 @@ public class RecordAdapter extends BaseQuickAdapter<Record, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Record item) {
-        helper.setText(R.id.tv_date, item.getDate());
-        helper.setText(R.id.tv_type, item.getTypeName());
-        helper.setText(R.id.tv_detail, item.getDetail());
-        helper.setText(R.id.tv_money, String.valueOf(item.getMoney()));
+        helper.setText(R.id.tv_date, item.getDate())
+                .setText(R.id.tv_type, item.getTypeName())
+                .setText(R.id.tv_detail, item.getDetail())
+                .setText(R.id.tv_money, String.valueOf(item.getMoney()));
+        if (item.getType() == TypeEnum.IN.value()) {
+            helper.setTextColor(R.id.tv_money, mContext.getResources().getColor(R.color.colorPrimary));
+        }
     }
 
 }

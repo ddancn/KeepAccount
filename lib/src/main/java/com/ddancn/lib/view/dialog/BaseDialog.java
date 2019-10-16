@@ -10,23 +10,19 @@ import android.os.Bundle;
  */
 public abstract class BaseDialog extends Dialog {
 
-    protected Context mContext;
-    protected int mLayoutResId;
+    private int mLayoutResId;
 
     public BaseDialog(Context context) {
         super(context);
-        mContext = context;
     }
 
     public BaseDialog(Context context, int layoutResId) {
         super(context);
-        mContext = context;
         mLayoutResId = layoutResId;
     }
 
     public BaseDialog(Context context, int layoutResId, int themeResId) {
         super(context, themeResId);
-        mContext = context;
         mLayoutResId = layoutResId;
     }
 
@@ -46,7 +42,7 @@ public abstract class BaseDialog extends Dialog {
         /**
          * 点击事件
          *
-         * @return 是否dismiss
+         * @return 是否cancel
          */
         boolean onClick();
     }

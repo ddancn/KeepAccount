@@ -1,6 +1,8 @@
 package com.ddancn.keepaccount.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -10,19 +12,23 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.blankj.utilcode.util.ToastUtils;
-import com.ddancn.keepaccount.Constant;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.activity.SettingActivity;
+import com.ddancn.keepaccount.activity.UpdateActivity;
+import com.ddancn.keepaccount.constant.TypeEnum;
 import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.dao.TypeDao;
+import com.ddancn.keepaccount.entity.Record;
 import com.ddancn.keepaccount.entity.Type;
 import com.ddancn.lib.base.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author ddan.zhuang
@@ -36,7 +42,9 @@ public class AddFragment extends BaseFragment {
     private Spinner spinnerType;
     private Button btnAdd;
 
-    private int type = Constant.TYPE_OUT;
+    private int type = TypeEnum.OUT.value();
+    private boolean isUpdate = false;
+    private Record recordToUpdate = new Record();
 
     @Override
     protected int bindLayout() {
@@ -46,6 +54,27 @@ public class AddFragment extends BaseFragment {
     @Override
     protected String setHeaderTitle() {
         return getString(R.string.app_name);
+    }
+
+    @Override
+    protected boolean hasHeader() {
+        return !isUpdate;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof UpdateActivity) {
+            isUpdate = true;
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (getActivity() instanceof UpdateActivity) {
+            recordToUpdate = ((UpdateActivity) getActivity()).getRecordToUpdate();
+        }
     }
 
     @Override
@@ -64,31 +93,43 @@ public class AddFragment extends BaseFragment {
         setRightClickListener(v -> startActivity(new Intent(getContext(), SettingActivity.class)));
         // 获取radio group收支选项，联动改变类型spinner的内容
         rgType.setOnCheckedChangeListener((group, checkId) -> {
-            if (checkId == R.id.rb_type_out) {
-                type = Constant.TYPE_OUT;
-            } else if (checkId == R.id.rb_type_in) {
-                type = Constant.TYPE_IN;
-            }
+            type = checkId == R.id.rb_type_out ? TypeEnum.OUT.value() : TypeEnum.IN.value();
             setSpinnerContent();
         });
 
-        // 按钮点击事件，判断是否合法并且存下记录
+        // 按钮点击事件
         btnAdd.setOnClickListener(v -> {
-            if (TextUtils.isEmpty(etMoney.getText().toString())) {
-                ToastUtils.showShort(R.string.add_need_money);
+            if (!checkParamLegal()) {
                 return;
             }
-            if (TextUtils.isEmpty((String) spinnerType.getSelectedItem())) {
-                ToastUtils.showShort(R.string.add_need_type);
-                return;
-            }
-            if (saveRecord()) {
-                ToastUtils.showShort(R.string.add_succeed);
-                reset();
+            if (saveOrUpdateRecord()) {
+                ToastUtils.showShort(isUpdate ? R.string.update_succeed : R.string.add_succeed);
+                if (isUpdate && getActivity() != null) {
+                    getActivity().finish();
+                } else {
+                    reset();
+                }
             } else {
-                ToastUtils.showShort(R.string.add_fail);
+                ToastUtils.showShort(isUpdate ? R.string.update_fail : R.string.add_fail);
             }
         });
+    }
+
+    /**
+     * 判断是否合法
+     *
+     * @return 是否合法
+     */
+    private boolean checkParamLegal() {
+        if (TextUtils.isEmpty(etMoney.getText().toString())) {
+            ToastUtils.showShort(R.string.add_need_money);
+            return false;
+        }
+        if (TextUtils.isEmpty((String) spinnerType.getSelectedItem())) {
+            ToastUtils.showShort(R.string.add_need_type);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -97,23 +138,53 @@ public class AddFragment extends BaseFragment {
         setSpinnerContent();
     }
 
+    /**
+     * 修改页面，先填上原来的数据
+     */
+    private void initData() {
+        btnAdd.setText(getString(R.string.update_btn));
+        String[] date = recordToUpdate.getDate().split("-");
+        int year = Integer.parseInt(date[0]);
+        int month = Integer.parseInt(date[1]);
+        int dayOfMonth = Integer.parseInt(date[2]);
+        datePicker.updateDate(year, month - 1, dayOfMonth);
+
+        etMoney.setText(String.valueOf(recordToUpdate.getMoney()));
+        etDetail.setText(recordToUpdate.getDetail());
+
+        List<Type> types = TypeDao.getTypesByType(recordToUpdate.getType());
+        type = recordToUpdate.getType();
+        rgType.check(type == TypeEnum.IN.value() ? R.id.rb_type_in : R.id.rb_type_out);
+        setSpinnerContent();
+
+        int selected = 0;
+        int size = types.size();
+        for (int i = 0; i < size; i++) {
+            if (types.get(i).getName().equals(recordToUpdate.getTypeName())) {
+                selected = i;
+                break;
+            }
+        }
+        spinnerType.setSelection(selected, true);
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         setSpinnerContent();
+        if (isUpdate) {
+            initData();
+        }
     }
 
-    /**
-     * 保存记录
-     *
-     * @return 是否保存成功
-     */
-    private boolean saveRecord() {
+    private boolean saveOrUpdateRecord() {
         int y = datePicker.getYear();
         int m = datePicker.getMonth() + 1;
         int d = datePicker.getDayOfMonth();
-        String date = String.format(Locale.CHINA, "%d-%2d-%2d", y, m, d);
-        return RecordDao.addRecord(
+        String date = getString(R.string.date_yyyy_mm_dd, y, m, d);
+        return RecordDao.addOrUpdateRecord(isUpdate,
+                recordToUpdate.getId(),
                 date,
                 Double.parseDouble(etMoney.getText().toString()),
                 etDetail.getText().toString(),
@@ -147,7 +218,7 @@ public class AddFragment extends BaseFragment {
         datePicker.updateDate(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
         etMoney.setText("");
         etDetail.setText("");
-        type = Constant.TYPE_OUT;
+        type = TypeEnum.OUT.value();
         rgType.check(R.id.rb_type_out);
         setSpinnerContent();
     }
