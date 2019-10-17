@@ -48,6 +48,12 @@ public class TypeDao {
         return LitePal.delete(Type.class, id);
     }
 
+    /**
+     * 检查某类型名是否已经存在
+     * @param name 名字
+     * @param type 类型1/-1
+     * @return 是否存在
+     */
     public static boolean checkIfExist(String name, int type){
         return LitePal.isExist(Type.class, "name = ? and type = ?", name, String.valueOf(type));
     }

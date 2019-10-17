@@ -32,6 +32,7 @@ import java.util.List;
 
 /**
  * @author ddan.zhuang
+ * 添加或修改记录
  */
 public class AddFragment extends BaseFragment {
 
@@ -130,12 +131,6 @@ public class AddFragment extends BaseFragment {
             return false;
         }
         return true;
-    }
-
-    @Override
-    protected void applyData() {
-        // 默认设置radio group为支出
-        setSpinnerContent();
     }
 
     /**

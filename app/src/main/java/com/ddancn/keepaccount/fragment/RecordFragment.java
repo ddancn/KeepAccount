@@ -68,8 +68,7 @@ public class RecordFragment extends BaseFragment {
                 DatePickerDialog.getPickerFromToday(getContext(), (datePicker, year, monthOfYear) -> {
                     showMonth = getString(R.string.date_yyyy_mm, year, monthOfYear + 1);
                     getRecords();
-                })
-        );
+                }).hideDay().show());
         //输入时即搜索
         editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
@@ -86,15 +85,15 @@ public class RecordFragment extends BaseFragment {
         editText.setOnTouchListener((v, event) -> {
             if (event.getX() > editText.getWidth()
                     - editText.getPaddingRight()
-                    - 32) {
+                    - editText.getCompoundDrawables()[2].getIntrinsicWidth()) {
                 editText.setText("");
                 return true;
             }
             return false;
         });
-        recordAdapter.setOnItemClickListener((adapter, view, position) -> {
-            UpdateActivity.start(getContext(), recordAdapter.getItem(position));
-        });
+        recordAdapter.setOnItemClickListener((adapter, view, position) ->
+                UpdateActivity.start(getContext(), recordAdapter.getItem(position))
+        );
         recordAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             ConfirmDialog.builder(getContext())
                     .setTitle(R.string.record_delete_record)
@@ -118,7 +117,6 @@ public class RecordFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         getRecords();
-        // TODO: 2019/10/16 bug
     }
 
     /**

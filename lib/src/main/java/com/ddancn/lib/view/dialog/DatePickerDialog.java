@@ -56,10 +56,9 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener, On
         datePicker = view.findViewById(R.id.datePicker);
         datePicker.init(year, monthOfYear, dayOfMonth, this);
 
-        hideDay();
     }
 
-    private void hideDay() {
+    public DatePickerDialog hideDay() {
         /* 处理android5.0以上的特殊情况 */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android");
@@ -84,6 +83,35 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener, On
                 }
             }
         }
+        return this;
+    }
+
+    public DatePickerDialog hideMonth() {
+        /* 处理android5.0以上的特殊情况 */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int daySpinnerId = Resources.getSystem().getIdentifier("month", "id", "android");
+            if (daySpinnerId != 0) {
+                View daySpinner = datePicker.findViewById(daySpinnerId);
+                if (daySpinner != null) {
+                    daySpinner.setVisibility(View.GONE);
+                }
+            }
+        } else {
+            Field[] datePickerFields = datePicker.getClass().getDeclaredFields();
+            for (Field datePickerField : datePickerFields) {
+                if ("mMonthSpinner".equals(datePickerField.getName()) || ("mMonthPicker").equals(datePickerField.getName())) {
+                    datePickerField.setAccessible(true);
+                    Object monthPicker = new Object();
+                    try {
+                        monthPicker = datePickerField.get(datePicker);
+                    } catch (IllegalAccessException | IllegalArgumentException e) {
+                        LogUtils.e(e);
+                    }
+                    ((View) monthPicker).setVisibility(View.GONE);
+                }
+            }
+        }
+        return this;
     }
 
     @Override

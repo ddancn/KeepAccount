@@ -28,10 +28,10 @@ public class RecordAdapter extends BaseQuickAdapter<Record, BaseViewHolder> {
         helper.setText(R.id.tv_date, item.getDate())
                 .setText(R.id.tv_type, item.getTypeName())
                 .setText(R.id.tv_detail, item.getDetail())
-                .setText(R.id.tv_money, String.valueOf(item.getMoney()));
-        if (item.getType() == TypeEnum.IN.value()) {
-            helper.setTextColor(R.id.tv_money, mContext.getResources().getColor(R.color.colorPrimary));
-        }
+                .setText(R.id.tv_money, String.valueOf(item.getMoney()))
+                .setTextColor(R.id.tv_money, item.getType() == TypeEnum.IN.value()
+                        ? mContext.getResources().getColor(R.color.colorPrimary)
+                        : mContext.getResources().getColor(R.color.colorText));
     }
 
 }
