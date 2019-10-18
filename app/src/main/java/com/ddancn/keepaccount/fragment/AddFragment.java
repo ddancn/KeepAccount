@@ -25,6 +25,7 @@ import com.ddancn.keepaccount.dao.TypeDao;
 import com.ddancn.keepaccount.entity.Record;
 import com.ddancn.keepaccount.entity.Type;
 import com.ddancn.lib.base.BaseFragment;
+import com.ddancn.lib.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -177,7 +178,7 @@ public class AddFragment extends BaseFragment {
         int y = datePicker.getYear();
         int m = datePicker.getMonth() + 1;
         int d = datePicker.getDayOfMonth();
-        String date = getString(R.string.date_yyyy_mm_dd, y, m, d);
+        String date = DateUtil.getFormatYMD(y, m, d);
         return RecordDao.addOrUpdateRecord(isUpdate,
                 recordToUpdate.getId(),
                 date,

@@ -30,19 +30,19 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener, On
         /**
          * 日期选择回调
          *
-         * @param datePicker        日期选择器
-         * @param year        选中年
-         * @param monthOfYear 选中月
+         * @param datePicker 日期选择器
+         * @param year       选中年
+         * @param month      选中月
+         * @param day        选中日
          */
-        void onDateSet(DatePicker datePicker, int year, int monthOfYear);
+        void onDateSet(DatePicker datePicker, int year, int month, int day);
     }
 
     public DatePickerDialog(Context context, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
         this(context, 0, callBack, year, monthOfYear, dayOfMonth);
     }
 
-    public DatePickerDialog(Context context, int theme, OnDateSetListener callBack, int year, int monthOfYear,
-                            int dayOfMonth) {
+    public DatePickerDialog(Context context, int theme, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
         super(context, theme);
 
         onDateSetListener = callBack;
@@ -119,7 +119,8 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener, On
         if (which == BUTTON_POSITIVE && onDateSetListener != null) {
             onDateSetListener.onDateSet(datePicker,
                     datePicker.getYear(),
-                    datePicker.getMonth());
+                    datePicker.getMonth(),
+                    datePicker.getDayOfMonth());
         }
     }
 
@@ -130,17 +131,39 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener, On
 
     /**
      * 简易获取日期选择对话框，日期从当天开始
-     * @param context context
-     * @param listener listener
+     *
+     * @param context   context
+     * @param listener  listener
+     * @param hideDay   是否隐藏日
+     * @param hideMonth 是否隐藏月
      * @return picker
      */
-    public static DatePickerDialog getPickerFromToday(Context context, OnDateSetListener listener){
+    public static DatePickerDialog getPickerFromToday(Context context, OnDateSetListener listener, boolean hideDay, boolean hideMonth) {
         Calendar calendar = Calendar.getInstance();
-        return new DatePickerDialog(
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
                 context,
                 listener,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
+        if (hideDay) {
+            datePickerDialog.hideDay();
+        }
+        if (hideMonth) {
+            datePickerDialog.hideMonth();
+        }
+        return datePickerDialog;
+    }
+
+    public static DatePickerDialog getYearPickerFromToday(Context context, OnDateSetListener listener) {
+        return getPickerFromToday(context, listener, true, true);
+    }
+
+    public static DatePickerDialog getYearMonthPickerFromToday(Context context, OnDateSetListener listener) {
+        return getPickerFromToday(context, listener, true, false);
+    }
+
+    public static DatePickerDialog getPickerFromToday(Context context, OnDateSetListener listener) {
+        return getPickerFromToday(context, listener, false, false);
     }
 }

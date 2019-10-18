@@ -17,6 +17,7 @@ import com.ddancn.keepaccount.dao.TypeDao;
 import com.ddancn.keepaccount.entity.Type;
 import com.ddancn.keepaccount.exception.TypeNameDuplicateException;
 import com.ddancn.lib.base.BaseActivity;
+import com.ddancn.lib.util.ViewUtil;
 import com.ddancn.lib.view.dialog.ConfirmDialog;
 import com.ddancn.lib.view.dialog.InputDialog;
 
@@ -56,8 +57,10 @@ public class SettingActivity extends BaseActivity {
         rvTypeIn.setLayoutManager(manager1);
         rvTypeOut.setLayoutManager(manager2);
         inTypesAdapter = new TypeAdapter(R.layout.item_type);
+        inTypesAdapter.setEmptyView(ViewUtil.getEmptyText(this, getString(R.string.setting_no_in_type)));
         rvTypeIn.setAdapter(inTypesAdapter);
         outTypesAdapter = new TypeAdapter(R.layout.item_type);
+        outTypesAdapter.setEmptyView(ViewUtil.getEmptyText(this, getString(R.string.setting_no_out_type)));
         rvTypeOut.setAdapter(outTypesAdapter);
     }
 

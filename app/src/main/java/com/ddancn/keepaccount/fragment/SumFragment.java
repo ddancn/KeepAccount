@@ -1,32 +1,30 @@
 package com.ddancn.keepaccount.fragment;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.constant.TypeEnum;
 import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.util.ChartHelper;
+import com.ddancn.lib.util.DateUtil;
 import com.ddancn.lib.base.BaseFragment;
 import com.ddancn.lib.view.dialog.DatePickerDialog;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * @author ddan.zhuang
  */
 public class SumFragment extends BaseFragment {
 
-    private Button btnMonth;
-    private Button btnYear;
-    private TextView tvMonth;
+    private RadioButton btnMonth;
+    private RadioButton btnYear;
+    private TextView tvDate;
     private ImageView iconDate;
     private TextView tvIncome;
     private TextView tvOutcome;
@@ -35,8 +33,8 @@ public class SumFragment extends BaseFragment {
     private PieChart pieChartOut;
     private LineChart lineChartOut;
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
-    private String showMonth = sdf.format(new Date());
+    private String showMonth;
+    private String showYear;
     private boolean isMonth = true;
 
     @Override
@@ -50,10 +48,16 @@ public class SumFragment extends BaseFragment {
     }
 
     @Override
+    protected void initParam() {
+        showMonth = DateUtil.getThisMonth();
+        showYear = DateUtil.getThisYear();
+    }
+
+    @Override
     protected void initView(View root) {
         btnMonth = root.findViewById(R.id.btn_month);
         btnYear = root.findViewById(R.id.btn_year);
-        tvMonth = root.findViewById(R.id.tv_month);
+        tvDate = root.findViewById(R.id.tv_date);
         iconDate = root.findViewById(R.id.icon_date);
         tvIncome = root.findViewById(R.id.tv_income);
         tvOutcome = root.findViewById(R.id.tv_outcome);
@@ -69,42 +73,58 @@ public class SumFragment extends BaseFragment {
 
     @Override
     protected void bindListener() {
-        btnMonth.setOnClickListener(v -> {
-            isMonth = true;
-            toast("切换到月视图");
+        btnMonth.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                isMonth = true;
+                toast(R.string.sum_to_month);
+                getData(showMonth);
+            }
         });
-        btnYear.setOnClickListener(v -> {
-            isMonth = false;
-            toast("切换到年视图");
+        btnYear.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                isMonth = false;
+                toast(R.string.sum_to_year);
+                getData(showYear);
+            }
         });
-        iconDate.setOnClickListener(v -> DatePickerDialog.getPickerFromToday(getContext(), (datePicker, year, monthOfYear) -> {
-            showMonth = getString(R.string.date_yyyy_mm, year, monthOfYear + 1);
-            getData();
-        }).hideDay().show());
+        iconDate.setOnClickListener(v -> DatePickerDialog.getPickerFromToday(getContext(), (datePicker, year, month, day) -> {
+            if (isMonth) {
+                showMonth = DateUtil.getFormatYM(year, month + 1);
+                getData(showMonth);
+            } else {
+                showYear = String.valueOf(year);
+                getData(showYear);
+            }
+        }, true, !isMonth).show());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getData();
+        if (isMonth) {
+            getData(showMonth);
+        } else {
+            getData(showYear);
+        }
     }
 
-    private void getData() {
-        tvMonth.setText(showMonth);
-        initSumData();
-        pieChartIn.setData(ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), showMonth));
-        pieChartOut.setData(ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), showMonth));
-        lineChartOut.setData(ChartHelper.getLineData(showMonth));
+    private void getData(String date) {
+        tvDate.setText(date);
+        getSumData(date);
+        pieChartIn.setData(ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date));
+        pieChartOut.setData(ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), date));
+        lineChartOut.setData(ChartHelper.getLineData(TypeEnum.OUT.value(), date));
         pieChartIn.invalidate();
         pieChartOut.invalidate();
+        ChartHelper.resetLine(lineChartOut, isMonth);
         lineChartOut.invalidate();
     }
 
     /**
-     * 初始化饼图的三个数据：收入、支出、总计
+     * 初始化三个统计数据：收入、支出、总计
      */
-    private void initSumData() {
-        List<Double> sumData = RecordDao.calMonthSum(showMonth);
+    private void getSumData(String date) {
+        List<Double> sumData = RecordDao.calMonthOrYearSum(date);
         tvIncome.setText(getString(R.string.sum_money_digit, sumData.get(0)));
         tvOutcome.setText(getString(R.string.sum_money_digit, sumData.get(1)));
         tvSum.setText(getString(R.string.sum_money_digit, sumData.get(2)));

@@ -16,14 +16,12 @@ import com.ddancn.keepaccount.activity.UpdateActivity;
 import com.ddancn.keepaccount.adapter.RecordAdapter;
 import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.entity.Record;
+import com.ddancn.lib.util.DateUtil;
 import com.ddancn.lib.base.BaseFragment;
 import com.ddancn.lib.util.SimpleTextWatcher;
+import com.ddancn.lib.util.ViewUtil;
 import com.ddancn.lib.view.dialog.ConfirmDialog;
 import com.ddancn.lib.view.dialog.DatePickerDialog;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * @author ddan.zhuang
@@ -35,9 +33,7 @@ public class RecordFragment extends BaseFragment {
     private RecyclerView rvRecord;
 
     private RecordAdapter recordAdapter;
-
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.CHINA);
-    private String showMonth = sdf.format(new Date());
+    private String showMonth;
 
     @Override
     protected int bindLayout() {
@@ -50,6 +46,11 @@ public class RecordFragment extends BaseFragment {
     }
 
     @Override
+    protected void initParam() {
+        showMonth = DateUtil.getThisMonth();
+    }
+
+    @Override
     protected void initView(View root) {
         editText = root.findViewById(R.id.search);
         iconDate = root.findViewById(R.id.icon_date);
@@ -58,6 +59,8 @@ public class RecordFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvRecord.setLayoutManager(layoutManager);
         recordAdapter = new RecordAdapter(R.layout.item_record);
+        recordAdapter.setEmptyView(ViewUtil.getEmptyText(getContext()));
+        recordAdapter.setFooterView(ViewUtil.getFooterText(getContext()));
         rvRecord.setAdapter(recordAdapter);
     }
 
@@ -65,10 +68,11 @@ public class RecordFragment extends BaseFragment {
     @Override
     protected void bindListener() {
         iconDate.setOnClickListener(v ->
-                DatePickerDialog.getPickerFromToday(getContext(), (datePicker, year, monthOfYear) -> {
-                    showMonth = getString(R.string.date_yyyy_mm, year, monthOfYear + 1);
+                DatePickerDialog.getYearMonthPickerFromToday(getContext(), (datePicker, year, month, day) -> {
+                    showMonth = DateUtil.getFormatYM(year, month + 1);
+                    toast(showMonth);
                     getRecords();
-                }).hideDay().show());
+                }).show());
         //输入时即搜索
         editText.addTextChangedListener(new SimpleTextWatcher() {
             @Override

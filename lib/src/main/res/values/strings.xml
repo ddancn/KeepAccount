@@ -2,4 +2,9 @@
     <string name="app_name">lib</string>
     <string name="btn_cancel">取消</string>
     <string name="btn_confirm">确定</string>
+    <string name="date_yyyy_mm">%s-%2s</string>
+    <string name="date_yyyy_mm_dd">%s-%2s-%2s</string>
+    <string name="empty_text">这里什么都没有(〃ﾉωﾉ)</string>
+    <string name="footer_text">再怎么找也没有啦(・ω・｀ll)</string>
+
 </resources>

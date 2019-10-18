@@ -3,7 +3,6 @@ package com.ddancn.keepaccount.util;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.Utils;
 import com.ddancn.keepaccount.R;
-import com.ddancn.keepaccount.constant.TypeEnum;
 import com.ddancn.keepaccount.dao.RecordDao;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -62,11 +61,11 @@ public class ChartHelper {
      *
      * @param type  类型
      * @param label 名称
-     * @param showMonth 月份
+     * @param date  日期：月份/年份
      * @return 构造的数据
      */
-    public static PieData getPieData(int type, String label, String showMonth) {
-        Map<String, Double> typeSum = RecordDao.calTypeSum(type, showMonth);
+    public static PieData getPieData(int type, String label, String date) {
+        Map<String, Double> typeSum = RecordDao.calTypeSum(type, date);
         List<PieEntry> entries = new ArrayList<>();
         for (Map.Entry<String, Double> perType : typeSum.entrySet()) {
             entries.add(new PieEntry(perType.getValue().floatValue(), perType.getKey()));
@@ -97,11 +96,11 @@ public class ChartHelper {
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
-        xAxis.setTextSize(12);
         xAxis.setAxisMaximum(31);
         xAxis.setAxisMinimum(1);
         xAxis.setGranularity(1f);
-        xAxis.setValueFormatter((value, axis) -> StringUtils.getString(R.string.sum_date_dd, (int) value));
+        xAxis.setValueFormatter((value, axis) ->
+                StringUtils.getString(R.string.sum_date_dd, (int) value));
         // 设置Y轴，标签格式
         YAxis lAxis = lineChart.getAxisLeft();
         lAxis.setValueFormatter((value, axis) -> StringUtils.getString(R.string.sum_money, value));
@@ -112,16 +111,32 @@ public class ChartHelper {
     }
 
     /**
-     * 折线图的数据
+     * 重新设置x轴的最大最小值和format
+     *
+     * @param lineChart 折线图
+     * @param isMonth   月/年
      */
-    public static LineData getLineData(String showMonth) {
-        Map<String, Double> dailySum = RecordDao.calDailySum(TypeEnum.OUT.value(), showMonth);
+    public static void resetLine(LineChart lineChart, boolean isMonth) {
+        XAxis xAxis = lineChart.getXAxis();
+        xAxis.setAxisMaximum(isMonth ? 31 : 12);
+        xAxis.setValueFormatter((value, axis) ->
+                StringUtils.getString(isMonth ? R.string.sum_date_dd : R.string.sum_date_mm, (int) value));
+    }
+
+    /**
+     * 折线图的数据
+     *
+     * @param type 类型
+     * @param date 日期：月份/年份
+     */
+    public static LineData getLineData(int type, String date) {
+        Map<String, Double> dailySum = RecordDao.calDayOrMonthSum(type, date);
         List<Entry> entries = new ArrayList<>();
         for (Map.Entry<String, Double> perDay : dailySum.entrySet()) {
-            entries.add(new Entry(Float.valueOf(perDay.getKey().split("-")[2]), perDay.getValue().floatValue()));
+            entries.add(new Entry(Float.valueOf(perDay.getKey()), perDay.getValue().floatValue()));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries,"");
+        LineDataSet dataSet = new LineDataSet(entries, "");
         dataSet.setColors(COLORS, Utils.getApp());
         dataSet.setValueTextColor(Utils.getApp().getResources().getColor(R.color.colorText));
         dataSet.setCircleColors(COLORS, Utils.getApp());

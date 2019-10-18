@@ -54,6 +54,7 @@ public class RecordDao {
 
     /**
      * 更新记录的类型名，更新类型的名称时调用
+     *
      * @param newName 新类型名
      * @param oldName 旧类型名
      * @return int
@@ -66,6 +67,7 @@ public class RecordDao {
 
     /**
      * 删除某类型的记录，删除类型时调用
+     *
      * @param typeName 类型名
      * @return int
      */
@@ -74,13 +76,14 @@ public class RecordDao {
     }
 
     /**
-     * 计算一个月的总收入、总支出、总计
-     * @param month 月份
+     * 计算一个月/一年的总收入、总支出、总计
+     *
+     * @param date 日期：月份/年份
      * @return List：0->总收入、1->总支出、2->总计
      */
-    public static List<Double> calMonthSum(String month){
-        Double inSum = LitePal.where("type is ? and date like ? ", String.valueOf(TypeEnum.IN.value()), month + "%").sum(Record.class, "money", Double.class);
-        Double outSum = LitePal.where("type is ? and date like ? ", String.valueOf(TypeEnum.OUT.value()), month + "%").sum(Record.class, "money", Double.class);
+    public static List<Double> calMonthOrYearSum(String date) {
+        Double inSum = LitePal.where("type is ? and date like ? ", String.valueOf(TypeEnum.IN.value()), date + "%").sum(Record.class, "money", Double.class);
+        Double outSum = LitePal.where("type is ? and date like ? ", String.valueOf(TypeEnum.OUT.value()), date + "%").sum(Record.class, "money", Double.class);
         Double sum = inSum - outSum;
         List<Double> result = new ArrayList<>(3);
         result.add(inSum);
@@ -90,16 +93,17 @@ public class RecordDao {
     }
 
     /**
-     * 计算一个月中每个类型的总值
+     * 计算一个月/一年中每个类型的总值
+     *
      * @param type 类型
-     * @param month 月份
+     * @param date 日期：月份/年份
      * @return 键值对：类型名->总值
      */
-    public static Map<String, Double> calTypeSum(int type, String month){
+    public static Map<String, Double> calTypeSum(int type, String date) {
         Map<String, Double> typeSum = new LinkedHashMap<>();
         Cursor cursor = LitePal.findBySQL("select typename, sum(money) as type_sum from record " +
                         "where type is ? and date like ? group by typeName",
-                String.valueOf(type), month + "%");
+                String.valueOf(type), date + "%");
 
         if (cursor.moveToFirst()) {
             do {
@@ -113,25 +117,34 @@ public class RecordDao {
     }
 
     /**
-     * 计算一个月中每日的总值
+     * 计算一个月中每日/一年中每月的总值
+     *
      * @param type 类型
-     * @param month 月份
+     * @param date 日期：月份/年份
      * @return 键值对：日期->总值
      */
-    public static Map<String, Double> calDailySum(int type, String month) {
-        Map<String, Double> dailySum = new LinkedHashMap<>();
-        Cursor cursor = LitePal.findBySQL("select date, sum(money) as daily_sum from record " +
-                        "where type is ? and date like ? group by date order by date",
-                String.valueOf(type), month + "%");
-
+    public static Map<String, Double> calDayOrMonthSum(int type, String date) {
+        Map<String, Double> sum = new LinkedHashMap<>();
+        // date格式yyyy-MM-dd
+        final int yearLength = 4;
+        // 月中的每日
+        String daySql = "select substr(date,9,2) as new_date, sum(money) as sum from record " +
+                "where type is ? and date like ? group by date order by date";
+        // 年中的每月
+        String monthSql = "select substr(date,6,2) as new_date, sum(money) as sum from record " +
+                "where type is ? and date like ? group by new_date order by new_date";
+        Cursor cursor = LitePal.findBySQL(date.length() > yearLength ? daySql : monthSql,
+                String.valueOf(type), date + "%");
         if (cursor.moveToFirst()) {
             do {
-                String date = cursor.getString(cursor.getColumnIndex("date"));
-                double sum = cursor.getInt(cursor.getColumnIndex("daily_sum"));
-                dailySum.put(date, sum);
+                String d = cursor.getString(cursor.getColumnIndex("new_date"));
+                double s = cursor.getInt(cursor.getColumnIndex("sum"));
+                sum.put(d, s);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return dailySum;
+        return sum;
     }
+
+
 }
