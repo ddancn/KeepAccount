@@ -21,6 +21,15 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "记账V${defaultConfig.versionName}_${releaseTime()}.apk"
+        }
+    }
+}
+
+static def releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
 }
 
 dependencies {

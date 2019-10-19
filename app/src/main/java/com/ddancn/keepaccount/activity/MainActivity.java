@@ -43,6 +43,7 @@ public class MainActivity extends BaseActivity {
         adapter.addFragment(new RecordFragment());
         adapter.addFragment(new SumFragment());
         mViewPager.setAdapter(adapter);
+        mViewPager.setOffscreenPageLimit(2);
     }
 
     @Override

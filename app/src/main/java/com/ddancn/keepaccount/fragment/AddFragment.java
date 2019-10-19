@@ -192,13 +192,13 @@ public class AddFragment extends BaseFragment {
      * 根据收支的选择填充spinner的内容
      */
     private void setSpinnerContent() {
-        List<Type> typeList = TypeDao.getTypesByType(type);
-        if (typeList == null || typeList.size() == 0) {
+        List<Type> types = TypeDao.getTypesByType(type);
+        if (types == null || types.size() == 0) {
             ToastUtils.showShort(R.string.add_no_type);
             return;
         }
         List<String> typeNames = new ArrayList<>();
-        for (Type t : typeList) {
+        for (Type t : types) {
             typeNames.add(t.getName());
         }
         ArrayAdapter spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.item_spinner, typeNames);
