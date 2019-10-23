@@ -8,6 +8,7 @@ import com.ddancn.keepaccount.entity.Record;
 import org.litepal.LitePal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,18 +35,21 @@ public class RecordDao {
 
     public static List<Record> searchRecord(String query) {
         String condition = "%" + query + "%";
-        return LitePal
+        List<Record> result = LitePal
                 .where("date like ? or money like ? or detail like ? or typeName like ?",
                         condition, condition, condition, condition)
                 .order("date desc")
                 .find(Record.class);
+        Collections.reverse(result);
+        return result;
     }
 
     public static List<Record> getRecordsByMonth(String month) {
-        return LitePal
+        List<Record> result = LitePal
                 .where("date like ?", month + "%")
-                .order("date desc")
                 .find(Record.class);
+        Collections.reverse(result);
+        return result;
     }
 
     public static int deleteRecordById(int id) {
