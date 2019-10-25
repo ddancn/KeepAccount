@@ -18,7 +18,7 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/btn_month"
+                android:id="@+id/rb_month"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
                 android:background="@drawable/selector_rb"
@@ -32,7 +32,7 @@
                 tools:targetApi="lollipop" />
 
             <RadioButton
-                android:id="@+id/btn_year"
+                android:id="@+id/rb_year"
                 android:layout_width="80dp"
                 android:layout_height="35dp"
                 android:layout_marginStart="20sp"

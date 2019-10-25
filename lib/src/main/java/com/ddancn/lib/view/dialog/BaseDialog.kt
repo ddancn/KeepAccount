@@ -8,7 +8,7 @@ import android.os.Bundle
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-abstract class BaseDialog @JvmOverloads constructor(context: Context, var layoutResId: Int = 0, themeResId: Int = 0)
+abstract class BaseDialog @JvmOverloads constructor(context: Context?, var layoutResId: Int = 0, themeResId: Int = 0)
     : Dialog(context, themeResId) {
 
     override fun onCreate(savedInstanceState: Bundle?) {

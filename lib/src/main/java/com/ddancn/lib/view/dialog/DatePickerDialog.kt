@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.view.View
-import android.widget.DatePicker
 import com.blankj.utilcode.util.LogUtils
 import com.ddancn.lib.R
 import kotlinx.android.synthetic.main.dialog_date_picker.*
@@ -14,8 +13,8 @@ import java.util.*
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-class DatePickerDialog(context: Context,
-                       private val onDateSetListener: OnDateSetListener?,
+class DatePickerDialog(context: Context?,
+                       private val onDateSetListener: android.app.DatePickerDialog.OnDateSetListener?,
                        private val year: Int,
                        private val monthOfYear: Int,
                        private val dayOfMonth: Int,
@@ -37,18 +36,6 @@ class DatePickerDialog(context: Context,
         if (hideMonth) {
             hideMonth()
         }
-    }
-
-    interface OnDateSetListener {
-        /**
-         * 日期选择回调
-         *
-         * @param datePicker 日期选择器
-         * @param year       选中年
-         * @param monthOfYear      选中月
-         * @param dayOfMonth        选中日
-         */
-        fun onDateSet(datePicker: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int)
     }
 
     fun hideDay() {
@@ -111,20 +98,20 @@ class DatePickerDialog(context: Context,
          * @param hideMonth 是否隐藏月
          * @return picker
          */
-        fun getPickerFromToday(context: Context, listener: OnDateSetListener, hideDay: Boolean, hideMonth: Boolean): DatePickerDialog {
+        fun getPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener, hideDay: Boolean, hideMonth: Boolean): DatePickerDialog {
             val calendar = Calendar.getInstance()
             return DatePickerDialog(context, listener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), hideDay, hideMonth)
         }
 
-        fun getYearPickerFromToday(context: Context, listener: OnDateSetListener): DatePickerDialog {
+        fun getYearPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
             return getPickerFromToday(context, listener, true, true)
         }
 
-        fun getYMPickerFromToday(context: Context, listener: OnDateSetListener): DatePickerDialog {
+        fun getYMPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
             return getPickerFromToday(context, listener, true, false)
         }
 
-        fun getYMDPickerFromToday(context: Context, listener: OnDateSetListener): DatePickerDialog {
+        fun getYMDPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
             return getPickerFromToday(context, listener, false, false)
         }
     }

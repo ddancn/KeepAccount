@@ -16,7 +16,7 @@
         android:focusableInTouchMode="true">
 
         <EditText
-            android:id="@+id/search"
+            android:id="@+id/et_search"
             android:layout_width="0dp"
             android:layout_height="30dp"
             android:layout_marginStart="15dp"

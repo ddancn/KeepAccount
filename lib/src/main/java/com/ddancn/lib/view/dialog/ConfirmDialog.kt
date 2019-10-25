@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.dialog_confirm.*
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-class ConfirmDialog @JvmOverloads constructor(context: Context,
+class ConfirmDialog @JvmOverloads constructor(context: Context?,
                     private val confirmText: String? = null,
                     private val cancelText: String? = null,
                     private val title: String? = null,
