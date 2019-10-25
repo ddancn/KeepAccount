@@ -57,7 +57,7 @@
             android:text="@string/btn_cancel" />
 
         <View
-            android:id="@+id/line_vertical"
+            android:id="@+id/view_divider_vertical"
             android:layout_width="1px"
             android:layout_height="match_parent"
             android:background="#E4E4E4" />

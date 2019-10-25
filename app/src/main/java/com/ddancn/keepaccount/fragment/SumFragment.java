@@ -9,8 +9,8 @@ import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.constant.TypeEnum;
 import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.util.ChartHelper;
-import com.ddancn.lib.util.DateUtil;
 import com.ddancn.lib.base.BaseFragment;
+import com.ddancn.lib.util.DateUtilKt;
 import com.ddancn.lib.view.dialog.DatePickerDialog;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -49,8 +49,8 @@ public class SumFragment extends BaseFragment {
 
     @Override
     protected void initParam() {
-        showMonth = DateUtil.getThisMonth();
-        showYear = DateUtil.getThisYear();
+        showMonth = DateUtilKt.getThisMonth();
+        showYear = DateUtilKt.getThisYear();
     }
 
     @Override
@@ -87,9 +87,9 @@ public class SumFragment extends BaseFragment {
                 getData(showYear);
             }
         });
-        iconDate.setOnClickListener(v -> DatePickerDialog.getPickerFromToday(getContext(), (datePicker, year, month, day) -> {
+        iconDate.setOnClickListener(v -> DatePickerDialog.Companion.getPickerFromToday(getContext(), (datePicker, year, month, day) -> {
             if (isMonth) {
-                showMonth = DateUtil.getFormatYM(year, month + 1);
+                showMonth = DateUtilKt.getFormatYM(year, month + 1);
                 getData(showMonth);
             } else {
                 showYear = String.valueOf(year);

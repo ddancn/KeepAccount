@@ -1,25 +1,19 @@
 package com.ddancn.keepaccount.activity;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.adapter.TypeAdapter;
 import com.ddancn.keepaccount.constant.TypeEnum;
-import com.ddancn.keepaccount.dao.RecordDao;
 import com.ddancn.keepaccount.dao.TypeDao;
 import com.ddancn.keepaccount.entity.Type;
-import com.ddancn.keepaccount.exception.TypeNameDuplicateException;
 import com.ddancn.lib.base.BaseActivity;
-import com.ddancn.lib.util.ViewUtil;
-import com.ddancn.lib.view.dialog.ConfirmDialog;
-import com.ddancn.lib.view.dialog.InputDialog;
+import com.ddancn.lib.util.ViewUtilKt;
 
 /**
  * @author ddan.zhuang
@@ -57,10 +51,10 @@ public class SettingActivity extends BaseActivity {
         rvTypeIn.setLayoutManager(manager1);
         rvTypeOut.setLayoutManager(manager2);
         inTypesAdapter = new TypeAdapter(R.layout.item_type);
-        inTypesAdapter.setEmptyView(ViewUtil.getEmptyText(this, getString(R.string.setting_no_in_type)));
+        inTypesAdapter.setEmptyView(ViewUtilKt.getEmptyTextView(getString(R.string.setting_no_in_type)));
         rvTypeIn.setAdapter(inTypesAdapter);
         outTypesAdapter = new TypeAdapter(R.layout.item_type);
-        outTypesAdapter.setEmptyView(ViewUtil.getEmptyText(this, getString(R.string.setting_no_out_type)));
+        outTypesAdapter.setEmptyView(ViewUtilKt.getEmptyTextView(getString(R.string.setting_no_out_type)));
         rvTypeOut.setAdapter(outTypesAdapter);
     }
 
@@ -85,28 +79,28 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void addType(int type) {
-        InputDialog.builder(this)
-                .setTitle(R.string.setting_add_type)
-                .setConfirmText(R.string.confirm)
-                .setCancelText(R.string.cancel)
-                .setConfirmListener(input -> {
-                    if (TextUtils.isEmpty(input)) {
-                        ToastUtils.showShort(R.string.setting_need_type_name);
-                        return false;
-                    }
-                    try {
-                        if (TypeDao.addType(input, type)) {
-                            ToastUtils.showShort(R.string.setting_add_succeed);
-                            applyData();
-                        } else {
-                            ToastUtils.showShort(R.string.setting_add_fail);
-                        }
-                    } catch (TypeNameDuplicateException e){
-                        toast(e.getMessage());
-                    }
-
-                    return true;
-                }).build().show();
+//        InputDialog.builder(this)
+//                .setTitle(R.string.setting_add_type)
+//                .setConfirmText(R.string.confirm)
+//                .setCancelText(R.string.cancel)
+//                .setConfirmListener(input -> {
+//                    if (TextUtils.isEmpty(input)) {
+//                        ToastUtils.showShort(R.string.setting_need_type_name);
+//                        return false;
+//                    }
+//                    try {
+//                        if (TypeDao.addType(input, type)) {
+//                            ToastUtils.showShort(R.string.setting_add_succeed);
+//                            applyData();
+//                        } else {
+//                            ToastUtils.showShort(R.string.setting_add_fail);
+//                        }
+//                    } catch (TypeNameDuplicateException e){
+//                        toast(e.getMessage());
+//                    }
+//
+//                    return true;
+//                }).build().show();
     }
 
     class TypeItemClickItemListener implements BaseQuickAdapter.OnItemClickListener {
@@ -116,29 +110,29 @@ public class SettingActivity extends BaseActivity {
             Type typeToUpdate = (Type) (adapter.getData().get(position));
             int type = typeToUpdate.getType();
 
-            InputDialog.builder(SettingActivity.this)
-                    .setTitle(R.string.setting_update_type)
-                    .setConfirmText(R.string.setting_update)
-                    .setCancelText(R.string.cancel)
-                    .setEtMsg(typeToUpdate.getName())
-                    .setConfirmListener(input -> {
-                        if (TextUtils.isEmpty(input)) {
-                            ToastUtils.showShort(R.string.setting_need_type_name);
-                            return false;
-                        }
-                        //修改类型，更新类型相关的记录
-                        try {
-                            if (TypeDao.updateTypeName(typeToUpdate.getId(), input) == 1
-                                    && RecordDao.updateRecordTypeName(input, typeToUpdate.getName()) >= 0) {
-                                ToastUtils.showShort(R.string.setting_update_succeed);
-                                getAdapter(type).getData().get(position).setName(input);
-                                getAdapter(type).notifyItemChanged(position);
-                            }
-                        } catch (TypeNameDuplicateException e){
-                            toast(e.getMessage());
-                        }
-                        return true;
-                    }).build().show();
+//            InputDialog.builder(SettingActivity.this)
+//                    .setTitle(R.string.setting_update_type)
+//                    .setConfirmText(R.string.setting_update)
+//                    .setCancelText(R.string.cancel)
+//                    .setEtMsg(typeToUpdate.getName())
+//                    .setConfirmListener(input -> {
+//                        if (TextUtils.isEmpty(input)) {
+//                            ToastUtils.showShort(R.string.setting_need_type_name);
+//                            return false;
+//                        }
+//                        //修改类型，更新类型相关的记录
+//                        try {
+//                            if (TypeDao.updateTypeName(typeToUpdate.getId(), input) == 1
+//                                    && RecordDao.updateRecordTypeName(input, typeToUpdate.getName()) >= 0) {
+//                                ToastUtils.showShort(R.string.setting_update_succeed);
+//                                getAdapter(type).getData().get(position).setName(input);
+//                                getAdapter(type).notifyItemChanged(position);
+//                            }
+//                        } catch (TypeNameDuplicateException e){
+//                            toast(e.getMessage());
+//                        }
+//                        return true;
+//                    }).build().show();
         }
     }
 
@@ -149,20 +143,20 @@ public class SettingActivity extends BaseActivity {
             Type typeToDelete = (Type) (adapter.getData().get(position));
             int type = typeToDelete.getType();
 
-            ConfirmDialog.builder(SettingActivity.this)
-                    .setTitle(R.string.setting_delete_type)
-                    .setMessage(R.string.setting_delete_hint)
-                    .setConfirmText(R.string.setting_delete)
-                    .setCancelText(R.string.cancel)
-                    .setConfirmListener(() -> {
-                        //先删除相关的记录，并删除类型
-                        if (RecordDao.deleteRecordByTypeName(typeToDelete.getName()) >= 0
-                                && TypeDao.deleteType(typeToDelete.getId()) == 1) {
-                            ToastUtils.showShort(R.string.setting_delete_succeed);
-                            getAdapter(type).remove(position);
-                        }
-                        return true;
-                    }).build().show();
+//            ConfirmDialog.builder(SettingActivity.this)
+//                    .setTitle(R.string.setting_delete_type)
+//                    .setMessage(R.string.setting_delete_hint)
+//                    .setConfirmText(R.string.setting_delete)
+//                    .setCancelText(R.string.cancel)
+//                    .setConfirmListener(() -> {
+//                        //先删除相关的记录，并删除类型
+//                        if (RecordDao.deleteRecordByTypeName(typeToDelete.getName()) >= 0
+//                                && TypeDao.deleteType(typeToDelete.getId()) == 1) {
+//                            ToastUtils.showShort(R.string.setting_delete_succeed);
+//                            getAdapter(type).remove(position);
+//                        }
+//                        return true;
+//                    }).build().show();
             return false;
         }
     }

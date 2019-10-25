@@ -15,12 +15,10 @@ import com.ddancn.keepaccount.R;
 import com.ddancn.keepaccount.activity.UpdateActivity;
 import com.ddancn.keepaccount.adapter.RecordAdapter;
 import com.ddancn.keepaccount.dao.RecordDao;
-import com.ddancn.keepaccount.entity.Record;
-import com.ddancn.lib.util.DateUtil;
 import com.ddancn.lib.base.BaseFragment;
+import com.ddancn.lib.util.DateUtilKt;
 import com.ddancn.lib.util.SimpleTextWatcher;
-import com.ddancn.lib.util.ViewUtil;
-import com.ddancn.lib.view.dialog.ConfirmDialog;
+import com.ddancn.lib.util.ViewUtilKt;
 import com.ddancn.lib.view.dialog.DatePickerDialog;
 
 /**
@@ -47,7 +45,7 @@ public class RecordFragment extends BaseFragment {
 
     @Override
     protected void initParam() {
-        showMonth = DateUtil.getThisMonth();
+        showMonth = DateUtilKt.getThisMonth();
     }
 
     @Override
@@ -59,8 +57,8 @@ public class RecordFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvRecord.setLayoutManager(layoutManager);
         recordAdapter = new RecordAdapter(R.layout.item_record);
-        recordAdapter.setEmptyView(ViewUtil.getEmptyText(getContext()));
-        recordAdapter.setFooterView(ViewUtil.getFooterText(getContext()));
+        recordAdapter.setEmptyView(ViewUtilKt.getEmptyTextView());
+        recordAdapter.setFooterView(ViewUtilKt.getFooterTextView());
         rvRecord.setAdapter(recordAdapter);
     }
 
@@ -68,8 +66,8 @@ public class RecordFragment extends BaseFragment {
     @Override
     protected void bindListener() {
         iconDate.setOnClickListener(v ->
-                DatePickerDialog.getYearMonthPickerFromToday(getContext(), (datePicker, year, month, day) -> {
-                    showMonth = DateUtil.getFormatYM(year, month + 1);
+                DatePickerDialog.Companion.getYMPickerFromToday(getContext(), (datePicker, year, month, day) -> {
+                    showMonth = DateUtilKt.getFormatYM(year, month + 1);
                     toast(showMonth);
                     getRecords();
                 }).show());
@@ -99,20 +97,20 @@ public class RecordFragment extends BaseFragment {
                 UpdateActivity.start(getContext(), recordAdapter.getItem(position))
         );
         recordAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-            ConfirmDialog.builder(getContext())
-                    .setTitle(R.string.record_delete_record)
-                    .setMessage(R.string.record_delete_hint)
-                    .setConfirmText(R.string.record_delete)
-                    .setCancelText(R.string.cancel)
-                    .setConfirmListener(() -> {
-                        Record recordToDelete = recordAdapter.getItem(position);
-                        if (recordToDelete != null
-                                && RecordDao.deleteRecordById(recordToDelete.getId()) == 1) {
-                            ToastUtils.showShort(R.string.record_delete_succeed);
-                            recordAdapter.remove(position);
-                        }
-                        return true;
-                    }).build().show();
+//            ConfirmDialog.builder(getContext())
+//                    .setTitle(R.string.record_delete_record)
+//                    .setMessage(R.string.record_delete_hint)
+//                    .setConfirmText(R.string.record_delete)
+//                    .setCancelText(R.string.cancel)
+//                    .setConfirmListener(() -> {
+//                        Record recordToDelete = recordAdapter.getItem(position);
+//                        if (recordToDelete != null
+//                                && RecordDao.deleteRecordById(recordToDelete.getId()) == 1) {
+//                            ToastUtils.showShort(R.string.record_delete_succeed);
+//                            recordAdapter.remove(position);
+//                        }
+//                        return true;
+//                    }).build().show();
             return false;
         });
     }
