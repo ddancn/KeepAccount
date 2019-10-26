@@ -43,7 +43,7 @@ abstract class BaseFragment : Fragment() {
         return true
     }
 
-    protected fun toast(msg: String) {
+    protected fun toast(msg: String?) {
         ToastUtils.showShort(msg)
     }
 

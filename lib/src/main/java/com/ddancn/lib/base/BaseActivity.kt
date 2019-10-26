@@ -51,7 +51,7 @@ abstract class BaseActivity : AppCompatActivity() {
         return true
     }
 
-    protected fun toast(msg: String) {
+    protected fun toast(msg: String?) {
         ToastUtils.showShort(msg)
     }
 

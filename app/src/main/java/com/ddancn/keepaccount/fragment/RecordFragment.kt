@@ -9,6 +9,8 @@ import com.ddancn.keepaccount.adapter.RecordAdapter
 import com.ddancn.keepaccount.dao.RecordDao
 import com.ddancn.lib.base.BaseFragment
 import com.ddancn.lib.util.*
+import com.ddancn.lib.view.dialog.BaseDialog
+import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.DatePickerDialog
 import kotlinx.android.synthetic.main.fragment_record.*
 
@@ -37,11 +39,12 @@ class RecordFragment : BaseFragment() {
 
     override fun bindListener() {
         icon_date.setOnClickListener {
-            DatePickerDialog.getYMPickerFromToday(context, android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
-                showMonth = getFormatYM(year, month + 1)
-                toast(showMonth)
-                getRecords()
-            }).show()
+            DatePickerDialog.getYMPickerFromToday(context,
+                    android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
+                        showMonth = getFormatYM(year, month + 1)
+                        toast(showMonth)
+                        getRecords()
+                    }).show()
         }
         //输入时即搜索
         et_search.addTextChangedListener(object : SimpleTextWatcher() {
@@ -66,21 +69,21 @@ class RecordFragment : BaseFragment() {
         }
         recordAdapter.setOnItemClickListener { adapter, view, position -> UpdateActivity.start(context, recordAdapter.getItem(position)) }
         recordAdapter.setOnItemLongClickListener { adapter, view, position ->
-//            ConfirmDialog(context,
-//                    title = getString(R.string.record_delete_record),
-//                    message = getString(R.string.record_delete_hint),
-//                    confirmText = getString(R.string.record_delete),
-//                    cancelText = getString(R.string.cancel),
-//                    confirmListener = object : BaseDialog.OnBtnClickListener {
-//                        override fun onClick(): Boolean {
-//                            val recordToDelete = recordAdapter.getItem(position)
-//                            if (RecordDao.deleteRecordById(recordToDelete?.id ?: -1) == 1) {
-//                                ToastUtils.showShort(R.string.record_delete_succeed)
-//                                recordAdapter.remove(position)
-//                            }
-//                            return true
-//                        }
-//                    }).show()
+            ConfirmDialog(context,
+                    title = getString(R.string.record_delete_record),
+                    message = getString(R.string.record_delete_hint),
+                    confirmText = getString(R.string.record_delete),
+                    cancelText = getString(R.string.cancel),
+                    confirmListener = object : BaseDialog.OnBtnClickListener {
+                        override fun onClick(): Boolean {
+                            val recordToDelete = recordAdapter.getItem(position)
+                            if (RecordDao.deleteRecordById(recordToDelete?.id ?: -1) == 1) {
+                                ToastUtils.showShort(R.string.record_delete_succeed)
+                                recordAdapter.remove(position)
+                            }
+                            return true
+                        }
+                    }).show()
             false
         }
     }
