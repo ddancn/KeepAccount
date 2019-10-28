@@ -52,7 +52,7 @@ object RecordDao {
      * @param oldName 旧类型名
      * @return int
      */
-    fun updateRecordTypeName(newName: String, oldName: String): Int {
+    fun updateRecordTypeName(newName: String, oldName: String?): Int {
         val record = Record()
         record.typeName = newName
         return record.updateAll("typeName is ?", oldName)
@@ -64,7 +64,7 @@ object RecordDao {
      * @param typeName 类型名
      * @return int
      */
-    fun deleteRecordByTypeName(typeName: String): Int {
+    fun deleteRecordByTypeName(typeName: String?): Int {
         return LitePal.deleteAll(Record::class.java, "typeName is ?", typeName)
     }
 

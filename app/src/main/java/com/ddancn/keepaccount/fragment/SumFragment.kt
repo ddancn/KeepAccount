@@ -56,7 +56,7 @@ class SumFragment : BaseFragment() {
             }
         }
         icon_date.setOnClickListener {
-            DatePickerDialog.getPickerFromToday(context,
+            DatePickerDialog.getPickerFromToday(icon_date.context,
                     android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
                         if (isMonth) {
                             showMonth = getFormatYM(year, month + 1)
@@ -65,7 +65,7 @@ class SumFragment : BaseFragment() {
                             showYear = year.toString()
                             getData(showYear)
                         }
-                    }, true, !isMonth).show()
+                    }, hideDay = true, hideMonth = !isMonth).show()
         }
     }
 

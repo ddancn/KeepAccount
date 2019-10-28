@@ -13,7 +13,7 @@ import java.util.*
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-class DatePickerDialog(context: Context?,
+class DatePickerDialog(context: Context,
                        private val onDateSetListener: android.app.DatePickerDialog.OnDateSetListener?,
                        private val year: Int,
                        private val monthOfYear: Int,
@@ -98,20 +98,20 @@ class DatePickerDialog(context: Context?,
          * @param hideMonth 是否隐藏月
          * @return picker
          */
-        fun getPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener, hideDay: Boolean, hideMonth: Boolean): DatePickerDialog {
+        fun getPickerFromToday(context: Context, listener: android.app.DatePickerDialog.OnDateSetListener, hideDay: Boolean, hideMonth: Boolean): DatePickerDialog {
             val calendar = Calendar.getInstance()
             return DatePickerDialog(context, listener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), hideDay, hideMonth)
         }
 
-        fun getYearPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
+        fun getYearPickerFromToday(context: Context, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
             return getPickerFromToday(context, listener, true, true)
         }
 
-        fun getYMPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
+        fun getYMPickerFromToday(context: Context, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
             return getPickerFromToday(context, listener, true, false)
         }
 
-        fun getYMDPickerFromToday(context: Context?, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
+        fun getYMDPickerFromToday(context: Context, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
             return getPickerFromToday(context, listener, false, false)
         }
     }

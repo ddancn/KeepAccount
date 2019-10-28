@@ -17,9 +17,11 @@ import java.util.*
  * @date 2019/10/17
  * 配合SumFragment使用
  */
-object ChartHelper {
+private val COLORS = intArrayOf(R.color.colorPieChart0, R.color.colorPieChart1, R.color.colorPieChart2,
+        R.color.colorPieChart3, R.color.colorPieChart4, R.color.colorPieChart5, R.color.colorPieChart6,
+        R.color.colorPieChart7, R.color.colorPieChart8, R.color.colorPieChart9)
 
-    private val COLORS = Utils.getApp().resources.getIntArray(R.array.colorPie)
+object ChartHelper {
 
     /**
      * 对饼图进行一些设置
@@ -54,7 +56,7 @@ object ChartHelper {
     fun getPieData(type: Int, label: String, date: String): PieData {
         val typeSum = RecordDao.calTypeSum(type, date)
         val entries = ArrayList<PieEntry>()
-        typeSum.forEach { entries.add(PieEntry(it.key.toFloat(), it.value)) }
+        typeSum.forEach { entries.add(PieEntry(it.value.toFloat(), it.key)) }
 
         val set = PieDataSet(entries, label)
         set.setColors(COLORS, Utils.getApp())
@@ -113,9 +115,9 @@ object ChartHelper {
      * @param date 日期：月份/年份
      */
     fun getLineData(type: Int, date: String): LineData {
-        val dailySum = RecordDao.calDayOrMonthSum(type, date)
+        val sum = RecordDao.calDayOrMonthSum(type, date)
         val entries = ArrayList<Entry>()
-        dailySum.forEach { entries.add(PieEntry(it.key.toFloat(), it.value)) }
+        sum.forEach { entries.add(Entry(it.key.toFloat(), it.value.toFloat())) }
 
         val dataSet = LineDataSet(entries, "")
         dataSet.setColors(COLORS, Utils.getApp())

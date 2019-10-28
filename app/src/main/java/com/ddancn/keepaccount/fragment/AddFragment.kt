@@ -26,7 +26,7 @@ class AddFragment : BaseFragment() {
 
     private var type = TypeEnum.OUT.value()
     private var isUpdate = false
-    private var recordToUpdate = Record()
+    private lateinit var recordToUpdate: Record
 
     override fun bindLayout(): Int {
         return R.layout.fragment_add
@@ -103,11 +103,12 @@ class AddFragment : BaseFragment() {
      */
     private fun initData() {
         btn_add.text = getString(R.string.update_btn)
-        val date = recordToUpdate.date.split("-")
-        val year = date[0].toInt()
-        val month = date[1].toInt()
-        val dayOfMonth = date[2].toInt()
-        date_picker.updateDate(year, month - 1, dayOfMonth)
+        val date = recordToUpdate.date?.split("-")?.let {
+            val year = it[0].toInt()
+            val month = it[1].toInt()
+            val dayOfMonth = it[2].toInt()
+            date_picker.updateDate(year, month - 1, dayOfMonth)
+        }
         et_money.setText(recordToUpdate.money.toString())
         et_detail.setText(recordToUpdate.detail)
         // 收支类型判断
@@ -117,10 +118,9 @@ class AddFragment : BaseFragment() {
         setSpinnerContent()
         // 具体类型名称
         var selected = 0
-        val size = types.size
-        for (i in 0..size) {
-            if (types[i].name == recordToUpdate.typeName) {
-                selected = i
+        for((index, type) in types.withIndex()){
+            if (type.name == recordToUpdate.typeName){
+                selected = index
                 break
             }
         }
@@ -154,13 +154,13 @@ class AddFragment : BaseFragment() {
      */
     private fun setSpinnerContent() {
         val types = TypeDao.getTypesByType(type)
-        if (types?.size == 0) {
+        if (types.isEmpty()) {
             ToastUtils.showShort(R.string.add_no_type)
             return
         }
         val typeNames = ArrayList<String>()
-        types.forEach { typeNames.add(it.name) }
-        val spinnerAdapter = ArrayAdapter<String>(context, R.layout.item_spinner, typeNames)
+        types.forEach { typeNames.add(it.name?:"") }
+        val spinnerAdapter = ArrayAdapter<String>(btn_add.context, R.layout.item_spinner, typeNames)
         spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
         spinner_type.adapter = spinnerAdapter
     }

@@ -10,13 +10,13 @@ import kotlinx.android.synthetic.main.dialog_input.*
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-class InputDialog @JvmOverloads constructor(context: Context,
-                                            private val confirmText: String? = null,
-                                            private val cancelText: String? = null,
-                                            private val title: String? = null,
-                                            private val etMsg: String? = null,
-                                            private val confirmListener: OnConfirmListenerWithInput? = null,
-                                            private val cancelListener: OnBtnClickListener? = null)
+class InputDialog(context: Context,
+                  private val confirmText: String? = null,
+                  private val cancelText: String? = null,
+                  private val title: String? = null,
+                  private val etMsg: String? = null,
+                  private val confirmListener: OnConfirmListenerWithInput? = null,
+                  private val cancelListener: OnBtnClickListener? = null)
     : BaseDialog(context, R.layout.dialog_input, R.style.CustomDialog) {
 
     override fun initView() {

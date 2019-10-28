@@ -7,16 +7,15 @@
     <color name="colorBackground">#f8f8f8</color>
     <color name="colorText">#555</color>
 
-    <array name="colorPie">
-        <item>#DDFF8A65</item>
-        <item>#DDFFB74D</item>
-        <item>#DDFFD54F</item>
-        <item>#DDFFF176</item>
-        <item>#DDDCE775</item>
-        <item>#DDAED581</item>
-        <item>#DD81C784</item>
-        <item>#DD4DB6AC</item>
-        <item>#DD4DD0E1</item>
-        <item>#DD4FC3F7</item>
-    </array>
+    <color name="colorPieChart0">#DDFF8A65</color>
+    <color name="colorPieChart1">#DDFFB74D</color>
+    <color name="colorPieChart2">#DDFFD54F</color>
+    <color name="colorPieChart3">#DDFFF176</color>
+    <color name="colorPieChart4">#DDDCE775</color>
+    <color name="colorPieChart5">#DDAED581</color>
+    <color name="colorPieChart6">#DD81C784</color>
+    <color name="colorPieChart7">#DD4DB6AC</color>
+    <color name="colorPieChart8">#DD4DD0E1</color>
+    <color name="colorPieChart9">#DD4FC3F7</color>
+
 </resources>

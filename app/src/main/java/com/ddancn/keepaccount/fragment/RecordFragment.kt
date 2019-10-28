@@ -39,7 +39,7 @@ class RecordFragment : BaseFragment() {
 
     override fun bindListener() {
         icon_date.setOnClickListener {
-            DatePickerDialog.getYMPickerFromToday(context,
+            DatePickerDialog.getYMPickerFromToday(icon_date.context,
                     android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
                         showMonth = getFormatYM(year, month + 1)
                         toast(showMonth)
@@ -67,9 +67,10 @@ class RecordFragment : BaseFragment() {
             }
             return@setOnTouchListener false
         }
-        recordAdapter.setOnItemClickListener { adapter, view, position -> UpdateActivity.start(context, recordAdapter.getItem(position)) }
+        recordAdapter.setOnItemClickListener { adapter, view, position ->
+            UpdateActivity.start(view.context, recordAdapter.getItem(position)) }
         recordAdapter.setOnItemLongClickListener { adapter, view, position ->
-            ConfirmDialog(context,
+            ConfirmDialog(view.context,
                     title = getString(R.string.record_delete_record),
                     message = getString(R.string.record_delete_hint),
                     confirmText = getString(R.string.record_delete),

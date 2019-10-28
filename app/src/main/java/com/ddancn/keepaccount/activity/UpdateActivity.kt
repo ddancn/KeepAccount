@@ -12,7 +12,7 @@ const val EXTRA_ARG = "recordToUpdate"
 
 class UpdateActivity : BaseActivity() {
 
-    private var recordToUpdate: Record? = null
+    internal var recordToUpdate: Record? = null
 
     override fun bindLayout(): Int {
         return com.ddancn.keepaccount.R.layout.activity_update
@@ -31,7 +31,7 @@ class UpdateActivity : BaseActivity() {
     }
 
     companion object {
-        fun start(context: Context, recordToUpdate: Record) {
+        fun start(context: Context, recordToUpdate: Record?) {
             val intent = Intent(context, UpdateActivity::class.java)
             intent.putExtra(EXTRA_ARG, recordToUpdate)
             context.startActivity(intent)
