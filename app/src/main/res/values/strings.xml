@@ -62,6 +62,7 @@
     <string name="setting_delete_hint">删除类型会删除所有与之相关的记录，确定要继续吗？</string>
     <string name="setting_no_in_type">来创建第一个收入类型吧</string>
     <string name="setting_no_out_type">来创建第一个支出类型吧</string>
+    <string name="setting_type_duplicate">类型名不要重复~</string>
 
     <!-- 修改页面 -->
     <string name="update_title">修改记录</string>

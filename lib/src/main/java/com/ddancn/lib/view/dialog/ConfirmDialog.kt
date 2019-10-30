@@ -49,7 +49,7 @@ class ConfirmDialog(context: Context,
             }
         }
         btn_cancel.setOnClickListener {
-            if (cancelListener?.onClick() == true) {
+            if (cancelListener == null || cancelListener.onClick()) {
                 cancel()
             }
         }

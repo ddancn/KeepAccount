@@ -23,6 +23,7 @@ class InputDialog(context: Context,
         btn_cancel.visibility = View.GONE
         tv_title.visibility = View.GONE
         view_divider_vertical.visibility = View.GONE
+        edit_text.requestFocus()
 
         KeyboardUtils.toggleSoftInput()
 
@@ -33,6 +34,7 @@ class InputDialog(context: Context,
         if (!etMsg.isNullOrBlank()) {
             edit_text.setText(etMsg)
             edit_text.visibility = View.VISIBLE
+            edit_text.selectAll()
         }
         if (!confirmText.isNullOrBlank()) {
             btn_confirm.text = confirmText
@@ -51,7 +53,7 @@ class InputDialog(context: Context,
             }
         }
         btn_cancel.setOnClickListener {
-            if (cancelListener?.onClick() == true) {
+            if (cancelListener == null || cancelListener.onClick()) {
                 cancel()
             }
         }

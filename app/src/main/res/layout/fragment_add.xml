@@ -1,89 +1,95 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
-
-    <DatePicker
-        android:id="@+id/date_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        tools:targetApi="lollipop" />
-
-    <EditText
-        android:id="@+id/et_money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="14"
-        android:gravity="center"
-        android:hint="@string/add_money"
-        android:inputType="numberDecimal"
-        android:textColor="@color/colorText"
-        tools:ignore="Autofill" />
-
-    <EditText
-        android:id="@+id/et_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="14"
-        android:gravity="center"
-        android:hint="@string/add_desc"
-        android:inputType="none"
-        android:textColor="@color/colorText"
-        tools:ignore="Autofill" />
+    android:background="@color/colorBackground">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-        <RadioGroup
-            android:id="@+id/rg_type"
+        <DatePicker
+            android:id="@+id/date_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            tools:targetApi="lollipop" />
+
+        <EditText
+            android:id="@+id/et_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="14"
+            android:gravity="center"
+            android:hint="@string/add_money"
+            android:inputType="numberDecimal"
+            android:textColor="@color/colorText"
+            tools:ignore="Autofill" />
+
+        <EditText
+            android:id="@+id/et_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="14"
+            android:gravity="center"
+            android:hint="@string/add_desc"
+            android:inputType="none"
+            android:textColor="@color/colorText"
+            tools:ignore="Autofill" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/rb_type_out"
+            <RadioGroup
+                android:id="@+id/rg_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/app_out"
-                android:textSize="16sp" />
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/rb_type_in"
+                <RadioButton
+                    android:id="@+id/rb_type_out"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/app_out"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_type_in"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_in"
+                    android:textSize="16sp" />
+
+            </RadioGroup>
+
+            <Spinner
+                android:id="@+id/spinner_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_in"
-                android:textSize="16sp" />
+                android:layout_marginStart="18dp"
+                android:minWidth="120dp" />
+        </LinearLayout>
 
-        </RadioGroup>
-
-        <Spinner
-            android:id="@+id/spinner_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:minWidth="120dp"/>
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/bg_item"
+            android:text="@string/add_btn"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_item"
-        android:text="@string/add_btn"
-        android:textColor="@color/colorPrimary"
-        android:textSize="20sp" />
-</LinearLayout>
+</ScrollView>
 

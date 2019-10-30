@@ -111,11 +111,12 @@ class SettingActivity : BaseActivity() {
                                     ToastUtils.showShort(R.string.setting_update_succeed)
                                     getAdapter(type).data[position].name = (input)
                                     getAdapter(type).notifyItemChanged(position)
+                                    return true
                                 }
                             } catch (e: TypeNameDuplicateException) {
                                 toast(e.message)
                             }
-                            return true
+                            return false
                         }
                     }).show()
         }
@@ -137,8 +138,9 @@ class SettingActivity : BaseActivity() {
                                     && TypeDao.deleteType(typeToDelete.id) == 1) {
                                 toast(R.string.setting_delete_succeed)
                                 getAdapter(type).remove(position)
+                                return true
                             }
-                            return true
+                            return false
                         }
                     }).show()
             return false

@@ -118,8 +118,8 @@ class AddFragment : BaseFragment() {
         setSpinnerContent()
         // 具体类型名称
         var selected = 0
-        for((index, type) in types.withIndex()){
-            if (type.name == recordToUpdate.typeName){
+        for ((index, type) in types.withIndex()) {
+            if (type.name == recordToUpdate.typeName) {
                 selected = index
                 break
             }
@@ -137,7 +137,7 @@ class AddFragment : BaseFragment() {
 
     private fun saveOrUpdateRecord(): Boolean {
         val y = date_picker.year
-        val m = date_picker.month
+        val m = date_picker.month + 1
         val d = date_picker.dayOfMonth
         val date = getFormatYMD(y, m, d)
         return RecordDao.addOrUpdateRecord(isUpdate,
@@ -159,7 +159,7 @@ class AddFragment : BaseFragment() {
             return
         }
         val typeNames = ArrayList<String>()
-        types.forEach { typeNames.add(it.name?:"") }
+        types.forEach { typeNames.add(it.name ?: "") }
         val spinnerAdapter = ArrayAdapter<String>(btn_add.context, R.layout.item_spinner, typeNames)
         spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
         spinner_type.adapter = spinnerAdapter

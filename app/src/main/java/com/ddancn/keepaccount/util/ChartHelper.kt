@@ -4,7 +4,7 @@ import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.Utils
 import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.dao.RecordDao
-import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
@@ -66,21 +66,21 @@ object ChartHelper {
     }
 
     /**
-     * 对折线图进行一些设置
+     * 对柱状图进行一些设置
      *
-     * @param lineChart 折线图
+     * @param barChart 柱状图
      */
-    fun prepareLine(lineChart: LineChart) {
+    fun prepareBar(barChart: BarChart) {
         // 设置Description
         val description = Description()
         description.text = StringUtils.getString(R.string.sum_out_trend)
         description.textSize = 12f
-        lineChart.description = description
+        barChart.description = description
         // 设置占位文字
-        lineChart.setNoDataText(Utils.getApp().getString(R.string.sum_no_data))
+        barChart.setNoDataText(Utils.getApp().getString(R.string.sum_no_data))
 
         // 设置X轴，位置底部，无网格线，文字大小，最大最小值，步长，标签格式
-        val xAxis = lineChart.xAxis
+        val xAxis = barChart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(false)
         xAxis.axisMaximum = 31f
@@ -88,42 +88,42 @@ object ChartHelper {
         xAxis.granularity = 1f
         xAxis.setValueFormatter { value, axis -> StringUtils.getString(R.string.sum_date_dd, value.toInt()) }
         // 设置Y轴，标签格式
-        val lAxis = lineChart.axisLeft
+        val lAxis = barChart.axisLeft
         lAxis.setValueFormatter { value, axis -> StringUtils.getString(R.string.sum_money, value) }
-        lineChart.axisRight.isEnabled = false
+        barChart.axisRight.isEnabled = false
 
         //设置无图例
-        lineChart.legend.isEnabled = false
+        barChart.legend.isEnabled = false
     }
 
     /**
      * 重新设置x轴的最大最小值和format
      *
-     * @param lineChart 折线图
+     * @param barChart 柱状图
      * @param isMonth   月/年
      */
-    fun resetLine(lineChart: LineChart, isMonth: Boolean) {
-        val xAxis = lineChart.xAxis
+    fun resetBar(barChart: BarChart, isMonth: Boolean) {
+        val xAxis = barChart.xAxis
         xAxis.axisMaximum = (if (isMonth) 31 else 12).toFloat()
         xAxis.setValueFormatter { value, axis -> StringUtils.getString(if (isMonth) R.string.sum_date_dd else R.string.sum_date_mm, value.toInt()) }
+        barChart.clearFocus()
     }
 
     /**
-     * 折线图的数据
+     * 柱状图的数据
      *
      * @param type 类型
      * @param date 日期：月份/年份
      */
-    fun getLineData(type: Int, date: String): LineData {
+    fun getBarData(type: Int, date: String): BarData {
         val sum = RecordDao.calDayOrMonthSum(type, date)
-        val entries = ArrayList<Entry>()
-        sum.forEach { entries.add(Entry(it.key.toFloat(), it.value.toFloat())) }
+        val entries = ArrayList<BarEntry>()
+        sum.forEach { entries.add(BarEntry(it.key.toFloat(), it.value.toFloat())) }
 
-        val dataSet = LineDataSet(entries, "")
+        val dataSet = BarDataSet(entries, "")
         dataSet.setColors(COLORS, Utils.getApp())
         dataSet.valueTextColor = Utils.getApp().resources.getColor(R.color.colorText)
-        dataSet.setCircleColors(COLORS, Utils.getApp())
         dataSet.valueTextSize = 10f
-        return LineData(dataSet)
+        return BarData(dataSet)
     }
 }

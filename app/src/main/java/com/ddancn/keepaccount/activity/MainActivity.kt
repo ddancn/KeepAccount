@@ -34,8 +34,7 @@ class MainActivity : BaseActivity() {
         viewpager.offscreenPageLimit = 2
     }
 
-    override
-    fun bindListener() {
+    override fun bindListener() {
         navigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_add -> viewpager.currentItem = 0

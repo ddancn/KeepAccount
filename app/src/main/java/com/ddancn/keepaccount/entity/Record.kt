@@ -7,13 +7,10 @@ import java.io.Serializable
 /**
  * @author ddan.zhuang
  */
-class Record : LitePalSupport(), Serializable {
-
-    var id: Int = 0
-    var date: String? = null
-    var money: Double = 0.0
-    var detail: String? = null
-    var type: Int = 0
-    var typeName: String? = null
-
-}
+data class Record(var id: Int = 0,
+                  var date: String = "",
+                  var money: Double = 0.0,
+                  var detail: String = "",
+                  var type: Int = 1,
+                  var typeName: String = "")
+    : LitePalSupport(), Serializable

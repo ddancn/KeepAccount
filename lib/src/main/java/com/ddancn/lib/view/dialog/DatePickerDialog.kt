@@ -29,7 +29,9 @@ class DatePickerDialog(context: Context,
                     date_picker.year,
                     date_picker.month,
                     date_picker.dayOfMonth)
+            cancel()
         }
+        btn_cancel.setOnClickListener { cancel() }
         if (hideDay) {
             hideDay()
         }
@@ -38,7 +40,7 @@ class DatePickerDialog(context: Context,
         }
     }
 
-    fun hideDay() {
+    private fun hideDay() {
         /* 处理android5.0以上的特殊情况 */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android")
@@ -63,7 +65,7 @@ class DatePickerDialog(context: Context,
         }
     }
 
-    fun hideMonth() {
+    private fun hideMonth() {
         /* 处理android5.0以上的特殊情况 */
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             val daySpinnerId = Resources.getSystem().getIdentifier("month", "id", "android")
@@ -104,15 +106,15 @@ class DatePickerDialog(context: Context,
         }
 
         fun getYearPickerFromToday(context: Context, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
-            return getPickerFromToday(context, listener, true, true)
+            return getPickerFromToday(context, listener, hideDay = true, hideMonth = true)
         }
 
         fun getYMPickerFromToday(context: Context, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
-            return getPickerFromToday(context, listener, true, false)
+            return getPickerFromToday(context, listener, hideDay = true, hideMonth = false)
         }
 
         fun getYMDPickerFromToday(context: Context, listener: android.app.DatePickerDialog.OnDateSetListener): DatePickerDialog {
-            return getPickerFromToday(context, listener, false, false)
+            return getPickerFromToday(context, listener, hideDay = false, hideMonth = false)
         }
     }
 }

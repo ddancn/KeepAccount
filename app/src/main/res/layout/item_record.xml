@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="35dp"
+    android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
     android:layout_marginTop="4dp"
     android:layout_marginEnd="10dp"
@@ -13,7 +13,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:padding="2dp">
 
         <TextView
             android:id="@+id/tv_date"
@@ -21,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textSize="22sp"
-            tools:text="2020-02-02"/>
+            tools:text="2020-02-02" />
 
         <TextView
             android:id="@+id/tv_type"
@@ -30,7 +31,7 @@
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/tv_date"
             android:textSize="22sp"
-            tools:text="类型"/>
+            tools:text="类型" />
 
         <TextView
             android:id="@+id/tv_detail"
@@ -38,8 +39,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/tv_type"
+            android:layout_toStartOf="@id/tv_money"
             android:textSize="22sp"
-            tools:text="详情"/>
+            tools:text="详情详情详情" />
 
         <TextView
             android:id="@+id/tv_money"
@@ -47,8 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="8dp"
-            android:textSize="24sp"
+            android:gravity="end"
             android:textColor="@color/colorText"
-            tools:text="100.0"/>
+            android:textSize="24sp"
+            tools:text="100.0" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

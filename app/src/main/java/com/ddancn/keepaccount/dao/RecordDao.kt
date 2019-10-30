@@ -13,12 +13,7 @@ object RecordDao {
 
     fun addOrUpdateRecord(isUpdate: Boolean, idToUpdate: Int,
                           date: String, money: Double, detail: String, type: Int, typeName: String): Boolean {
-        val record = Record()
-        record.date = date
-        record.money = money
-        record.detail = detail
-        record.type = type
-        record.typeName = typeName
+        val record = Record(date = date, money = money, detail = detail, type = type, typeName = typeName)
         return if (isUpdate) record.update(idToUpdate.toLong()) == 1 else record.save()
     }
 
@@ -36,6 +31,7 @@ object RecordDao {
     fun getRecordsByMonth(month: String): List<Record> {
         val result = LitePal
                 .where("date like ?", "$month%")
+                .order("date")
                 .find(Record::class.java)
         result.reverse()
         return result
@@ -53,8 +49,7 @@ object RecordDao {
      * @return int
      */
     fun updateRecordTypeName(newName: String, oldName: String?): Int {
-        val record = Record()
-        record.typeName = newName
+        val record = Record(typeName = newName)
         return record.updateAll("typeName is ?", oldName)
     }
 

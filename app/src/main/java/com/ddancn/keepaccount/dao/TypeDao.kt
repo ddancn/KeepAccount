@@ -22,9 +22,7 @@ object TypeDao {
         if (checkIfExist(name, type)) {
             throw TypeNameDuplicateException()
         }
-        val addType = Type()
-        addType.name = name
-        addType.type = type
+        val addType = Type(name = name, type = type)
         return addType.save()
     }
 
@@ -37,8 +35,7 @@ object TypeDao {
                 throw TypeNameDuplicateException()
             }
         }
-        val updateType = Type()
-        updateType.name = name
+        val updateType = Type(name = name)
         return updateType.update(id.toLong())
     }
 

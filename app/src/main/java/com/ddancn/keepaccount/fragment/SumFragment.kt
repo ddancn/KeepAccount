@@ -28,8 +28,7 @@ class SumFragment : BaseFragment() {
         return getString(R.string.sum_title)
     }
 
-    override
-    fun initParam() {
+    override fun initParam() {
         showMonth = getThisMonth()
         showYear = getThisYear()
     }
@@ -37,7 +36,7 @@ class SumFragment : BaseFragment() {
     override fun initView() {
         ChartHelper.preparePie(pie_chart_in)
         ChartHelper.preparePie(pie_chart_out)
-        ChartHelper.prepareLine(line_chart_out)
+        ChartHelper.prepareBar(bar_chart_out)
     }
 
     override fun bindListener() {
@@ -81,13 +80,16 @@ class SumFragment : BaseFragment() {
     private fun getData(date: String) {
         tv_date.text = date
         getSumData(date)
+
         pie_chart_in.data = ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date)
         pie_chart_out.data = ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), date)
-        line_chart_out.data = ChartHelper.getLineData(TypeEnum.OUT.value(), date)
+        bar_chart_out.clear()
+        ChartHelper.resetBar(bar_chart_out, isMonth)
+        bar_chart_out.data = ChartHelper.getBarData(TypeEnum.OUT.value(), date)
+
         pie_chart_in.invalidate()
         pie_chart_out.invalidate()
-        ChartHelper.resetLine(line_chart_out, isMonth)
-        line_chart_out.invalidate()
+        bar_chart_out.invalidate()
     }
 
     /**
