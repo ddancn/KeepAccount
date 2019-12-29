@@ -13,6 +13,7 @@
 * kotlin
 * MPAndroidChart
 * BRVAH
+* LitePal
 
 待完成：
 * 数据转移和备份
