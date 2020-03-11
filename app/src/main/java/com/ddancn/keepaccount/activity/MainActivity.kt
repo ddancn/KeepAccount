@@ -56,7 +56,7 @@ class MainActivity : BaseActivity() {
         private val fragments = ArrayList<Fragment>()
 
         override fun getItem(position: Int): Fragment {
-            return fragments.get(position)
+            return fragments[position]
         }
 
         override fun getCount(): Int {

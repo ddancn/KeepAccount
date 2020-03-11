@@ -29,6 +29,7 @@
     <string name="record_delete_record">删除记录</string>
     <string name="record_delete_succeed">删除成功</string>
     <string name="record_delete_hint">真的要删除这条记录吗？</string>
+    <string name="record_switch_month">已切换到%s</string>
 
     <!-- 统计页面 -->
     <string name="sum_title">统计</string>

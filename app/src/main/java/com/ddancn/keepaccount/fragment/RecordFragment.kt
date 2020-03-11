@@ -16,19 +16,16 @@ import kotlinx.android.synthetic.main.fragment_record.*
 
 /**
  * @author ddan.zhuang
+ * 记录列表页面
  */
 class RecordFragment : BaseFragment() {
 
     private var recordAdapter = RecordAdapter(R.layout.item_record)
     private var showMonth: String = getThisMonth()
 
-    override fun bindLayout(): Int {
-        return R.layout.fragment_record
-    }
+    override fun bindLayout(): Int = R.layout.fragment_record
 
-    override fun hasHeader(): Boolean {
-        return false
-    }
+    override fun hasHeader(): Boolean = false
 
     override fun initView() {
         rv_record.layoutManager = LinearLayoutManager(context)
@@ -38,15 +35,18 @@ class RecordFragment : BaseFragment() {
     }
 
     override fun bindListener() {
+        // 选择日期
         icon_date.setOnClickListener {
             DatePickerDialog.getYMPickerFromToday(icon_date.context,
                     android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
                         showMonth = getFormatYM(year, month + 1)
-                        toast(showMonth)
+                        toast(getString(R.string.record_switch_month, showMonth))
                         getRecords()
+                        // 查记录时清空可能有的搜索内容
+                        et_search.setText("")
                     }).show()
         }
-        //输入时即搜索
+        // 输入实时搜索
         et_search.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
@@ -57,7 +57,7 @@ class RecordFragment : BaseFragment() {
                 }
             }
         })
-        //搜索框清空按钮的事件
+        // 搜索框清空按钮的事件
         et_search.setOnTouchListener { v, event ->
             if (event.x > et_search.width
                     - et_search.paddingRight
@@ -67,8 +67,11 @@ class RecordFragment : BaseFragment() {
             }
             return@setOnTouchListener false
         }
+        // 点击记录去修改
         recordAdapter.setOnItemClickListener { adapter, view, position ->
-            UpdateActivity.start(view.context, recordAdapter.getItem(position)) }
+            UpdateActivity.start(view.context, recordAdapter.getItem(position))
+        }
+        // 长按记录来删除
         recordAdapter.setOnItemLongClickListener { adapter, view, position ->
             ConfirmDialog(view.context,
                     title = getString(R.string.record_delete_record),

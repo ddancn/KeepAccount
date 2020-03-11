@@ -20,7 +20,7 @@ import java.util.*
 
 /**
  * @author ddan.zhuang
- * 添加或修改记录
+ * 添加或修改记录页面
  */
 class AddFragment : BaseFragment() {
 
@@ -28,17 +28,11 @@ class AddFragment : BaseFragment() {
     private var isUpdate = false
     private lateinit var recordToUpdate: Record
 
-    override fun bindLayout(): Int {
-        return R.layout.fragment_add
-    }
+    override fun bindLayout(): Int = R.layout.fragment_add
 
-    override fun setHeaderTitle(): String {
-        return getString(R.string.app_name)
-    }
+    override fun setHeaderTitle(): String = getString(R.string.app_name)
 
-    override fun hasHeader(): Boolean {
-        return !isUpdate
-    }
+    override fun hasHeader(): Boolean = !isUpdate
 
     override fun onAttach(@NonNull context: Context) {
         super.onAttach(context)
@@ -61,7 +55,7 @@ class AddFragment : BaseFragment() {
         // 获取radio group收支选项，联动改变类型spinner的内容
         rg_type.setOnCheckedChangeListener { group, checkedId ->
             type = if (checkedId == R.id.rb_type_out) TypeEnum.OUT.value() else TypeEnum.IN.value()
-            setSpinnerContent()
+            setSpinnerItems()
         }
         // 按钮点击事件
         btn_add.setOnClickListener {
@@ -82,7 +76,7 @@ class AddFragment : BaseFragment() {
     }
 
     /**
-     * 判断是否合法
+     * 判断输入是否合法
      *
      * @return 是否合法
      */
@@ -99,11 +93,12 @@ class AddFragment : BaseFragment() {
     }
 
     /**
-     * 修改页面，先填上原来的数据
+     * 如果是修改页面，先填上原来的数据
      */
-    private fun initData() {
+    private fun fillOldData() {
         btn_add.text = getString(R.string.update_btn)
-        val date = recordToUpdate.date?.split("-")?.let {
+        // 选择日期
+        recordToUpdate.date.split("-").let {
             val year = it[0].toInt()
             val month = it[1].toInt()
             val dayOfMonth = it[2].toInt()
@@ -111,55 +106,65 @@ class AddFragment : BaseFragment() {
         }
         et_money.setText(recordToUpdate.money.toString())
         et_detail.setText(recordToUpdate.detail)
-        // 收支类型判断
+
+        // 填充收支类型判断
         type = recordToUpdate.type
         val types = TypeDao.getTypesByType(type)
         rg_type.check(if (type == TypeEnum.IN.value()) R.id.rb_type_in else R.id.rb_type_out)
-        setSpinnerContent()
-        // 具体类型名称
+        setSpinnerItems()
+
+        // 填充具体类型名称
         var selected = 0
-        for ((index, type) in types.withIndex()) {
-            if (type.name == recordToUpdate.typeName) {
+        types.filterIndexed { index, type ->
+            val result = type.name == recordToUpdate.typeName
+            if (result) {
                 selected = index
-                break
             }
+            result
         }
         spinner_type.setSelection(selected, true)
     }
 
     override fun onResume() {
         super.onResume()
-        setSpinnerContent()
+        setSpinnerItems()
         if (isUpdate) {
-            initData()
+            fillOldData()
         }
     }
 
+    /**
+     * 添加或修改记录
+     */
     private fun saveOrUpdateRecord(): Boolean {
         val y = date_picker.year
         val m = date_picker.month + 1
         val d = date_picker.dayOfMonth
         val date = getFormatYMD(y, m, d)
-        return RecordDao.addOrUpdateRecord(isUpdate,
-                recordToUpdate.id,
-                date,
-                et_money.text.toString().toDouble(),
-                et_detail.text.toString(),
-                type,
-                spinner_type.selectedItem.toString())
+        val record = Record(date = date,
+                money = et_money.text.toString().toDouble(),
+                detail = et_detail.text.toString(),
+                type = type,
+                typeName = spinner_type.selectedItem.toString())
+
+        return if (isUpdate) {
+            record.id = recordToUpdate.id
+            RecordDao.updateRecord(record)
+        } else {
+            RecordDao.addRecord(record)
+        }
     }
 
     /**
      * 根据收支的选择填充spinner的内容
      */
-    private fun setSpinnerContent() {
+    private fun setSpinnerItems() {
         val types = TypeDao.getTypesByType(type)
         if (types.isEmpty()) {
             ToastUtils.showShort(R.string.add_no_type)
             return
         }
-        val typeNames = ArrayList<String>()
-        types.forEach { typeNames.add(it.name ?: "") }
+        val typeNames = types.map { it.name }
         val spinnerAdapter = ArrayAdapter<String>(btn_add.context, R.layout.item_spinner, typeNames)
         spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
         spinner_type.adapter = spinnerAdapter
@@ -175,7 +180,7 @@ class AddFragment : BaseFragment() {
         et_detail.setText("")
         type = TypeEnum.OUT.value()
         rg_type.check(R.id.rb_type_out)
-        setSpinnerContent()
+        setSpinnerItems()
     }
 
 }

@@ -18,15 +18,12 @@ class SumFragment : BaseFragment() {
 
     private var showMonth = getThisMonth()
     private var showYear = getThisYear()
+    // 月视图或年视图
     private var isMonth = true
 
-    override fun bindLayout(): Int {
-        return R.layout.fragment_sum
-    }
+    override fun bindLayout(): Int = R.layout.fragment_sum
 
-    override fun setHeaderTitle(): String {
-        return getString(R.string.sum_title)
-    }
+    override fun setHeaderTitle(): String = getString(R.string.sum_title)
 
     override fun initParam() {
         showMonth = getThisMonth()

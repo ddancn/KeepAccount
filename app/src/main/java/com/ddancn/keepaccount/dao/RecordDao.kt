@@ -11,23 +11,39 @@ import java.util.*
  */
 object RecordDao {
 
-    fun addOrUpdateRecord(isUpdate: Boolean, idToUpdate: Int,
-                          date: String, money: Double, detail: String, type: Int, typeName: String): Boolean {
-        val record = Record(date = date, money = money, detail = detail, type = type, typeName = typeName)
-        return if (isUpdate) record.update(idToUpdate.toLong()) == 1 else record.save()
+    /**
+     * 添加记录
+     */
+    fun addRecord(record: Record): Boolean {
+        return record.save()
     }
 
+    /**
+     * 修改记录
+     */
+    fun updateRecord(record: Record): Boolean {
+        return record.update(record.id.toLong()) == 1
+    }
+
+    /**
+     * 搜索记录
+     * @param query 关键词
+     */
     fun searchRecord(query: String): List<Record> {
         val condition = "%$query%"
         val result = LitePal
                 .where("date like ? or money like ? or detail like ? or typeName like ?",
                         condition, condition, condition, condition)
-                .order("date desc")
+                .order("date")
                 .find(Record::class.java)
         result.reverse()
         return result
     }
 
+    /**
+     * 按月获取记录
+     * @param month 月份，格式yyyy-MM
+     */
     fun getRecordsByMonth(month: String): List<Record> {
         val result = LitePal
                 .where("date like ?", "$month%")
@@ -37,6 +53,10 @@ object RecordDao {
         return result
     }
 
+    /**
+     * 删除记录
+     * @param id 要删除的记录id
+     */
     fun deleteRecordById(id: Int): Int {
         return LitePal.delete(Record::class.java, id.toLong())
     }

@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_setting.*
 
 /**
  * @author ddan.zhuang
+ * 设置类型页面
  */
 class SettingActivity : BaseActivity() {
 
