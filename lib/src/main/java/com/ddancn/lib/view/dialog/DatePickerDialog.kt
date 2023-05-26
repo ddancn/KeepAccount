@@ -2,9 +2,7 @@ package com.ddancn.lib.view.dialog;
 
 import android.content.Context
 import android.content.res.Resources
-import android.os.Build
 import android.view.View
-import com.blankj.utilcode.util.LogUtils
 import com.ddancn.lib.R
 import kotlinx.android.synthetic.main.dialog_date_picker.*
 import java.util.*
@@ -42,51 +40,19 @@ class DatePickerDialog(context: Context,
 
     private fun hideDay() {
         /* 处理android5.0以上的特殊情况 */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android")
-            if (daySpinnerId != 0) {
-                val daySpinner = date_picker.findViewById<View>(daySpinnerId)
-                daySpinner.visibility = View.GONE
-            }
-        } else {
-            val datePickerFields = date_picker.javaClass.declaredFields
-            for (field in datePickerFields) {
-                if ("mDaySpinner" == field.name || ("mDayPicker") == field.name) {
-                    field.isAccessible = true
-                    var dayPicker: Any? = null
-                    try {
-                        dayPicker = field.get(date_picker)
-                    } catch (e: Exception) {
-                        LogUtils.e(e)
-                    }
-                    (dayPicker as? View)?.visibility = View.GONE
-                }
-            }
+        val daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android")
+        if (daySpinnerId != 0) {
+            val daySpinner = date_picker.findViewById<View>(daySpinnerId)
+            daySpinner.visibility = View.GONE
         }
     }
 
     private fun hideMonth() {
         /* 处理android5.0以上的特殊情况 */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val daySpinnerId = Resources.getSystem().getIdentifier("month", "id", "android")
-            if (daySpinnerId != 0) {
-                val daySpinner = date_picker.findViewById<View>(daySpinnerId)
-                daySpinner.visibility = View.GONE
-            }
-        } else {
-            val datePickerFields = date_picker.javaClass.declaredFields
-            for (field in datePickerFields) {
-                if ("mMonthSpinner" == field.name || ("mMonthPicker") == field.name) {
-                    field.isAccessible = true
-                    var monthPicker: Any? = null
-                    try {
-                        monthPicker = field.get(date_picker)
-                    } catch (e: Exception) {
-                        LogUtils.e(e)
-                    }
-                    (monthPicker as? View)?.visibility = View.GONE
-                }
-            }
+        val daySpinnerId = Resources.getSystem().getIdentifier("month", "id", "android")
+        if (daySpinnerId != 0) {
+            val daySpinner = date_picker.findViewById<View>(daySpinnerId)
+            daySpinner.visibility = View.GONE
         }
     }
 

@@ -1,14 +1,18 @@
 package com.ddancn.keepaccount.fragment
 
+import android.annotation.SuppressLint
 import android.text.Editable
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.ToastUtils
 import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.activity.UpdateActivity
 import com.ddancn.keepaccount.adapter.RecordAdapter
 import com.ddancn.keepaccount.dao.RecordDao
+import com.ddancn.keepaccount.util.getEmptyTextView
+import com.ddancn.keepaccount.util.getFooterTextView
 import com.ddancn.lib.base.BaseFragment
-import com.ddancn.lib.util.*
+import com.ddancn.lib.util.SimpleTextWatcher
+import com.ddancn.lib.util.getFormatYM
+import com.ddancn.lib.util.getThisMonth
 import com.ddancn.lib.view.dialog.BaseDialog
 import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.DatePickerDialog
@@ -34,6 +38,7 @@ class RecordFragment : BaseFragment() {
         rv_record.adapter = recordAdapter
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun bindListener() {
         // 选择日期
         icon_date.setOnClickListener {
@@ -82,7 +87,7 @@ class RecordFragment : BaseFragment() {
                         override fun onClick(): Boolean {
                             val recordToDelete = recordAdapter.getItem(position)
                             if (RecordDao.deleteRecordById(recordToDelete?.id ?: -1) == 1) {
-                                ToastUtils.showShort(R.string.record_delete_succeed)
+                                toast(R.string.record_delete_succeed)
                                 recordAdapter.remove(position)
                             }
                             return true
@@ -103,7 +108,7 @@ class RecordFragment : BaseFragment() {
     private fun getRecords() {
         recordAdapter.setNewData(RecordDao.getRecordsByMonth(showMonth))
         if (recordAdapter.data.isEmpty()) {
-            ToastUtils.showShort(R.string.record_search_no_result)
+            toast(R.string.record_search_no_result)
         }
     }
 }

@@ -1,12 +1,10 @@
 package com.ddancn.lib.base
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +19,7 @@ import com.jaeger.library.StatusBarUtil
  */
 abstract class BaseActivity : AppCompatActivity() {
 
-    private lateinit var headerView: HeaderView
+    protected lateinit var headerView: HeaderView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,14 +55,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected fun toast(@StringRes resId: Int) {
         ToastUtils.showShort(resId)
-    }
-
-    protected fun <T : Any> start(clazz: Class<T>) {
-        startActivity(Intent(this, clazz))
-    }
-
-    protected fun <T : Any> startForResult(clazz: Class<T>, requestCode: Int) {
-        startActivityForResult(Intent(this, clazz), requestCode)
     }
 
     /**
@@ -107,45 +97,9 @@ abstract class BaseActivity : AppCompatActivity() {
         return ""
     }
 
-    protected fun setTitleText(text: String) {
-        headerView.setTitle(text)
-    }
-
-    protected fun setLeftText(text: String) {
-        headerView.setLeftText(text)
-    }
-
-    protected fun setLeftText(@StringRes resId: Int) {
-        headerView.setLeftText(getString(resId))
-    }
-
-    protected fun setRightText(text: String) {
-        headerView.setRightText(text)
-    }
-
-    protected fun setRightText(@StringRes resId: Int) {
-        headerView.setRightText(getString(resId))
-    }
-
-    protected fun setLeftImage(@DrawableRes resId: Int) {
-        headerView.setLeftImage(resId)
-    }
-
-    protected fun setRightImage(@DrawableRes resId: Int) {
-        headerView.setRightImage(resId)
-    }
-
-    protected fun setLeftClickListener(listener: View.OnClickListener) {
-        headerView.setLeftClickListener(listener)
-    }
-
-    protected fun setRightClickListener(listener: View.OnClickListener) {
-        headerView.setRightClickListener(listener)
-    }
-
     protected fun enableLeftBack() {
-        setLeftImage(R.drawable.ic_left_arrow)
-        headerView.setLeftClickListener(View.OnClickListener { finish() })
+        headerView.setLeftImage(R.drawable.ic_left_arrow)
+        headerView.setLeftClickListener { finish() }
     }
 
 }

@@ -1,8 +1,6 @@
 package com.ddancn.keepaccount.fragment
 
 import android.content.Context
-import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
 import androidx.annotation.NonNull
 import com.blankj.utilcode.util.ToastUtils
@@ -41,17 +39,16 @@ class AddFragment : BaseFragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun initParam() {
         recordToUpdate = (activity as? UpdateActivity)?.recordToUpdate ?: Record()
     }
 
     override fun initView() {
-        setRightImage(R.drawable.ic_setting)
+        headerView.setRightImage(R.drawable.ic_setting)
     }
 
     override fun bindListener() {
-        setRightClickListener(View.OnClickListener { start(SettingActivity::class.java) })
+        headerView.setRightClickListener { start(SettingActivity::class.java) }
         // 获取radio group收支选项，联动改变类型spinner的内容
         rg_type.setOnCheckedChangeListener { group, checkedId ->
             type = if (checkedId == R.id.rb_type_out) TypeEnum.OUT.value() else TypeEnum.IN.value()
@@ -86,7 +83,7 @@ class AddFragment : BaseFragment() {
             return false
         }
         if (spinner_type.selectedItem.toString().isEmpty()) {
-            ToastUtils.showShort(R.string.add_need_money)
+            toast(R.string.add_need_money)
             return false
         }
         return true
@@ -161,7 +158,7 @@ class AddFragment : BaseFragment() {
     private fun setSpinnerItems() {
         val types = TypeDao.getTypesByType(type)
         if (types.isEmpty()) {
-            ToastUtils.showShort(R.string.add_no_type)
+            toast(R.string.add_no_type)
             return
         }
         val typeNames = types.map { it.name }

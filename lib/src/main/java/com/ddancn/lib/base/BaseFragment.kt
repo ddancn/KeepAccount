@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -19,7 +18,7 @@ import com.ddancn.lib.view.HeaderView
  */
 abstract class BaseFragment : Fragment() {
 
-    private lateinit var headerView: HeaderView
+    protected lateinit var headerView: HeaderView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootLayout = inflater.inflate(R.layout.activity_base, null) as ViewGroup
@@ -53,10 +52,6 @@ abstract class BaseFragment : Fragment() {
 
     protected fun <T : Any> start(clazz: Class<T>) {
         startActivity(Intent(context, clazz))
-    }
-
-    protected fun <T : Any> startForResult(clazz: Class<T>, requestCode: Int) {
-        startActivityForResult(Intent(context, clazz), requestCode)
     }
 
     /**
@@ -99,39 +94,4 @@ abstract class BaseFragment : Fragment() {
         return ""
     }
 
-    protected fun setTitleText(text: String) {
-        headerView.setTitle(text)
-    }
-
-    protected fun setLeftText(text: String) {
-        headerView.setLeftText(text)
-    }
-
-    protected fun setLeftText(@StringRes resId: Int) {
-        headerView.setLeftText(getString(resId))
-    }
-
-    protected fun setRightText(text: String) {
-        headerView.setRightText(text)
-    }
-
-    protected fun setRightText(@StringRes resId: Int) {
-        headerView.setRightText(getString(resId))
-    }
-
-    protected fun setLeftImage(@DrawableRes resId: Int) {
-        headerView.setLeftImage(resId)
-    }
-
-    protected fun setRightImage(@DrawableRes resId: Int) {
-        headerView.setRightImage(resId)
-    }
-
-    protected fun setLeftClickListener(listener: View.OnClickListener) {
-        headerView.setLeftClickListener(listener)
-    }
-
-    protected fun setRightClickListener(listener: View.OnClickListener) {
-        headerView.setRightClickListener(listener)
-    }
 }

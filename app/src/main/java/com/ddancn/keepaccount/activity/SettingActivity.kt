@@ -2,7 +2,6 @@ package com.ddancn.keepaccount.activity
 
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import com.blankj.utilcode.util.ToastUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.adapter.TypeAdapter
@@ -11,8 +10,8 @@ import com.ddancn.keepaccount.dao.RecordDao
 import com.ddancn.keepaccount.dao.TypeDao
 import com.ddancn.keepaccount.entity.Type
 import com.ddancn.keepaccount.exception.TypeNameDuplicateException
+import com.ddancn.keepaccount.util.getEmptyTextView
 import com.ddancn.lib.base.BaseActivity
-import com.ddancn.lib.util.getEmptyTextView
 import com.ddancn.lib.view.dialog.BaseDialog
 import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.InputDialog
@@ -109,7 +108,7 @@ class SettingActivity : BaseActivity() {
                             try {
                                 if (TypeDao.updateTypeName(typeToUpdate.id, input) == 1
                                         && RecordDao.updateRecordTypeName(input, typeToUpdate.name) >= 0) {
-                                    ToastUtils.showShort(R.string.setting_update_succeed)
+                                    toast(R.string.setting_update_succeed)
                                     getAdapter(type).data[position].name = (input)
                                     getAdapter(type).notifyItemChanged(position)
                                     return true
