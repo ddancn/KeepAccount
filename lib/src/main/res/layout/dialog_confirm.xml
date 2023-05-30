@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="260dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_dialog"
+    android:minWidth="260dp"
     android:orientation="vertical">
 
     <TextView
@@ -26,9 +27,9 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
+        android:lineSpacingMultiplier="1.2"
         android:textColor="#555"
         android:textSize="16sp"
-        android:lineSpacingMultiplier="1.2"
         tools:text="内容内容内容" />
 
     <View
@@ -50,9 +51,9 @@
             android:background="@null"
             android:gravity="center"
             android:lines="1"
+            android:text="@string/btn_cancel"
             android:textColor="#7D7D7D"
-            android:textSize="16sp"
-            android:text="@string/btn_cancel" />
+            android:textSize="16sp" />
 
         <View
             android:id="@+id/view_divider_vertical"
@@ -68,8 +69,8 @@
             android:background="@null"
             android:gravity="center"
             android:lines="1"
+            android:text="@string/btn_confirm"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp"
-            android:text="@string/btn_confirm" />
+            android:textSize="16sp" />
     </LinearLayout>
 </LinearLayout>

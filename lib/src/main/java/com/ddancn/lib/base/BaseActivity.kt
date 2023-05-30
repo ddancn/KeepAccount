@@ -5,19 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewbinding.ViewBinding
 import com.blankj.utilcode.util.ToastUtils
 import com.ddancn.lib.R
 import com.ddancn.lib.view.HeaderView
+import com.dylanc.viewbinding.base.ViewBindingUtil
 import com.jaeger.library.StatusBarUtil
 
 /**
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
+    protected lateinit var vb: VB
 
     protected lateinit var headerView: HeaderView
 
@@ -35,14 +37,14 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun generateContentView() {
-        val rootLayout = LayoutInflater.from(this).inflate(R.layout.activity_base, null) as ViewGroup
+        val rootLayout =
+            LayoutInflater.from(this).inflate(R.layout.activity_base, null) as ViewGroup
 
         headerView = rootLayout.findViewById(R.id.view_header)
         headerView.visibility = if (hasHeader()) View.VISIBLE else View.GONE
-        headerView.setTitle(setHeaderTitle())
 
-        val contentView = LayoutInflater.from(this).inflate(bindLayout(), rootLayout, true)
-        setContentView(contentView)
+        vb = ViewBindingUtil.inflateWithGeneric(this, layoutInflater, rootLayout, true)
+        setContentView(rootLayout)
     }
 
     protected open fun hasHeader(): Boolean {
@@ -56,14 +58,6 @@ abstract class BaseActivity : AppCompatActivity() {
     protected fun toast(@StringRes resId: Int) {
         ToastUtils.showShort(resId)
     }
-
-    /**
-     * 绑定资源文件
-     *
-     * @return layoutResId
-     */
-    @LayoutRes
-    protected abstract fun bindLayout(): Int
 
     /**
      * 初始化参数

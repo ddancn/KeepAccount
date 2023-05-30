@@ -3,17 +3,22 @@ package com.ddancn.lib.view.dialog;
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import androidx.viewbinding.ViewBinding
+import com.dylanc.viewbinding.base.ViewBindingUtil
 
 /**
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-abstract class BaseDialog(context: Context, var layoutResId: Int = 0, themeResId: Int = 0)
-    : Dialog(context, themeResId) {
+abstract class BaseDialog<VB : ViewBinding>(context: Context, themeResId: Int = 0) :
+    Dialog(context, themeResId) {
+
+    protected lateinit var vb: VB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layoutResId)
+        vb = ViewBindingUtil.inflateWithGeneric(this, layoutInflater)
+        setContentView(vb.root)
         initView()
     }
 

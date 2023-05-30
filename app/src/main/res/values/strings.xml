@@ -18,7 +18,7 @@
     <string name="add_btn">添加</string>
     <string name="add_succeed">添加成功</string>
     <string name="add_fail">添加失败</string>
-    <string name="add_need_money">请输入钱数</string>
+    <string name="add_need_money">请输入金额</string>
     <string name="add_need_type">请选择/创建类型</string>
     <string name="add_no_type">先在设置里创建类型~</string>
 

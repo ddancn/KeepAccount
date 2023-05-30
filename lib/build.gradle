@@ -1,9 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
         minSdkVersion 21
@@ -22,17 +21,23 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    //工具
-    api 'com.blankj:utilcodex:1.31.1'
-    //状态栏
-    api 'com.jaeger.statusbarutil:library:1.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    // 工具
+    api 'com.blankj:utilcodex:1.31.1'
+    // 状态栏
+    api 'com.jaeger.statusbarutil:library:1.5.1'
+    // VB
+    api 'com.github.DylanCaiCoding.ViewBindingKTX:viewbinding-base:2.1.0'
 }
 repositories {
     mavenCentral()

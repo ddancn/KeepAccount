@@ -5,20 +5,16 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.ddancn.keepaccount.R
+import com.ddancn.keepaccount.databinding.ActivityMainBinding
 import com.ddancn.keepaccount.fragment.AddFragment
 import com.ddancn.keepaccount.fragment.RecordFragment
 import com.ddancn.keepaccount.fragment.SumFragment
 import com.ddancn.lib.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * @author ddan.zhuang
  */
-class MainActivity : BaseActivity() {
-
-    override fun bindLayout(): Int {
-        return R.layout.activity_main
-    }
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun hasHeader(): Boolean {
         return false
@@ -29,22 +25,22 @@ class MainActivity : BaseActivity() {
         adapter.addFragment(AddFragment())
         adapter.addFragment(RecordFragment())
         adapter.addFragment(SumFragment())
-        viewpager.adapter = adapter
-        viewpager.offscreenPageLimit = 2
+        vb.viewpager.adapter = adapter
+        vb.viewpager.offscreenPageLimit = 2
     }
 
     override fun bindListener() {
-        navigation.setOnItemSelectedListener { item ->
+        vb.navigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_add -> viewpager.currentItem = 0
-                R.id.navigation_list -> viewpager.currentItem = 1
-                R.id.navigation_chart -> viewpager.currentItem = 2
+                R.id.navigation_add -> vb.viewpager.currentItem = 0
+                R.id.navigation_list -> vb.viewpager.currentItem = 1
+                R.id.navigation_chart -> vb.viewpager.currentItem = 2
             }
             false
         }
-        viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        vb.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                navigation.menu.getItem(position).isChecked = true
+                vb.navigation.menu.getItem(position).isChecked = true
             }
         })
     }

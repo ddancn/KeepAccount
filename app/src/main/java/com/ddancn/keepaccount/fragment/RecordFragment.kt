@@ -7,6 +7,7 @@ import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.activity.UpdateActivity
 import com.ddancn.keepaccount.adapter.RecordAdapter
 import com.ddancn.keepaccount.dao.RecordDao
+import com.ddancn.keepaccount.databinding.FragmentRecordBinding
 import com.ddancn.keepaccount.util.getEmptyTextView
 import com.ddancn.keepaccount.util.getFooterTextView
 import com.ddancn.lib.base.BaseFragment
@@ -16,43 +17,40 @@ import com.ddancn.lib.util.getThisMonth
 import com.ddancn.lib.view.dialog.BaseDialog
 import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.DatePickerDialog
-import kotlinx.android.synthetic.main.fragment_record.*
 
 /**
  * @author ddan.zhuang
  * 记录列表页面
  */
-class RecordFragment : BaseFragment() {
+class RecordFragment : BaseFragment<FragmentRecordBinding>() {
 
     private var recordAdapter = RecordAdapter(R.layout.item_record)
     private var showMonth: String = getThisMonth()
 
-    override fun bindLayout(): Int = R.layout.fragment_record
-
     override fun hasHeader(): Boolean = false
 
     override fun initView() {
-        rv_record.layoutManager = LinearLayoutManager(context)
+        vb.rvRecord.layoutManager = LinearLayoutManager(context)
         recordAdapter.emptyView = getEmptyTextView()
         recordAdapter.setFooterView(getFooterTextView())
-        rv_record.adapter = recordAdapter
+        vb.rvRecord.adapter = recordAdapter
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun bindListener() {
         // 选择日期
-        icon_date.setOnClickListener {
-            DatePickerDialog.getYMPickerFromToday(icon_date.context,
+        vb.iconDate.setOnClickListener {
+            DatePickerDialog.getYMPickerFromToday(vb.iconDate.context,
                     android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
                         showMonth = getFormatYM(year, month + 1)
                         toast(getString(R.string.record_switch_month, showMonth))
                         getRecords()
                         // 查记录时清空可能有的搜索内容
-                        et_search.setText("")
+                        vb.etSearch.setText("")
                     }).show()
         }
         // 输入实时搜索
-        et_search.addTextChangedListener(object : SimpleTextWatcher() {
+        vb.etSearch.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
                 if (query.isBlank()) {
@@ -63,11 +61,11 @@ class RecordFragment : BaseFragment() {
             }
         })
         // 搜索框清空按钮的事件
-        et_search.setOnTouchListener { v, event ->
-            if (event.x > et_search.width
-                    - et_search.paddingRight
-                    - et_search.compoundDrawables[2].intrinsicWidth) {
-                et_search.setText("")
+        vb.etSearch.setOnTouchListener { v, event ->
+            if (event.x > vb.etSearch.width
+                    - vb.etSearch.paddingRight
+                    - vb.etSearch.compoundDrawables[2].intrinsicWidth) {
+                vb.etSearch.setText("")
                 return@setOnTouchListener true
             }
             return@setOnTouchListener false

@@ -5,18 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.blankj.utilcode.util.ToastUtils
 import com.ddancn.lib.R
 import com.ddancn.lib.view.HeaderView
+import com.dylanc.viewbinding.base.ViewBindingUtil
 
 /**
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<VB : ViewBinding> : Fragment() {
+
+    protected lateinit var vb: VB
 
     protected lateinit var headerView: HeaderView
 
@@ -24,8 +27,8 @@ abstract class BaseFragment : Fragment() {
         val rootLayout = inflater.inflate(R.layout.activity_base, null) as ViewGroup
         headerView = rootLayout.findViewById(R.id.view_header)
         headerView.visibility = if (hasHeader()) View.VISIBLE else View.GONE
-        headerView.setTitle(setHeaderTitle())
-        inflater.inflate(bindLayout(), rootLayout, true)
+
+        vb = ViewBindingUtil.inflateWithGeneric(this, layoutInflater, rootLayout, true)
 
         initParam()
         return rootLayout
@@ -55,14 +58,6 @@ abstract class BaseFragment : Fragment() {
     }
 
     /**
-     * 绑定资源文件
-     *
-     * @return layoutResId
-     */
-    @LayoutRes
-    protected abstract fun bindLayout(): Int
-
-    /**
      * 初始化参数
      */
     protected open fun initParam() {//
@@ -83,15 +78,6 @@ abstract class BaseFragment : Fragment() {
      * 展示数据
      */
     protected open fun applyData() {//
-    }
-
-    /**
-     * 设置标题
-     *
-     * @return 标题
-     */
-    protected open fun setHeaderTitle(): String {
-        return ""
     }
 
 }

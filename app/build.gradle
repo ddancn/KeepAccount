@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdk 33
+    compileSdk 32
     defaultConfig {
         applicationId "com.ddancn.keepaccount"
         minSdkVersion 21
@@ -12,15 +11,21 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 //    applicationVariants.all { variant ->
 //        variant.outputs.all {
@@ -44,12 +49,14 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
-
-    implementation 'org.litepal.guolindev:core:3.2.3'
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
+    // 数据库
+    implementation 'org.litepal.guolindev:core:3.2.3'
+    // BRVAH
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.45'
+    // 图表
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 }
 repositories {
     mavenCentral()

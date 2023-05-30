@@ -8,6 +8,7 @@ import com.ddancn.keepaccount.adapter.TypeAdapter
 import com.ddancn.keepaccount.constant.TypeEnum
 import com.ddancn.keepaccount.dao.RecordDao
 import com.ddancn.keepaccount.dao.TypeDao
+import com.ddancn.keepaccount.databinding.ActivitySettingBinding
 import com.ddancn.keepaccount.entity.Type
 import com.ddancn.keepaccount.exception.TypeNameDuplicateException
 import com.ddancn.keepaccount.util.getEmptyTextView
@@ -15,39 +16,31 @@ import com.ddancn.lib.base.BaseActivity
 import com.ddancn.lib.view.dialog.BaseDialog
 import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.InputDialog
-import kotlinx.android.synthetic.main.activity_setting.*
 
 /**
  * @author ddan.zhuang
  * 设置类型页面
  */
-class SettingActivity : BaseActivity() {
+class SettingActivity : BaseActivity<ActivitySettingBinding>() {
 
     private val inTypesAdapter = TypeAdapter(R.layout.item_type)
     private val outTypesAdapter = TypeAdapter(R.layout.item_type)
 
-    override fun bindLayout(): Int {
-        return R.layout.activity_setting
-    }
-
-    override fun setHeaderTitle(): String {
-        return getString(R.string.setting_title)
-    }
-
     override fun initView() {
+        headerView.setTitle(R.string.setting_title)
         enableLeftBack()
 
-        rv_type_in.layoutManager = GridLayoutManager(this, 3)
-        rv_type_out.layoutManager = GridLayoutManager(this, 3)
+        vb.rvTypeIn.layoutManager = GridLayoutManager(this, 3)
+        vb.rvTypeOut.layoutManager = GridLayoutManager(this, 3)
         inTypesAdapter.emptyView = getEmptyTextView(getString(R.string.setting_no_in_type))
         outTypesAdapter.emptyView = getEmptyTextView(getString(R.string.setting_no_out_type))
-        rv_type_in.adapter = inTypesAdapter
-        rv_type_out.adapter = outTypesAdapter
+        vb.rvTypeIn.adapter = inTypesAdapter
+        vb.rvTypeOut.adapter = outTypesAdapter
     }
 
     override fun bindListener() {
-        icon_add_in.setOnClickListener { addType(TypeEnum.IN.value()) }
-        icon_add_out.setOnClickListener { addType(TypeEnum.OUT.value()) }
+        vb.iconAddIn.setOnClickListener { addType(TypeEnum.IN.value()) }
+        vb.iconAddOut.setOnClickListener { addType(TypeEnum.OUT.value()) }
         inTypesAdapter.onItemClickListener = TypeItemClickItemListener()
         inTypesAdapter.onItemLongClickListener = TypeItemLongClickListener()
         outTypesAdapter.onItemClickListener = TypeItemClickItemListener()
@@ -123,7 +116,11 @@ class SettingActivity : BaseActivity() {
     }
 
     inner class TypeItemLongClickListener : BaseQuickAdapter.OnItemLongClickListener {
-        override fun onItemLongClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int): Boolean {
+        override fun onItemLongClick(
+            adapter: BaseQuickAdapter<*, *>?,
+            view: View?,
+            position: Int
+        ): Boolean {
             val typeToDelete = adapter?.data?.get(position) as Type
             val type = typeToDelete.type
             ConfirmDialog(context = this@SettingActivity,

@@ -3,8 +3,7 @@ package com.ddancn.lib.view.dialog;
 import android.content.Context
 import android.content.res.Resources
 import android.view.View
-import com.ddancn.lib.R
-import kotlinx.android.synthetic.main.dialog_date_picker.*
+import com.ddancn.lib.databinding.DialogDatePickerBinding
 import java.util.*
 
 /**
@@ -18,18 +17,18 @@ class DatePickerDialog(context: Context,
                        private val dayOfMonth: Int,
                        private val hideDay: Boolean,
                        private val hideMonth: Boolean)
-    : BaseDialog(context, R.layout.dialog_date_picker) {
+    : BaseDialog<DialogDatePickerBinding>(context) {
 
     override fun initView() {
-        date_picker.init(year, monthOfYear, dayOfMonth, null)
-        btn_confirm.setOnClickListener {
-            onDateSetListener?.onDateSet(date_picker,
-                    date_picker.year,
-                    date_picker.month,
-                    date_picker.dayOfMonth)
+        vb.datePicker.init(year, monthOfYear, dayOfMonth, null)
+        vb.btnConfirm.setOnClickListener {
+            onDateSetListener?.onDateSet(vb.datePicker,
+                    vb.datePicker.year,
+                    vb.datePicker.month,
+                    vb.datePicker.dayOfMonth)
             cancel()
         }
-        btn_cancel.setOnClickListener { cancel() }
+        vb.btnCancel.setOnClickListener { cancel() }
         if (hideDay) {
             hideDay()
         }
@@ -39,19 +38,17 @@ class DatePickerDialog(context: Context,
     }
 
     private fun hideDay() {
-        /* 处理android5.0以上的特殊情况 */
         val daySpinnerId = Resources.getSystem().getIdentifier("day", "id", "android")
         if (daySpinnerId != 0) {
-            val daySpinner = date_picker.findViewById<View>(daySpinnerId)
+            val daySpinner = vb.datePicker.findViewById<View>(daySpinnerId)
             daySpinner.visibility = View.GONE
         }
     }
 
     private fun hideMonth() {
-        /* 处理android5.0以上的特殊情况 */
         val daySpinnerId = Resources.getSystem().getIdentifier("month", "id", "android")
         if (daySpinnerId != 0) {
-            val daySpinner = date_picker.findViewById<View>(daySpinnerId)
+            val daySpinner = vb.datePicker.findViewById<View>(daySpinnerId)
             daySpinner.visibility = View.GONE
         }
     }

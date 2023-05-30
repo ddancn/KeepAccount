@@ -3,27 +3,23 @@ package com.ddancn.keepaccount.fragment
 import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.constant.TypeEnum
 import com.ddancn.keepaccount.dao.RecordDao
+import com.ddancn.keepaccount.databinding.FragmentSumBinding
 import com.ddancn.keepaccount.util.ChartHelper
 import com.ddancn.lib.base.BaseFragment
 import com.ddancn.lib.util.getFormatYM
 import com.ddancn.lib.util.getThisMonth
 import com.ddancn.lib.util.getThisYear
 import com.ddancn.lib.view.dialog.DatePickerDialog
-import kotlinx.android.synthetic.main.fragment_sum.*
 
 /**
  * @author ddan.zhuang
  */
-class SumFragment : BaseFragment() {
+class SumFragment : BaseFragment<FragmentSumBinding>() {
 
     private var showMonth = getThisMonth()
     private var showYear = getThisYear()
     // 月视图或年视图
     private var isMonth = true
-
-    override fun bindLayout(): Int = R.layout.fragment_sum
-
-    override fun setHeaderTitle(): String = getString(R.string.sum_title)
 
     override fun initParam() {
         showMonth = getThisMonth()
@@ -31,28 +27,29 @@ class SumFragment : BaseFragment() {
     }
 
     override fun initView() {
-        ChartHelper.preparePie(pie_chart_in)
-        ChartHelper.preparePie(pie_chart_out)
-        ChartHelper.prepareBar(bar_chart_out)
+        headerView.setTitle(R.string.sum_title)
+        ChartHelper.preparePie(vb.pieChartIn)
+        ChartHelper.preparePie(vb.pieChartOut)
+        ChartHelper.prepareBar(vb.barChartOut)
     }
 
     override fun bindListener() {
-        rb_month.setOnCheckedChangeListener { buttonView, isChecked ->
+        vb.rbMonth.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 isMonth = true
                 toast(R.string.sum_to_month)
                 getData(showMonth)
             }
         }
-        rb_year.setOnCheckedChangeListener { buttonView, isChecked ->
+        vb.rbYear.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 isMonth = false
                 toast(R.string.sum_to_year)
                 getData(showYear)
             }
         }
-        icon_date.setOnClickListener {
-            DatePickerDialog.getPickerFromToday(icon_date.context,
+        vb.iconDate.setOnClickListener {
+            DatePickerDialog.getPickerFromToday(vb.iconDate.context,
                     android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
                         if (isMonth) {
                             showMonth = getFormatYM(year, month + 1)
@@ -75,18 +72,18 @@ class SumFragment : BaseFragment() {
     }
 
     private fun getData(date: String) {
-        tv_date.text = date
+        vb.tvDate.text = date
         getSumData(date)
 
-        pie_chart_in.data = ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date)
-        pie_chart_out.data = ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), date)
-        bar_chart_out.clear()
-        ChartHelper.resetBar(bar_chart_out, isMonth)
-        bar_chart_out.data = ChartHelper.getBarData(TypeEnum.OUT.value(), date)
+        vb.pieChartIn.data = ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date)
+        vb.pieChartOut.data = ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), date)
+        vb.barChartOut.clear()
+        ChartHelper.resetBar(vb.barChartOut, isMonth)
+        vb.barChartOut.data = ChartHelper.getBarData(TypeEnum.OUT.value(), date)
 
-        pie_chart_in.invalidate()
-        pie_chart_out.invalidate()
-        bar_chart_out.invalidate()
+        vb.pieChartIn.invalidate()
+        vb.pieChartOut.invalidate()
+        vb.barChartOut.invalidate()
     }
 
     /**
@@ -94,9 +91,9 @@ class SumFragment : BaseFragment() {
      */
     private fun getSumData(date: String) {
         val sumData = RecordDao.calMonthOrYearSum(date)
-        tv_income.text = getString(R.string.sum_money_digit, sumData[0])
-        tv_outcome.text = getString(R.string.sum_money_digit, sumData[1])
-        tv_sum.text = getString(R.string.sum_money_digit, sumData[2])
+        vb.tvIncome.text = getString(R.string.sum_money_digit, sumData[0])
+        vb.tvOutcome.text = getString(R.string.sum_money_digit, sumData[1])
+        vb.tvSum.text = getString(R.string.sum_money_digit, sumData[2])
     }
 
 }
