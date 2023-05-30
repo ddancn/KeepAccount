@@ -9,14 +9,15 @@ import com.ddancn.lib.databinding.DialogConfirmBinding
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-class ConfirmDialog(context: Context,
-                    private val confirmText: String? = null,
-                    private val cancelText: String? = null,
-                    private val title: String? = null,
-                    private val message: String? = null,
-                    private val confirmListener: OnBtnClickListener? = null,
-                    private val cancelListener: OnBtnClickListener? = null)
-    : BaseDialog<DialogConfirmBinding>(context, R.style.CustomDialog) {
+class ConfirmDialog(
+    context: Context,
+    private val confirmText: String = "确定",
+    private val cancelText: String = "取消",
+    private val title: String = "",
+    private val message: String = "",
+    private val confirmListener: (() -> Boolean)? = null,
+    private val cancelListener: (() -> Boolean)? = null
+) : BaseDialog<DialogConfirmBinding>(context, R.style.CustomDialog) {
 
     override fun initView() {
         vb.btnCancel.visibility = View.GONE
@@ -24,32 +25,32 @@ class ConfirmDialog(context: Context,
         vb.tvMsg.visibility = View.GONE
         vb.viewDividerVertical.visibility = View.GONE
 
-        if (!title.isNullOrBlank()) {
+        if (title.isNotBlank()) {
             vb.tvTitle.text = title
             vb.tvTitle.visibility = View.VISIBLE
         }
-        if (!message.isNullOrBlank()) {
+        if (message.isNotBlank()) {
             vb.tvMsg.text = message
             vb.tvMsg.visibility = View.VISIBLE
         }
-        if (!confirmText.isNullOrBlank()) {
+        if (confirmText.isNotBlank()) {
             vb.btnConfirm.text = confirmText
             vb.btnConfirm.visibility = View.VISIBLE
         }
-        if (!cancelText.isNullOrBlank()) {
+        if (cancelText.isNotBlank()) {
             vb.btnCancel.text = cancelText
             vb.btnCancel.visibility = View.VISIBLE
         }
-        if (!confirmText.isNullOrBlank() && !cancelText.isNullOrEmpty()) {
+        if (confirmText.isNotBlank() && cancelText.isNotEmpty()) {
             vb.viewDividerVertical.visibility = View.VISIBLE
         }
         vb.btnConfirm.setOnClickListener {
-            if (confirmListener?.onClick() == true) {
+            if (confirmListener == null || confirmListener.invoke()) {
                 cancel()
             }
         }
         vb.btnCancel.setOnClickListener {
-            if (cancelListener == null || cancelListener.onClick()) {
+            if (cancelListener == null || cancelListener.invoke()) {
                 cancel()
             }
         }

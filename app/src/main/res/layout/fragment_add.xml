@@ -73,7 +73,7 @@
             </RadioGroup>
 
             <Spinner
-                android:id="@+id/spinner_type"
+                android:id="@+id/spinner_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"

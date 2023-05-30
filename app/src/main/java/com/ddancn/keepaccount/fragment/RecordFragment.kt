@@ -8,13 +8,8 @@ import com.ddancn.keepaccount.activity.UpdateActivity
 import com.ddancn.keepaccount.adapter.RecordAdapter
 import com.ddancn.keepaccount.dao.RecordDao
 import com.ddancn.keepaccount.databinding.FragmentRecordBinding
-import com.ddancn.keepaccount.util.getEmptyTextView
-import com.ddancn.keepaccount.util.getFooterTextView
+import com.ddancn.keepaccount.util.*
 import com.ddancn.lib.base.BaseFragment
-import com.ddancn.lib.util.SimpleTextWatcher
-import com.ddancn.lib.util.getFormatYM
-import com.ddancn.lib.util.getThisMonth
-import com.ddancn.lib.view.dialog.BaseDialog
 import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.DatePickerDialog
 
@@ -26,6 +21,7 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>() {
 
     private var recordAdapter = RecordAdapter(R.layout.item_record)
     private var showMonth: String = getThisMonth()
+    private var keyword: String = ""
 
     override fun hasHeader(): Boolean = false
 
@@ -40,32 +36,33 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>() {
     override fun bindListener() {
         // 选择日期
         vb.iconDate.setOnClickListener {
-            DatePickerDialog.getYMPickerFromToday(vb.iconDate.context,
-                    android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
-                        showMonth = getFormatYM(year, month + 1)
-                        toast(getString(R.string.record_switch_month, showMonth))
-                        getRecords()
-                        // 查记录时清空可能有的搜索内容
-                        vb.etSearch.setText("")
-                    }).show()
+            DatePickerDialog.getYMPickerFromToday(
+                vb.iconDate.context
+            ) { datePicker, year, month, dayOfMonth ->
+                showMonth = getFormatYM(year, month + 1)
+                toast(getString(R.string.record_switch_month, showMonth))
+                // 查记录时清空可能有的搜索内容
+                vb.etSearch.setText("")
+                keyword = ""
+                getRecords()
+            }.show()
         }
         // 输入实时搜索
         vb.etSearch.addTextChangedListener(object : SimpleTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
                 val query = s.toString()
-                if (query.isBlank()) {
-                    getRecords()
-                } else {
-                    recordAdapter.setNewData(RecordDao.searchRecord(query))
-                }
+                keyword = query
+                getRecords()
             }
         })
         // 搜索框清空按钮的事件
         vb.etSearch.setOnTouchListener { v, event ->
             if (event.x > vb.etSearch.width
-                    - vb.etSearch.paddingRight
-                    - vb.etSearch.compoundDrawables[2].intrinsicWidth) {
+                - vb.etSearch.paddingRight
+                - vb.etSearch.compoundDrawables[2].intrinsicWidth
+            ) {
                 vb.etSearch.setText("")
+                keyword = ""
                 return@setOnTouchListener true
             }
             return@setOnTouchListener false
@@ -77,20 +74,18 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>() {
         // 长按记录来删除
         recordAdapter.setOnItemLongClickListener { adapter, view, position ->
             ConfirmDialog(view.context,
-                    title = getString(R.string.record_delete_record),
-                    message = getString(R.string.record_delete_hint),
-                    confirmText = getString(R.string.record_delete),
-                    cancelText = getString(R.string.cancel),
-                    confirmListener = object : BaseDialog.OnBtnClickListener {
-                        override fun onClick(): Boolean {
-                            val recordToDelete = recordAdapter.getItem(position)
-                            if (RecordDao.deleteRecordById(recordToDelete?.id ?: -1) == 1) {
-                                toast(R.string.record_delete_succeed)
-                                recordAdapter.remove(position)
-                            }
-                            return true
-                        }
-                    }).show()
+                title = getString(R.string.record_delete_record),
+                message = getString(R.string.record_delete_hint),
+                confirmText = getString(R.string.record_delete),
+                cancelText = getString(R.string.cancel),
+                confirmListener = {
+                    val recordToDelete = recordAdapter.getItem(position)
+                    if (RecordDao.deleteRecordById(recordToDelete?.id ?: -1) == 1) {
+                        toast(R.string.record_delete_succeed)
+                        recordAdapter.remove(position)
+                    }
+                    return@ConfirmDialog true
+                }).show()
             false
         }
     }
@@ -101,10 +96,14 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>() {
     }
 
     /**
-     * 从数据库中查询某月的记录
+     * 从数据库中查询记录
      */
     private fun getRecords() {
-        recordAdapter.setNewData(RecordDao.getRecordsByMonth(showMonth))
+        if (keyword.isBlank()) {
+            recordAdapter.setNewData(RecordDao.getRecordsByMonth(showMonth))
+        } else {
+            recordAdapter.setNewData(RecordDao.searchRecord(keyword))
+        }
         if (recordAdapter.data.isEmpty()) {
             toast(R.string.record_search_no_result)
         }

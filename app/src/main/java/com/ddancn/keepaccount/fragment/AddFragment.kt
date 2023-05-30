@@ -7,12 +7,12 @@ import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.activity.SettingActivity
 import com.ddancn.keepaccount.activity.UpdateActivity
 import com.ddancn.keepaccount.constant.TypeEnum
+import com.ddancn.keepaccount.dao.CategoryDao
 import com.ddancn.keepaccount.dao.RecordDao
-import com.ddancn.keepaccount.dao.TypeDao
 import com.ddancn.keepaccount.databinding.FragmentAddBinding
 import com.ddancn.keepaccount.entity.Record
+import com.ddancn.keepaccount.util.getFormatYMD
 import com.ddancn.lib.base.BaseFragment
-import com.ddancn.lib.util.getFormatYMD
 import java.util.*
 
 /**
@@ -29,9 +29,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
 
     override fun onAttach(@NonNull context: Context) {
         super.onAttach(context)
-        if (context is UpdateActivity) {
-            isUpdate = true
-        }
+        isUpdate = context is UpdateActivity
     }
 
     override fun onStart() {
@@ -79,10 +77,10 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
             toast(R.string.add_need_money)
             return false
         }
-        if (vb.spinnerType.selectedItem == null
-            || vb.spinnerType.selectedItem.toString().isEmpty()
+        if (vb.spinnerCategory.selectedItem == null
+            || vb.spinnerCategory.selectedItem.toString().isEmpty()
         ) {
-            toast(R.string.add_need_type)
+            toast(R.string.add_need_category)
             return false
         }
         return true
@@ -105,27 +103,28 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
 
         // 填充收支类型判断
         type = recordToUpdate.type
-        val types = TypeDao.getTypesByType(type)
+        val categories = CategoryDao.getCategoriesByType(type)
         vb.rgType.check(if (type == TypeEnum.IN.value()) R.id.rb_type_in else R.id.rb_type_out)
         setSpinnerItems()
 
         // 填充具体类型名称
         var selected = 0
-        types.filterIndexed { index, type ->
-            val result = type.name == recordToUpdate.typeName
+        categories.filterIndexed { index, category ->
+            val result = category.name == recordToUpdate.categoryName
             if (result) {
                 selected = index
             }
             result
         }
-        vb.spinnerType.setSelection(selected, true)
+        vb.spinnerCategory.setSelection(selected, true)
     }
 
     override fun onResume() {
         super.onResume()
-        setSpinnerItems()
         if (isUpdate) {
             fillOldData()
+        } else {
+            setSpinnerItems()
         }
     }
 
@@ -142,7 +141,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
             money = vb.etMoney.text.toString().toDouble(),
             detail = vb.etDetail.text.toString(),
             type = type,
-            typeName = vb.spinnerType.selectedItem.toString()
+            categoryName = vb.spinnerCategory.selectedItem.toString()
         )
 
         return if (isUpdate) {
@@ -157,14 +156,14 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
      * 根据收支的选择填充spinner的内容
      */
     private fun setSpinnerItems() {
-        val types = TypeDao.getTypesByType(type)
-        if (types.isEmpty()) {
-            toast(R.string.add_no_type)
+        val categories = CategoryDao.getCategoriesByType(type)
+        if (categories.isEmpty()) {
+            toast(R.string.add_no_category)
         }
-        val typeNames = types.map { it.name }
-        val spinnerAdapter = ArrayAdapter(vb.btnAdd.context, R.layout.item_spinner, typeNames)
+        val spinnerAdapter =
+            ArrayAdapter(vb.btnAdd.context, R.layout.item_spinner, categories.map { it.name })
         spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
-        vb.spinnerType.adapter = spinnerAdapter
+        vb.spinnerCategory.adapter = spinnerAdapter
     }
 
     /**

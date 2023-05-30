@@ -4,16 +4,15 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.ddancn.keepaccount.R
-import com.ddancn.keepaccount.adapter.TypeAdapter
+import com.ddancn.keepaccount.adapter.CategoryAdapter
 import com.ddancn.keepaccount.constant.TypeEnum
+import com.ddancn.keepaccount.dao.CategoryDao
 import com.ddancn.keepaccount.dao.RecordDao
-import com.ddancn.keepaccount.dao.TypeDao
 import com.ddancn.keepaccount.databinding.ActivitySettingBinding
-import com.ddancn.keepaccount.entity.Type
-import com.ddancn.keepaccount.exception.TypeNameDuplicateException
+import com.ddancn.keepaccount.entity.Category
+import com.ddancn.keepaccount.exception.CategoryNameDuplicateException
 import com.ddancn.keepaccount.util.getEmptyTextView
 import com.ddancn.lib.base.BaseActivity
-import com.ddancn.lib.view.dialog.BaseDialog
 import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.InputDialog
 
@@ -23,123 +22,116 @@ import com.ddancn.lib.view.dialog.InputDialog
  */
 class SettingActivity : BaseActivity<ActivitySettingBinding>() {
 
-    private val inTypesAdapter = TypeAdapter(R.layout.item_type)
-    private val outTypesAdapter = TypeAdapter(R.layout.item_type)
+    private val inAdapter = CategoryAdapter(R.layout.item_category)
+    private val outAdapter = CategoryAdapter(R.layout.item_category)
 
     override fun initView() {
         headerView.setTitle(R.string.setting_title)
         enableLeftBack()
 
-        vb.rvTypeIn.layoutManager = GridLayoutManager(this, 3)
-        vb.rvTypeOut.layoutManager = GridLayoutManager(this, 3)
-        inTypesAdapter.emptyView = getEmptyTextView(getString(R.string.setting_no_in_type))
-        outTypesAdapter.emptyView = getEmptyTextView(getString(R.string.setting_no_out_type))
-        vb.rvTypeIn.adapter = inTypesAdapter
-        vb.rvTypeOut.adapter = outTypesAdapter
+        vb.rvCategoryIn.layoutManager = GridLayoutManager(this, 3)
+        vb.rvCategoryOut.layoutManager = GridLayoutManager(this, 3)
+        inAdapter.emptyView = getEmptyTextView(getString(R.string.setting_no_in_category))
+        outAdapter.emptyView = getEmptyTextView(getString(R.string.setting_no_out_category))
+        vb.rvCategoryIn.adapter = inAdapter
+        vb.rvCategoryOut.adapter = outAdapter
     }
 
     override fun bindListener() {
-        vb.iconAddIn.setOnClickListener { addType(TypeEnum.IN.value()) }
-        vb.iconAddOut.setOnClickListener { addType(TypeEnum.OUT.value()) }
-        inTypesAdapter.onItemClickListener = TypeItemClickItemListener()
-        inTypesAdapter.onItemLongClickListener = TypeItemLongClickListener()
-        outTypesAdapter.onItemClickListener = TypeItemClickItemListener()
-        outTypesAdapter.onItemLongClickListener = TypeItemLongClickListener()
+        vb.iconAddIn.setOnClickListener { addCategory(TypeEnum.IN.value()) }
+        vb.iconAddOut.setOnClickListener { addCategory(TypeEnum.OUT.value()) }
+        inAdapter.onItemClickListener = CategoryItemClickItemListener()
+        inAdapter.onItemLongClickListener = CategoryItemLongClickListener()
+        outAdapter.onItemClickListener = CategoryItemClickItemListener()
+        outAdapter.onItemLongClickListener = CategoryItemLongClickListener()
     }
 
     override fun applyData() {
-        inTypesAdapter.setNewData(TypeDao.getTypesByType(TypeEnum.IN.value()))
-        outTypesAdapter.setNewData(TypeDao.getTypesByType(TypeEnum.OUT.value()))
+        inAdapter.setNewData(CategoryDao.getCategoriesByType(TypeEnum.IN.value()))
+        outAdapter.setNewData(CategoryDao.getCategoriesByType(TypeEnum.OUT.value()))
     }
 
-    private fun getAdapter(type: Int): TypeAdapter {
-        return if (type == TypeEnum.IN.value()) inTypesAdapter else outTypesAdapter
+    private fun getAdapter(type: Int): CategoryAdapter {
+        return if (type == TypeEnum.IN.value()) inAdapter else outAdapter
     }
 
-    private fun addType(type: Int) {
-        InputDialog(context = this,
-                title = getString(R.string.setting_add_type),
-                confirmText = getString(R.string.confirm),
-                cancelText = getString(R.string.cancel),
-                confirmListener = object : InputDialog.OnConfirmListenerWithInput {
-                    override fun onClick(input: String): Boolean {
-                        if (input.isBlank()) {
-                            toast(R.string.setting_need_type_name)
-                            return false
-                        }
-                        try {
-                            if (TypeDao.addType(input, type)) {
-                                toast(R.string.setting_add_succeed)
-                                applyData()
-                            } else {
-                                toast(R.string.setting_add_fail)
-                            }
-                        } catch (e: TypeNameDuplicateException) {
-                            toast(e.message)
-                        }
-                        return true
+    private fun addCategory(type: Int) {
+        InputDialog(
+            context = this,
+            title = getString(R.string.setting_add_category),
+            confirmListener = { input ->
+                if (input.isBlank()) {
+                    toast(R.string.setting_need_category_name)
+                    return@InputDialog false
+                }
+                try {
+                    if (CategoryDao.addCategory(input, type)) {
+                        toast(R.string.setting_add_succeed)
+                        applyData()
+                    } else {
+                        toast(R.string.setting_add_fail)
                     }
-                }).show()
+                } catch (e: CategoryNameDuplicateException) {
+                    toast(e.message)
+                }
+                return@InputDialog true
+            }).show()
     }
 
-    inner class TypeItemClickItemListener : BaseQuickAdapter.OnItemClickListener {
+    inner class CategoryItemClickItemListener : BaseQuickAdapter.OnItemClickListener {
         override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
-            val typeToUpdate = adapter?.data?.get(position) as Type
-            val type = typeToUpdate.type
+            val categoryToUpdate = adapter?.data?.get(position) as Category
+            val type = categoryToUpdate.type
             InputDialog(context = this@SettingActivity,
-                    title = getString(R.string.setting_update_type),
-                    confirmText = getString(R.string.setting_update),
-                    cancelText = getString(R.string.cancel),
-                    etMsg = typeToUpdate.name,
-                    confirmListener = object : InputDialog.OnConfirmListenerWithInput {
-                        override fun onClick(input: String): Boolean {
-                            if (input.isBlank()) {
-                                toast(R.string.setting_need_type_name)
-                                return false
-                            }
-                            //修改类型，更新类型相关的记录
-                            try {
-                                if (TypeDao.updateTypeName(typeToUpdate.id, input) == 1
-                                        && RecordDao.updateRecordTypeName(input, typeToUpdate.name) >= 0) {
-                                    toast(R.string.setting_update_succeed)
-                                    getAdapter(type).data[position].name = (input)
-                                    getAdapter(type).notifyItemChanged(position)
-                                    return true
-                                }
-                            } catch (e: TypeNameDuplicateException) {
-                                toast(e.message)
-                            }
-                            return false
+                title = getString(R.string.setting_update_category),
+                etMsg = categoryToUpdate.name,
+                confirmText = getString(R.string.setting_update),
+                confirmListener = { input ->
+                    if (input.isBlank()) {
+                        toast(R.string.setting_need_category_name)
+                        return@InputDialog false
+                    }
+                    //修改类型，更新类型相关的记录
+                    try {
+                        if (CategoryDao.updateCategoryName(categoryToUpdate.id, input) == 1
+                            && RecordDao.updateRecordCategoryName(input, categoryToUpdate.name) >= 0
+                        ) {
+                            toast(R.string.setting_update_succeed)
+                            getAdapter(type).data[position].name = (input)
+                            getAdapter(type).notifyItemChanged(position)
+                            return@InputDialog true
                         }
-                    }).show()
+                    } catch (e: CategoryNameDuplicateException) {
+                        toast(e.message)
+                    }
+                    return@InputDialog false
+
+                }).show()
         }
     }
 
-    inner class TypeItemLongClickListener : BaseQuickAdapter.OnItemLongClickListener {
+    inner class CategoryItemLongClickListener : BaseQuickAdapter.OnItemLongClickListener {
         override fun onItemLongClick(
             adapter: BaseQuickAdapter<*, *>?,
             view: View?,
             position: Int
         ): Boolean {
-            val typeToDelete = adapter?.data?.get(position) as Type
-            val type = typeToDelete.type
+            val categoryToDelete = adapter?.data?.get(position) as Category
+            val type = categoryToDelete.type
             ConfirmDialog(context = this@SettingActivity,
-                    title = getString(R.string.setting_delete_type),
-                    message = getString(R.string.setting_delete_hint),
-                    confirmText = getString(R.string.setting_delete),
-                    cancelText = getString(R.string.cancel),
-                    confirmListener = object : BaseDialog.OnBtnClickListener {
-                        override fun onClick(): Boolean {
-                            //先删除相关的记录，并删除类型
-                            if (RecordDao.deleteRecordByTypeName(typeToDelete.name) >= 0
-                                    && TypeDao.deleteType(typeToDelete.id) == 1) {
-                                toast(R.string.setting_delete_succeed)
-                                getAdapter(type).remove(position)
-                                return true
-                            }
-                            return false
-                        }
-                    }).show()
+                title = getString(R.string.setting_delete_category),
+                message = getString(R.string.setting_delete_hint),
+                confirmText = getString(R.string.setting_delete),
+                confirmListener = {
+                    //先删除相关的记录，并删除类型
+                    if (RecordDao.deleteRecordByCategoryName(categoryToDelete.name) >= 0
+                        && CategoryDao.deleteCategory(categoryToDelete.id) == 1
+                    ) {
+                        toast(R.string.setting_delete_succeed)
+                        getAdapter(type).remove(position)
+                    }
+                    return@ConfirmDialog true
+                }).show()
             return false
         }
     }

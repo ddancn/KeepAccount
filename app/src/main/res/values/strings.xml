@@ -19,8 +19,8 @@
     <string name="add_succeed">添加成功</string>
     <string name="add_fail">添加失败</string>
     <string name="add_need_money">请输入金额</string>
-    <string name="add_need_type">请选择/创建类型</string>
-    <string name="add_no_type">先在设置里创建类型~</string>
+    <string name="add_need_category">请选择/创建类型</string>
+    <string name="add_no_category">先在设置里创建类型~</string>
 
     <!-- 列表页面 -->
     <string name="record_search">搜索…</string>
@@ -50,20 +50,20 @@
     <string name="setting_type_in">收入类型</string>
     <string name="setting_type_out">支出类型</string>
     <string name="setting_add">添加</string>
-    <string name="setting_add_type">添加类型</string>
+    <string name="setting_add_category">添加类型</string>
     <string name="setting_add_succeed">添加成功</string>
     <string name="setting_add_fail">添加失败</string>
-    <string name="setting_need_type_name">没有输入类型的名称哦</string>
+    <string name="setting_need_category_name">没有输入类型的名称哦</string>
     <string name="setting_update">修改</string>
-    <string name="setting_update_type">修改类型</string>
+    <string name="setting_update_category">修改类型</string>
     <string name="setting_update_succeed">修改成功</string>
     <string name="setting_delete">删除</string>
-    <string name="setting_delete_type">删除类型</string>
+    <string name="setting_delete_category">删除类型</string>
     <string name="setting_delete_succeed">删除成功</string>
     <string name="setting_delete_hint">删除类型会删除所有与之相关的记录，确定要继续吗？</string>
-    <string name="setting_no_in_type">来创建第一个收入类型吧</string>
-    <string name="setting_no_out_type">来创建第一个支出类型吧</string>
-    <string name="setting_type_duplicate">类型名不要重复~</string>
+    <string name="setting_no_in_category">来创建第一个收入类型吧</string>
+    <string name="setting_no_out_category">来创建第一个支出类型吧</string>
+    <string name="setting_category_duplicate">类型名不要重复~</string>
 
     <!-- 修改页面 -->
     <string name="update_title">修改记录</string>

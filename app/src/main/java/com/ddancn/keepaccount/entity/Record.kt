@@ -12,5 +12,5 @@ data class Record(var id: Int = 0,
                   var money: Double = 0.0,
                   var detail: String = "",
                   var type: Int = 1,
-                  var typeName: String = "")
+                  var categoryName: String = "")
     : LitePalSupport(), Serializable

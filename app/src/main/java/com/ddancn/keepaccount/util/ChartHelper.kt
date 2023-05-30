@@ -3,14 +3,13 @@ package com.ddancn.keepaccount.util
 import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.Utils
 import com.ddancn.keepaccount.R
-import com.ddancn.keepaccount.dao.RecordDao
+import com.ddancn.keepaccount.dao.SumDao
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
-import java.util.*
 
 /**
  * @author ddan.zhuang
@@ -54,7 +53,7 @@ object ChartHelper {
      * @return 构造的数据
      */
     fun getPieData(type: Int, label: String, date: String): PieData {
-        val typeSum = RecordDao.calTypeSum(type, date)
+        val typeSum = SumDao.calTypeSum(type, date)
         val entries = ArrayList<PieEntry>()
         typeSum.forEach { entries.add(PieEntry(it.value.toFloat(), it.key)) }
 
@@ -116,7 +115,7 @@ object ChartHelper {
      * @param date 日期：月份/年份
      */
     fun getBarData(type: Int, date: String): BarData {
-        val sum = RecordDao.calDayOrMonthSum(type, date)
+        val sum = SumDao.calDayOrMonthSum(type, date)
         val entries = ArrayList<BarEntry>()
         sum.forEach { entries.add(BarEntry(it.key.toFloat(), it.value.toFloat())) }
 

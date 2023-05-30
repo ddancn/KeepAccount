@@ -6,6 +6,6 @@
   
     <list>
         <mapping class="com.ddancn.keepaccount.entity.Record" />
-        <mapping class="com.ddancn.keepaccount.entity.Type" />
+        <mapping class="com.ddancn.keepaccount.entity.Category" />
     </list>  
 </litepal>  

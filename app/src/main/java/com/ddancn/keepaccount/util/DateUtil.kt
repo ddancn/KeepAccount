@@ -1,4 +1,4 @@
-package com.ddancn.lib.util
+package com.ddancn.keepaccount.util
 
 import com.blankj.utilcode.util.Utils
 import com.ddancn.lib.R

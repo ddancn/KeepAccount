@@ -14,7 +14,7 @@ class RecordAdapter(layoutResId: Int, data: List<Record>? = null)
 
     override fun convert(helper: BaseViewHolder, item: Record) {
         helper.setText(R.id.tv_date, item.date)
-                .setText(R.id.tv_type, item.typeName)
+                .setText(R.id.tv_category, item.categoryName)
                 .setText(R.id.tv_detail, item.detail)
                 .setText(R.id.tv_money, item.money.toString())
                 .setTextColor(R.id.tv_money, if (item.type == TypeEnum.IN.value())

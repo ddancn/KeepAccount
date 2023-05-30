@@ -2,13 +2,13 @@ package com.ddancn.keepaccount.fragment
 
 import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.constant.TypeEnum
-import com.ddancn.keepaccount.dao.RecordDao
+import com.ddancn.keepaccount.dao.SumDao
 import com.ddancn.keepaccount.databinding.FragmentSumBinding
 import com.ddancn.keepaccount.util.ChartHelper
+import com.ddancn.keepaccount.util.getFormatYM
+import com.ddancn.keepaccount.util.getThisMonth
+import com.ddancn.keepaccount.util.getThisYear
 import com.ddancn.lib.base.BaseFragment
-import com.ddancn.lib.util.getFormatYM
-import com.ddancn.lib.util.getThisMonth
-import com.ddancn.lib.util.getThisYear
 import com.ddancn.lib.view.dialog.DatePickerDialog
 
 /**
@@ -16,14 +16,15 @@ import com.ddancn.lib.view.dialog.DatePickerDialog
  */
 class SumFragment : BaseFragment<FragmentSumBinding>() {
 
-    private var showMonth = getThisMonth()
-    private var showYear = getThisYear()
+    private var chosenMonth = getThisMonth()
+    private var chosenYear = getThisYear()
+
     // 月视图或年视图
     private var isMonth = true
 
     override fun initParam() {
-        showMonth = getThisMonth()
-        showYear = getThisYear()
+        chosenMonth = getThisMonth()
+        chosenYear = getThisYear()
     }
 
     override fun initView() {
@@ -38,36 +39,37 @@ class SumFragment : BaseFragment<FragmentSumBinding>() {
             if (isChecked) {
                 isMonth = true
                 toast(R.string.sum_to_month)
-                getData(showMonth)
+                getData(chosenMonth)
             }
         }
         vb.rbYear.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 isMonth = false
                 toast(R.string.sum_to_year)
-                getData(showYear)
+                getData(chosenYear)
             }
         }
         vb.iconDate.setOnClickListener {
-            DatePickerDialog.getPickerFromToday(vb.iconDate.context,
-                    android.app.DatePickerDialog.OnDateSetListener { datePicker, year, month, dayOfMonth ->
-                        if (isMonth) {
-                            showMonth = getFormatYM(year, month + 1)
-                            getData(showMonth)
-                        } else {
-                            showYear = year.toString()
-                            getData(showYear)
-                        }
-                    }, hideDay = true, hideMonth = !isMonth).show()
+            DatePickerDialog.getPickerFromToday(
+                vb.iconDate.context, hideDay = true, hideMonth = !isMonth
+            ) { datePicker, year, month, dayOfMonth ->
+                if (isMonth) {
+                    chosenMonth = getFormatYM(year, month + 1)
+                    getData(chosenMonth)
+                } else {
+                    chosenYear = year.toString()
+                    getData(chosenYear)
+                }
+            }.show()
         }
     }
 
     override fun onResume() {
         super.onResume()
         if (isMonth) {
-            getData(showMonth)
+            getData(chosenMonth)
         } else {
-            getData(showYear)
+            getData(chosenYear)
         }
     }
 
@@ -75,8 +77,11 @@ class SumFragment : BaseFragment<FragmentSumBinding>() {
         vb.tvDate.text = date
         getSumData(date)
 
-        vb.pieChartIn.data = ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date)
-        vb.pieChartOut.data = ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), date)
+        vb.pieChartIn.data =
+            ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date)
+        vb.pieChartOut.data =
+            ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), date)
+
         vb.barChartOut.clear()
         ChartHelper.resetBar(vb.barChartOut, isMonth)
         vb.barChartOut.data = ChartHelper.getBarData(TypeEnum.OUT.value(), date)
@@ -90,7 +95,7 @@ class SumFragment : BaseFragment<FragmentSumBinding>() {
      * 初始化三个统计数据：收入、支出、总计
      */
     private fun getSumData(date: String) {
-        val sumData = RecordDao.calMonthOrYearSum(date)
+        val sumData = SumDao.calMonthOrYearSum(date)
         vb.tvIncome.text = getString(R.string.sum_money_digit, sumData[0])
         vb.tvOutcome.text = getString(R.string.sum_money_digit, sumData[1])
         vb.tvSum.text = getString(R.string.sum_money_digit, sumData[2])

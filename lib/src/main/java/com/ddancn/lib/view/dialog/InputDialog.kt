@@ -10,14 +10,15 @@ import com.ddancn.lib.databinding.DialogInputBinding
  * @author ddan.zhuang
  * @date 2019/10/15
  */
-class InputDialog(context: Context,
-                  private val confirmText: String? = null,
-                  private val cancelText: String? = null,
-                  private val title: String? = null,
-                  private val etMsg: String? = null,
-                  private val confirmListener: OnConfirmListenerWithInput? = null,
-                  private val cancelListener: OnBtnClickListener? = null)
-    : BaseDialog<DialogInputBinding>(context, R.style.CustomDialog) {
+class InputDialog(
+    context: Context,
+    private val confirmText: String = "确定",
+    private val cancelText: String = "取消",
+    private val title: String = "",
+    private val etMsg: String = "",
+    private val confirmListener: (input: String) -> Boolean,
+    private val cancelListener: (() -> Boolean)? = null
+) : BaseDialog<DialogInputBinding>(context, R.style.CustomDialog) {
 
     override fun initView() {
         vb.btnCancel.visibility = View.GONE
@@ -25,54 +26,45 @@ class InputDialog(context: Context,
         vb.viewDividerVertical.visibility = View.GONE
         vb.editText.requestFocus()
 
-        KeyboardUtils.toggleSoftInput()
+        KeyboardUtils.showSoftInput(vb.editText)
 
-        if (!title.isNullOrBlank()) {
+        if (title.isNotBlank()) {
             vb.tvTitle.text = title
             vb.tvTitle.visibility = View.VISIBLE
         }
-        if (!etMsg.isNullOrBlank()) {
+        if (etMsg.isNotBlank()) {
             vb.editText.setText(etMsg)
             vb.editText.visibility = View.VISIBLE
             vb.editText.selectAll()
         }
-        if (!confirmText.isNullOrBlank()) {
+        if (confirmText.isNotBlank()) {
             vb.btnConfirm.text = confirmText
             vb.btnConfirm.visibility = View.VISIBLE
         }
-        if (!cancelText.isNullOrBlank()) {
+        if (cancelText.isNotBlank()) {
             vb.btnCancel.text = cancelText
             vb.btnCancel.visibility = View.VISIBLE
         }
-        if (!confirmText.isNullOrBlank() && !cancelText.isNullOrEmpty()) {
+        if (confirmText.isNotBlank() && cancelText.isNotEmpty()) {
             vb.viewDividerVertical.visibility = View.VISIBLE
         }
         vb.btnConfirm.setOnClickListener {
-            if (confirmListener?.onClick(vb.editText.text.toString()) == true) {
+            if (confirmListener.invoke(vb.editText.text.toString())) {
                 cancel()
             }
         }
         vb.btnCancel.setOnClickListener {
-            if (cancelListener == null || cancelListener.onClick()) {
+            if (cancelListener == null || cancelListener.invoke()) {
                 cancel()
             }
         }
         setOnCancelListener {
-            KeyboardUtils.toggleSoftInput()
+            KeyboardUtils.hideSoftInput(vb.editText)
         }
     }
 
-    /**
-     * 返回输入的确定点击事件
-     */
-    interface OnConfirmListenerWithInput {
-        /**
-         * 点击确定
-         *
-         * @param input 输入内容
-         * @return 是否dismiss
-         */
-        fun onClick(input: String): Boolean
+    override fun onDetachedFromWindow() {
+        KeyboardUtils.hideSoftInput(vb.editText)
     }
 
 }
