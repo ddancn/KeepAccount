@@ -24,7 +24,6 @@ class InputDialog(
         vb.btnCancel.visibility = View.GONE
         vb.tvTitle.visibility = View.GONE
         vb.viewDividerVertical.visibility = View.GONE
-        vb.editText.requestFocus()
 
         KeyboardUtils.showSoftInput(vb.editText)
 

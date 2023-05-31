@@ -1,18 +1,23 @@
 package com.ddancn.keepaccount.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.ArrayAdapter
 import androidx.annotation.NonNull
 import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.activity.SettingActivity
 import com.ddancn.keepaccount.activity.UpdateActivity
+import com.ddancn.keepaccount.adapter.AddCategoryAdapter
 import com.ddancn.keepaccount.constant.TypeEnum
 import com.ddancn.keepaccount.dao.CategoryDao
 import com.ddancn.keepaccount.dao.RecordDao
 import com.ddancn.keepaccount.databinding.FragmentAddBinding
+import com.ddancn.keepaccount.entity.Category
 import com.ddancn.keepaccount.entity.Record
 import com.ddancn.keepaccount.util.getFormatYMD
 import com.ddancn.lib.base.BaseFragment
+import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import java.util.*
 
 /**
@@ -25,6 +30,9 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
     private var isUpdate = false
     private lateinit var recordToUpdate: Record
 
+    private val categoryAdapter = AddCategoryAdapter(R.layout.item_add_category)
+    private var selectedCate: Category? = null
+
     override fun hasHeader(): Boolean = !isUpdate
 
     override fun onAttach(@NonNull context: Context) {
@@ -35,19 +43,35 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
     override fun onStart() {
         super.onStart()
         recordToUpdate = (activity as? UpdateActivity)?.recordToUpdate ?: Record()
+//        view?.postDelayed({
+//            KeyboardUtils.showSoftInput(vb.etMoney)
+//        }, 500)
     }
 
     override fun initView() {
         headerView.setTitle(R.string.app_name)
         headerView.setRightImage(R.drawable.ic_setting)
+
+        val manager = FlexboxLayoutManager(context)
+        // 主轴方向排列
+        manager.justifyContent = JustifyContent.FLEX_START
+        // 次轴方向排列
+        manager.alignItems = AlignItems.CENTER
+        vb.rvCategory.layoutManager = manager
+        vb.rvCategory.adapter = categoryAdapter
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun bindListener() {
         headerView.setRightClickListener { start(SettingActivity::class.java) }
-        // 获取radio group收支选项，联动改变类型spinner的内容
+        // 选择收支大类，联动改变类型列表的内容
         vb.rgType.setOnCheckedChangeListener { group, checkedId ->
             type = if (checkedId == R.id.rb_type_out) TypeEnum.OUT.value() else TypeEnum.IN.value()
-            setSpinnerItems()
+            setCategoryList()
+        }
+        categoryAdapter.setOnItemClickListener { adapter, view, position ->
+            selectedCate = categoryAdapter.data[position]
+            categoryAdapter.setSelectedPos(position)
         }
         // 按钮点击事件
         vb.btnAdd.setOnClickListener {
@@ -77,9 +101,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
             toast(R.string.add_need_money)
             return false
         }
-        if (vb.spinnerCategory.selectedItem == null
-            || vb.spinnerCategory.selectedItem.toString().isEmpty()
-        ) {
+        if (selectedCate == null) {
             toast(R.string.add_need_category)
             return false
         }
@@ -105,18 +127,17 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
         type = recordToUpdate.type
         val categories = CategoryDao.getCategoriesByType(type)
         vb.rgType.check(if (type == TypeEnum.IN.value()) R.id.rb_type_in else R.id.rb_type_out)
-        setSpinnerItems()
+        setCategoryList()
 
         // 填充具体类型名称
         var selected = 0
-        categories.filterIndexed { index, category ->
-            val result = category.name == recordToUpdate.categoryName
-            if (result) {
+        categories.forEachIndexed { index, category ->
+            if (category.name == recordToUpdate.categoryName) {
                 selected = index
             }
-            result
         }
-        vb.spinnerCategory.setSelection(selected, true)
+        categoryAdapter.setSelectedPos(selected)
+        selectedCate = categoryAdapter.data[selected]
     }
 
     override fun onResume() {
@@ -124,7 +145,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
         if (isUpdate) {
             fillOldData()
         } else {
-            setSpinnerItems()
+            setCategoryList()
         }
     }
 
@@ -141,7 +162,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
             money = vb.etMoney.text.toString().toDouble(),
             detail = vb.etDetail.text.toString(),
             type = type,
-            categoryName = vb.spinnerCategory.selectedItem.toString()
+            categoryName = selectedCate!!.name
         )
 
         return if (isUpdate) {
@@ -153,17 +174,20 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
     }
 
     /**
-     * 根据收支的选择填充spinner的内容
+     * 根据收支的选择填充类型的内容
      */
-    private fun setSpinnerItems() {
+    private fun setCategoryList() {
         val categories = CategoryDao.getCategoriesByType(type)
         if (categories.isEmpty()) {
             toast(R.string.add_no_category)
+            categoryAdapter.setNewData(emptyList())
+            selectedCate = null
+            return
         }
-        val spinnerAdapter =
-            ArrayAdapter(vb.btnAdd.context, R.layout.item_spinner, categories.map { it.name })
-        spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
-        vb.spinnerCategory.adapter = spinnerAdapter
+
+        categoryAdapter.setNewData(categories)
+        categoryAdapter.setSelectedPos(0)
+        selectedCate = categoryAdapter.data[0]
     }
 
     /**
@@ -180,7 +204,7 @@ class AddFragment : BaseFragment<FragmentAddBinding>() {
         vb.etDetail.setText("")
         type = TypeEnum.OUT.value()
         vb.rgType.check(R.id.rb_type_out)
-        setSpinnerItems()
+        setCategoryList()
     }
 
 }

@@ -34,8 +34,9 @@ object RecordDao {
                 "date like ? or money like ? or detail like ? or categoryName like ?",
                 condition, condition, condition, condition
             )
-            .order("date desc")
+            .order("date")
             .find(Record::class.java)
+            .reversed()
     }
 
     /**
@@ -45,8 +46,9 @@ object RecordDao {
     fun getRecordsByMonth(month: String): List<Record> {
         return LitePal
             .where("date like ?", "$month%")
-            .order("date desc")
+            .order("date")
             .find(Record::class.java)
+            .reversed()
     }
 
     /**

@@ -28,8 +28,7 @@
                 android:gravity="center"
                 android:text="@string/sum_month"
                 android:textColor="@drawable/selector_rb_text"
-                android:textSize="16sp"
-                tools:targetApi="lollipop" />
+                android:textSize="16sp" />
 
             <RadioButton
                 android:id="@+id/rb_year"
@@ -42,8 +41,7 @@
                 android:gravity="center"
                 android:text="@string/sum_year"
                 android:textColor="@drawable/selector_rb_text"
-                android:textSize="16sp"
-                tools:targetApi="lollipop" />
+                android:textSize="16sp" />
         </RadioGroup>
 
         <RelativeLayout

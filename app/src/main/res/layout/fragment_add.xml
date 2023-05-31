@@ -16,69 +16,73 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:calendarViewShown="false"
-            android:datePickerMode="spinner"
-            tools:targetApi="lollipop" />
-
-        <EditText
-            android:id="@+id/et_money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="14"
-            android:gravity="center"
-            android:hint="@string/add_money"
-            android:inputType="numberDecimal"
-            android:textColor="@color/colorText"
-            tools:ignore="Autofill" />
-
-        <EditText
-            android:id="@+id/et_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="14"
-            android:gravity="center"
-            android:hint="@string/add_desc"
-            android:inputType="none"
-            android:textColor="@color/colorText"
-            tools:ignore="Autofill" />
+            android:datePickerMode="spinner" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginHorizontal="80dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="horizontal">
 
-            <RadioGroup
-                android:id="@+id/rg_type"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/et_money"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:ems="14"
+                android:gravity="center"
+                android:hint="@string/add_money"
+                android:inputType="numberDecimal"
+                android:textColor="@color/colorText"
+                tools:ignore="Autofill" />
 
-                <RadioButton
-                    android:id="@+id/rb_type_out"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/app_out"
-                    android:textSize="16sp" />
-
-                <RadioButton
-                    android:id="@+id/rb_type_in"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_in"
-                    android:textSize="16sp" />
-
-            </RadioGroup>
-
-            <Spinner
-                android:id="@+id/spinner_category"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/et_detail"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:minWidth="120dp" />
+                android:layout_weight="1"
+                android:ems="14"
+                android:gravity="center"
+                android:hint="@string/add_desc"
+                android:inputType="none"
+                android:textColor="@color/colorText"
+                tools:ignore="Autofill" />
         </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/rg_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_type_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/app_out"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/rb_type_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_in"
+                android:textSize="16sp" />
+
+        </RadioGroup>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="50dp"
+            tools:itemCount="1"
+            tools:listitem="@layout/item_add_category" />
 
         <Button
             android:id="@+id/btn_add"
