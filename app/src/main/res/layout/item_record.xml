@@ -21,6 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:textColor="@color/colorTextLight"
             android:textSize="22sp"
             tools:text="2020-02-02" />
 
@@ -30,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/tv_date"
+            android:textColor="@color/colorTextLight"
             android:textSize="22sp"
             tools:text="类型" />
 
@@ -38,8 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@id/tv_category"
             android:layout_toStartOf="@id/tv_money"
+            android:layout_toEndOf="@id/tv_category"
+            android:textColor="@color/colorTextLight"
             android:textSize="22sp"
             tools:text="详情详情详情" />
 

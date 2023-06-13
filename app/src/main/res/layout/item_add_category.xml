@@ -5,14 +5,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="4dp"
-    android:background="@drawable/selector_rb"
+    android:layout_margin="3dp"
+    android:background="@drawable/selector_rb_type"
     android:elevation="1dp"
     android:gravity="center"
     android:paddingHorizontal="10dp"
     android:paddingVertical="5dp"
-    android:textColor="@drawable/selector_rb_text"
+    android:textColor="@drawable/selector_rb_type_text"
     android:textSize="16sp"
     tools:text="类型">
-
 </TextView>

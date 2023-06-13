@@ -6,6 +6,8 @@
     <color name="colorAccent">#EF5350</color>
     <color name="colorBackground">#f8f8f8</color>
     <color name="colorText">#555</color>
+    <color name="colorTextLight">#777</color>
+    <color name="colorBorder">#DDD</color>
 
     <color name="colorPieChart0">#DDFF8A65</color>
     <color name="colorPieChart1">#DDFFB74D</color>

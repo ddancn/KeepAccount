@@ -29,7 +29,7 @@ class SumFragment : BaseFragment<FragmentSumBinding>() {
 
     override fun initView() {
         headerView.setTitle(R.string.sum_title)
-        ChartHelper.preparePie(vb.pieChartIn)
+//        ChartHelper.preparePie(vb.pieChartIn)
         ChartHelper.preparePie(vb.pieChartOut)
         ChartHelper.prepareBar(vb.barChartOut)
     }
@@ -77,8 +77,8 @@ class SumFragment : BaseFragment<FragmentSumBinding>() {
         vb.tvDate.text = date
         getSumData(date)
 
-        vb.pieChartIn.data =
-            ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date)
+//        vb.pieChartIn.data =
+//            ChartHelper.getPieData(TypeEnum.IN.value(), getString(R.string.app_in), date)
         vb.pieChartOut.data =
             ChartHelper.getPieData(TypeEnum.OUT.value(), getString(R.string.app_out), date)
 
@@ -86,7 +86,7 @@ class SumFragment : BaseFragment<FragmentSumBinding>() {
         ChartHelper.resetBar(vb.barChartOut, isMonth)
         vb.barChartOut.data = ChartHelper.getBarData(TypeEnum.OUT.value(), date)
 
-        vb.pieChartIn.invalidate()
+//        vb.pieChartIn.invalidate()
         vb.pieChartOut.invalidate()
         vb.barChartOut.invalidate()
     }
