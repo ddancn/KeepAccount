@@ -8,7 +8,9 @@ import com.ddancn.keepaccount.activity.UpdateActivity
 import com.ddancn.keepaccount.adapter.RecordAdapter
 import com.ddancn.keepaccount.dao.RecordDao
 import com.ddancn.keepaccount.databinding.FragmentRecordBinding
+import com.ddancn.keepaccount.entity.Record
 import com.ddancn.keepaccount.util.*
+import com.ddancn.keepaccount.vo.RecordSection
 import com.ddancn.lib.base.BaseFragment
 import com.ddancn.lib.view.dialog.ConfirmDialog
 import com.ddancn.lib.view.dialog.DatePickerDialog
@@ -19,7 +21,7 @@ import com.ddancn.lib.view.dialog.DatePickerDialog
  */
 class RecordFragment : BaseFragment<FragmentRecordBinding>() {
 
-    private var recordAdapter = RecordAdapter(R.layout.item_record)
+    private var recordAdapter = RecordAdapter(R.layout.item_record, R.layout.item_record_header)
     private var showMonth: String = getThisMonth()
     private var keyword: String = ""
 
@@ -69,24 +71,27 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>() {
         }
         // 点击记录去修改
         recordAdapter.setOnItemClickListener { adapter, view, position ->
-            UpdateActivity.start(view.context, recordAdapter.getItem(position))
+            val item = recordAdapter.getItem(position)
+            if (item?.isHeader == true) return@setOnItemClickListener
+            UpdateActivity.start(view.context, item?.t)
         }
         // 长按记录来删除
         recordAdapter.setOnItemLongClickListener { adapter, view, position ->
+            val item = recordAdapter.getItem(position)
+            if (item?.isHeader == true) return@setOnItemLongClickListener false
             ConfirmDialog(view.context,
                 title = getString(R.string.record_delete_record),
                 message = getString(R.string.record_delete_hint),
                 confirmText = getString(R.string.record_delete),
                 cancelText = getString(R.string.cancel),
                 confirmListener = {
-                    val recordToDelete = recordAdapter.getItem(position)
-                    if (RecordDao.deleteRecordById(recordToDelete?.id ?: -1) == 1) {
+                    if (RecordDao.deleteRecordById(item?.t?.id ?: -1) == 1) {
                         toast(R.string.record_delete_succeed)
                         recordAdapter.remove(position)
                     }
                     return@ConfirmDialog true
                 }).show()
-            false
+            return@setOnItemLongClickListener true
         }
     }
 
@@ -100,12 +105,23 @@ class RecordFragment : BaseFragment<FragmentRecordBinding>() {
      */
     private fun getRecords() {
         if (keyword.isBlank()) {
-            recordAdapter.setNewData(RecordDao.getRecordsByMonth(showMonth))
+            setSections(RecordDao.getRecordsByMonth(showMonth))
         } else {
-            recordAdapter.setNewData(RecordDao.searchRecord(keyword))
+            setSections(RecordDao.searchRecord(keyword))
         }
         if (recordAdapter.data.isEmpty()) {
             toast(R.string.record_search_no_result)
         }
+    }
+
+    private fun setSections(map: Map<String, List<Record>>) {
+        val list = ArrayList<RecordSection>()
+        for ((date, records) in map) {
+            list.add(RecordSection(true, date))
+            records.forEach { r ->
+                list.add(RecordSection(r))
+            }
+        }
+        recordAdapter.setNewData(list)
     }
 }

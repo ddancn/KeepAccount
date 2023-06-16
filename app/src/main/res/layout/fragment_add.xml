@@ -19,38 +19,27 @@
             android:calendarViewShown="false"
             android:datePickerMode="spinner" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/et_money"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="80dp"
-            android:layout_marginTop="10dp"
+            android:ems="14"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:hint="@string/add_money"
+            android:inputType="numberDecimal"
+            android:textColor="@color/colorText"
+            tools:ignore="Autofill" />
 
-            <EditText
-                android:id="@+id/et_money"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="14"
-                android:gravity="center"
-                android:hint="@string/add_money"
-                android:inputType="numberDecimal"
-                android:textColor="@color/colorText"
-                tools:ignore="Autofill" />
-
-            <EditText
-                android:id="@+id/et_detail"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="14"
-                android:gravity="center"
-                android:hint="@string/add_desc"
-                android:inputType="none"
-                android:textColor="@color/colorText"
-                tools:ignore="Autofill" />
-        </LinearLayout>
+        <EditText
+            android:id="@+id/et_detail"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:ems="14"
+            android:gravity="center"
+            android:hint="@string/add_desc"
+            android:inputType="none"
+            android:textColor="@color/colorText"
+            tools:ignore="Autofill" />
 
         <RadioGroup
             android:id="@+id/rg_type"

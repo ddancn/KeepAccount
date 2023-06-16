@@ -1,5 +1,6 @@
 package com.ddancn.keepaccount.entity
 
+import com.chad.library.adapter.base.entity.SectionEntity
 import org.litepal.crud.LitePalSupport
 
 import java.io.Serializable

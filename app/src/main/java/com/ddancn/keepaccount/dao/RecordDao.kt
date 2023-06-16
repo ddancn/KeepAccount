@@ -24,10 +24,10 @@ object RecordDao {
     }
 
     /**
-     * 搜索记录
+     * 搜索记录并分组
      * @param query 关键词
      */
-    fun searchRecord(query: String): List<Record> {
+    fun searchRecord(query: String): Map<String,List<Record>> {
         val condition = "%$query%"
         return LitePal
             .where(
@@ -37,18 +37,19 @@ object RecordDao {
             .order("date")
             .find(Record::class.java)
             .reversed()
+            .groupBy { it.date }
     }
 
     /**
-     * 按月获取记录
+     * 按月获取记录并分组
      * @param month 月份，格式yyyy-MM
      */
-    fun getRecordsByMonth(month: String): List<Record> {
+    fun getRecordsByMonth(month: String): Map<String,List<Record>> {
         return LitePal
             .where("date like ?", "$month%")
-            .order("date")
             .find(Record::class.java)
             .reversed()
+            .groupBy { it.date }
     }
 
     /**

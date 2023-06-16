@@ -2,6 +2,7 @@ package com.ddancn.keepaccount.adapter
 
 import android.annotation.SuppressLint
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.ddancn.keepaccount.R
@@ -12,7 +13,7 @@ import com.ddancn.keepaccount.entity.Category
  * @date 2023/5/30
  * @description
  */
-class AddCategoryAdapter(layoutResId: Int, data: List<Category>? = null) :
+class AddCategoryAdapter(@LayoutRes layoutResId: Int, data: List<Category>? = null) :
     BaseQuickAdapter<Category, BaseViewHolder>(layoutResId, data) {
 
     override fun convert(helper: BaseViewHolder, item: Category) {

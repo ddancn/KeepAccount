@@ -1,25 +1,31 @@
 package com.ddancn.keepaccount.adapter
 
-import com.chad.library.adapter.base.BaseQuickAdapter
+import androidx.annotation.LayoutRes
+import com.chad.library.adapter.base.BaseSectionQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.ddancn.keepaccount.R
 import com.ddancn.keepaccount.constant.TypeEnum
-import com.ddancn.keepaccount.entity.Record
+import com.ddancn.keepaccount.vo.RecordSection
 
 /**
  * @author ddan.zhuang
  */
-class RecordAdapter(layoutResId: Int, data: List<Record>? = null)
-    : BaseQuickAdapter<Record, BaseViewHolder>(layoutResId, data) {
+class RecordAdapter(@LayoutRes layoutResId: Int, @LayoutRes sectionHeadResId: Int, data: List<RecordSection>? = null) :
+    BaseSectionQuickAdapter<RecordSection, BaseViewHolder>(layoutResId, sectionHeadResId, data) {
 
-    override fun convert(helper: BaseViewHolder, item: Record) {
-        helper.setText(R.id.tv_date, item.date)
-                .setText(R.id.tv_category, item.categoryName)
-                .setText(R.id.tv_detail, item.detail)
-                .setText(R.id.tv_money, item.money.toString())
-                .setTextColor(R.id.tv_money, if (item.type == TypeEnum.IN.value())
-                    mContext.resources.getColor(R.color.colorPrimary)
-                else mContext.resources.getColor(R.color.colorText))
+    override fun convert(helper: BaseViewHolder, item: RecordSection) {
+        val record = item.t
+        helper.setText(R.id.tv_category, record.categoryName)
+            .setText(R.id.tv_detail, record.detail)
+            .setText(R.id.tv_money, record.money.toString())
+            .setTextColor(
+                R.id.tv_money, if (record.type == TypeEnum.IN.value())
+                    mContext.resources.getColor(R.color.colorPrimary, mContext.theme)
+                else mContext.resources.getColor(R.color.colorText, mContext.theme)
+            )
     }
 
+    override fun convertHead(helper: BaseViewHolder, item: RecordSection) {
+        helper.setText(R.id.tv_date, item.header)
+    }
 }
