@@ -20,6 +20,8 @@ object RecordDao {
      * 修改记录
      */
     fun updateRecord(record: Record): Boolean {
+        if (record.money == 0.0) record.setToDefault("money")
+        if (record.detail.isBlank()) record.setToDefault("detail")
         return record.update(record.id.toLong()) == 1
     }
 
@@ -27,7 +29,7 @@ object RecordDao {
      * 搜索记录并分组
      * @param query 关键词
      */
-    fun searchRecord(query: String): Map<String,List<Record>> {
+    fun searchRecord(query: String): Map<String, List<Record>> {
         val condition = "%$query%"
         return LitePal
             .where(
@@ -44,7 +46,7 @@ object RecordDao {
      * 按月获取记录并分组
      * @param month 月份，格式yyyy-MM
      */
-    fun getRecordsByMonth(month: String): Map<String,List<Record>> {
+    fun getRecordsByMonth(month: String): Map<String, List<Record>> {
         return LitePal
             .where("date like ?", "$month%")
             .find(Record::class.java)
