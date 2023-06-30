@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_marginTop="16dp"
-        android:background="#dadada" />
+        android:background="@color/colorDivider" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,14 +34,14 @@
             android:gravity="center"
             android:lines="1"
             android:text="@string/btn_cancel"
-            android:textColor="#7D7D7D"
+            android:textColor="@color/colorCancelText"
             android:textSize="16sp" />
 
         <View
             android:id="@+id/view_divider_vertical"
             android:layout_width="1px"
             android:layout_height="match_parent"
-            android:background="#dadada" />
+            android:background="@color/colorDivider" />
 
         <Button
             android:id="@+id/btn_confirm"

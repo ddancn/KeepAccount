@@ -63,7 +63,7 @@ object RecordDao {
     }
 
     /**
-     * 更新记录的类型名，更新类型的名称时调用
+     * 更新记录的类型名，更新类型的名称/删除类型转移记录 时调用
      *
      * @param newName 新类型名
      * @param oldName 旧类型名

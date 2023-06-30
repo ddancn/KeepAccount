@@ -58,9 +58,13 @@
     <string name="setting_update_category">修改类型</string>
     <string name="setting_update_succeed">修改成功</string>
     <string name="setting_delete">删除</string>
-    <string name="setting_delete_category">删除类型</string>
+    <string name="setting_delete_category">删除类型: %s</string>
     <string name="setting_delete_succeed">删除成功</string>
-    <string name="setting_delete_hint">删除类型会删除所有与之相关的记录，确定要继续吗？</string>
+    <string name="setting_delete_transfer_succeed">转移并删除成功</string>
+    <string name="setting_delete_hint">如何处理该类型下的记录？</string>
+    <string name="setting_delete_all_record">删除所有相关记录</string>
+    <string name="setting_transfer_record">转移记录到其他类型</string>
+    <string name="setting_choose_category">选择要转移至的类型</string>
     <string name="setting_no_in_category">来创建第一个收入类型吧</string>
     <string name="setting_no_out_category">来创建第一个支出类型吧</string>
     <string name="setting_category_duplicate">类型名不要重复~</string>

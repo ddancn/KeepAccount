@@ -27,12 +27,4 @@ abstract class BaseDialog<VB : ViewBinding>(context: Context, themeResId: Int = 
      */
     protected abstract fun initView()
 
-    interface OnBtnClickListener {
-        /**
-         * 点击事件
-         *
-         * @return 是否cancel
-         */
-        fun onClick(): Boolean
-    }
 }

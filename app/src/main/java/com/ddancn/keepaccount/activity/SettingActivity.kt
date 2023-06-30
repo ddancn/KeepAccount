@@ -13,7 +13,7 @@ import com.ddancn.keepaccount.entity.Category
 import com.ddancn.keepaccount.exception.CategoryNameDuplicateException
 import com.ddancn.keepaccount.util.getEmptyTextView
 import com.ddancn.lib.base.BaseActivity
-import com.ddancn.lib.view.dialog.ConfirmDialog
+import com.ddancn.lib.view.dialog.ChoiceDialog
 import com.ddancn.lib.view.dialog.InputDialog
 
 /**
@@ -105,7 +105,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
                         toast(e.message)
                     }
                     return@InputDialog false
-
                 }).show()
         }
     }
@@ -118,21 +117,65 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         ): Boolean {
             val categoryToDelete = adapter?.data?.get(position) as Category
             val type = categoryToDelete.type
-            ConfirmDialog(context = this@SettingActivity,
-                title = getString(R.string.setting_delete_category),
+            ChoiceDialog(
+                context = this@SettingActivity,
+                title = getString(R.string.setting_delete_category, categoryToDelete.name),
                 message = getString(R.string.setting_delete_hint),
-                confirmText = getString(R.string.setting_delete),
-                confirmListener = {
-                    //先删除相关的记录，并删除类型
-                    if (RecordDao.deleteRecordByCategoryName(categoryToDelete.name) >= 0
-                        && CategoryDao.deleteCategory(categoryToDelete.id) == 1
-                    ) {
-                        toast(R.string.setting_delete_succeed)
-                        getAdapter(type).remove(position)
-                    }
-                    return@ConfirmDialog true
-                }).show()
-            return false
+                choices = listOf(
+                    getString(R.string.setting_delete_all_record),
+                    getString(R.string.setting_transfer_record)
+                ),
+                listeners = listOf(
+                    deleteRecord(categoryToDelete, type, position),
+                    transferRecord(type, categoryToDelete, position)
+                )
+            ).show()
+            return true
         }
+
+        private fun deleteRecord(
+            categoryToDelete: Category,
+            type: Int,
+            position: Int
+        ): (Int) -> Boolean = (ChoiceDialog@{
+            //先删除相关的记录，并删除类型
+            if (RecordDao.deleteRecordByCategoryName(categoryToDelete.name) >= 0
+                && CategoryDao.deleteCategory(categoryToDelete.id) == 1
+            ) {
+                toast(R.string.setting_delete_succeed)
+                getAdapter(type).remove(position)
+            }
+            return@ChoiceDialog true
+        })
+
+        private fun transferRecord(
+            type: Int,
+            categoryToDelete: Category,
+            position: Int
+        ): (Int) -> Boolean = (ChoiceDialog@{
+            val categories = getAdapter(type).data
+            //转移相关记录，并删除类型
+            val listener = listener@{ i: Int ->
+                val categoryToTransfer = categories[i]
+                if (RecordDao.updateRecordCategoryName(
+                        categoryToTransfer.name,
+                        categoryToDelete.name
+                    ) >= 0
+                    && CategoryDao.deleteCategory(categoryToDelete.id) == 1
+                ) {
+                    toast(R.string.setting_delete_transfer_succeed)
+                    getAdapter(type).remove(position)
+                }
+                return@listener true
+            }
+            ChoiceDialog(
+                context = this@SettingActivity,
+                title = getString(R.string.setting_delete_category, categoryToDelete.name),
+                message = getString(R.string.setting_choose_category),
+                choices = categories.map { it.name }.filter { it != categoryToDelete.name },
+                listeners = List(categories.size - 1) { listener }
+            ).show()
+            return@ChoiceDialog true
+        })
     }
 }

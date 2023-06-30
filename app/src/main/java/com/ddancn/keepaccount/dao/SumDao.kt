@@ -17,11 +17,15 @@ object SumDao {
      * @return List：0->总收入、1->总支出、2->总计
      */
     fun calMonthOrYearSum(date: String): List<Double> {
-        val inSum = LitePal.where("type is ? and date like ? ",
-            TypeEnum.IN.value().toString(), "$date%")
+        val inSum = LitePal.where(
+            "type is ? and date like ? ",
+            TypeEnum.IN.value().toString(), "$date%"
+        )
             .sum(Record::class.java, "money", Double::class.java)
-        val outSum = LitePal.where("type is ? and date like ? ",
-            TypeEnum.OUT.value().toString(), "$date%")
+        val outSum = LitePal.where(
+            "type is ? and date like ? ",
+            TypeEnum.OUT.value().toString(), "$date%"
+        )
             .sum(Record::class.java, "money", Double::class.java)
         val sum = inSum - outSum
         return listOf(inSum, outSum, sum)
@@ -36,14 +40,20 @@ object SumDao {
      */
     fun calTypeSum(type: Int, date: String): Map<String, Double> {
         val typeSum = LinkedHashMap<String, Double>()
-        val cursor = LitePal.findBySQL("select categoryname, sum(money) as type_sum from record " +
-                "where type is ? and date like ? group by categoryName",
-            type.toString(), "$date%")
+        val cursor = LitePal.findBySQL(
+            "select categoryname, sum(money) as type_sum from record " +
+                    "where type is ? and date like ? group by categoryName",
+            type.toString(), "$date%"
+        )
         if (cursor.moveToFirst()) {
             do {
-                val name = cursor.getString(cursor.getColumnIndex("categoryname"))
-                val sum = cursor.getInt(cursor.getColumnIndex("type_sum")).toDouble()
-                typeSum[name] = sum
+                val nameIndex = cursor.getColumnIndex("categoryname")
+                val sumIndex = cursor.getColumnIndex("type_sum")
+                if (nameIndex >= 0 && sumIndex >= 0) {
+                    val name = cursor.getString(nameIndex)
+                    val sum = cursor.getInt(sumIndex).toDouble()
+                    typeSum[name] = sum
+                }
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -67,13 +77,19 @@ object SumDao {
         // 年中的每月
         val monthSql = "select substr(date,6,2) as new_date, sum(money) as sum from record " +
                 "where type is ? and date like ? group by new_date order by new_date"
-        val cursor = LitePal.findBySQL(if (date.length > yearLength) daySql else monthSql,
-            type.toString(), "$date%")
+        val cursor = LitePal.findBySQL(
+            if (date.length > yearLength) daySql else monthSql,
+            type.toString(), "$date%"
+        )
         if (cursor.moveToFirst()) {
             do {
-                val d = cursor.getString(cursor.getColumnIndex("new_date"))
-                val s = cursor.getInt(cursor.getColumnIndex("sum")).toDouble()
-                sum[d] = s
+                val dIndex = cursor.getColumnIndex("new_date")
+                val sIndex = cursor.getColumnIndex("sum")
+                if (dIndex >= 0 && sIndex >= 0) {
+                    val d = cursor.getString(dIndex)
+                    val s = cursor.getInt(sIndex).toDouble()
+                    sum[d] = s
+                }
             } while (cursor.moveToNext())
         }
         cursor.close()
