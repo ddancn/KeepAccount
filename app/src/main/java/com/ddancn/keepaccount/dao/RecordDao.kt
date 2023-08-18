@@ -49,6 +49,7 @@ object RecordDao {
     fun getRecordsByMonth(month: String): Map<String, List<Record>> {
         return LitePal
             .where("date like ?", "$month%")
+            .order("date")
             .find(Record::class.java)
             .reversed()
             .groupBy { it.date }
