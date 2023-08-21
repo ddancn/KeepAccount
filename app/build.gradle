@@ -5,7 +5,7 @@ android {
     compileSdk 32
     defaultConfig {
         applicationId "com.ddancn.keepaccount"
-        minSdkVersion 23
+        minSdkVersion 29
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
